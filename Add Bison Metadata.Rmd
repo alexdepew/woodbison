@@ -1,0 +1,421 @@
+---
+title: "Bison Microsatellite Tidy"
+output: html_document
+date: "2025-11-07"
+---
+
+# File information
+This script is for tidying Bison Microsatellite Database (Trent + Davis). 
+Files used described below:  
+
+- GWilson_All Trent and Davis Samples_metadata.csv  
+   - All Trent and Davis samples with year collected, received from Greg Wilson Oct 2025
+- GWilson_Bison_All_Genotypes_July2025_long.csv:   
+   - All Trent samples with year collected, received from Greg Wilson Oct 2025  
+- Petri_Sample_List_Bison_2025.csv  
+  - Metadata associated with samples from Renee Petri, received Oct 2025  
+- Bison_SampleList_Centre_04.11.2025.csv  
+  - All Trent samples & metadata  
+- Grant_Thesis_Samples_AsOf_5Nov25.csv  
+  - Samples and metadata associated with Mikaella Grant thesis  
+
+Population Assignments are as follows:  
+
+- Slave River Lowlands = Little Buffalo  
+- Peace Athabasca Delta = Sweetgrass  
+- Prince Albert National Park = Sturgeon River  
+- Waterton National Park / Waterton Lakes = Waterton Lakes National Park  
+
+# Load required libraries
+```{r, warning = FALSE, message = FALSE}
+library(tidyverse)
+```
+
+# Load required data
+```{r}
+microsat_database <- 
+  read.csv("Full_Bison_Dataset_18.12.2025.csv")
+
+trentdavis <- 
+  read.csv("Input files/GWilson_All Trent and Davis Samples_metadata.csv")
+
+trent <-
+  read.csv("Input files/GWilson_Bison_All_Genotypes_July2025_long.csv")
+
+petri_metadata <- 
+  read.csv("Input files/Petri_Sample_List_Bison_2025.csv") %>% 
+
+# ensure sample names are consistent
+  mutate(Sample.name = ifelse(grepl("-fe", Sample.name), 
+                              gsub("-fe", "-Fe", Sample.name),
+                              Sample.name)) %>% 
+  
+# assign population abbreviations
+  mutate(Bison.Herd = ifelse(Bison.Herd == "Sweetgrass", "WBNPPAD", 
+                      ifelse(Bison.Herd == "Lake One", "WBNPLakeOne",
+                      ifelse(Bison.Herd == "Little Buffalo", "WBNPLB",
+                      ifelse(Bison.Herd == "Sweetgrass A", "WBNPPAD", 
+                      ifelse(Bison.Herd == "Carlson", "WBNPCarlson", 
+                      ifelse(Bison.Herd == "Nyarlying", "WBNPNY", 
+                      ifelse(Bison.Herd == "Hay Camp", "WBNPHC",
+                      ifelse(Bison.Herd == "Nyarling", "WBNPNY",
+                      Bison.Herd)))))))))
+
+center_metadata <- 
+  read.csv("Input files/Bison_SampleList_Centre_04.11.2025.csv") %>% 
+
+# assign population abbreviations 
+  mutate(Population = ifelse(Population == "Nahanni", "NAH", 
+                      ifelse(Population == "Etthithun", "ETH", 
+                      ifelse(Population == "Nordquist/Liard", "NORD/Liard",
+                      ifelse(Population == "Nordquist", "NORD", 
+                      ifelse(Population == "Ronald Lake", "RL", 
+                      ifelse(Population == "Wabasca", "WAB", 
+                      ifelse(Population == "Hay Zama", "HZ", 
+                      ifelse(Population == "WBNP / Nyarling", "WBNPNY",
+                      ifelse(Population == "WBNP/Nyarling", "WBNPNY",
+                      ifelse(Population == "WBNP / Hay Camp", "WBNPHC", 
+                      ifelse(Population == "WBNP/Hay Camp", "WBNPHC", 
+                      ifelse(Population == "Mackenzie", "MBS", 
+                      ifelse(Population == "Grasslands National Park", "GNP", 
+                      ifelse(Population == "McCusker River", "MCR", 
+                      ifelse(Population == "Banff National Park", "BNP", 
+                      ifelse(Population == "Chitek Lake (MB)", "CL", 
+                      ifelse(Population == "Waterton Lakes", "WLNP", 
+                      ifelse(Population == "PANP", "Sturgeon River", 
+                      ifelse(Population == "Prince Albert National Park", "Sturgeon River", 
+                      ifelse(Population == "Pink Mountain", "PM", 
+                      ifelse(Population == "Hay-Zama", "HZ", 
+                      ifelse(Population == "Garden River", "WBNPGR", 
+                      ifelse(Population == "OMB", "OMOHB",
+                      ifelse(Population == "Elk Island National Park", "EINP",
+                      ifelse(Population == "Waterton National Park", "WLNP",
+                      Population))))))))))))))))))))))))))
+
+mg_thesis_metadata <-
+  read.csv("Input files/Grant_Thesis_Samples_AsOf_5Nov25.csv") %>%
+  
+# create edited Sample ID column to match with sample IDs in microsat database
+  mutate(SampleID_edit = Sample.ID,
+         SampleID_edit = gsub("_Oct24_", "", SampleID_edit),
+    
+# ensure naming conventions are consistent with Petri metadata
+         Sample.ID = ifelse(Original.owner == "Renee Petri",
+                            gsub("WBNP", "WBNP-", Sample.ID),
+                            Sample.ID),
+         Sample.ID = ifelse(Original.owner == "Renee Petri" & grepl("WBNP", Sample.ID),
+                            paste(Sample.ID, "-Fe", sep = ""),
+                            Sample.ID),
+         Sample.ID = gsub("PANP", "PANP-", Sample.ID),
+         Sample.ID = ifelse(grepl("PANP", Sample.ID),
+                            paste(Sample.ID, "-Fe", sep = ""),
+                            Sample.ID),
+         Sample.ID = gsub("YUK", "YUK-", Sample.ID),
+         Sample.ID = ifelse(grepl("YUK", Sample.ID),
+                            paste(Sample.ID, "-Fe", sep = ""),
+                            Sample.ID))
+```
+
+## Subset data 
+```{r}
+renee_wbnp <- 
+  mg_thesis_metadata %>% 
+  filter(grepl("WBNP", Sample.ID) & Original.owner == "Renee Petri")
+
+chris_wbnp <- 
+  mg_thesis_metadata %>% 
+  filter(grepl("WBNP", Sample.ID) & Original.owner == "Christopher Kyle")
+```
+
+# Combine Trent + Davis Metadata
+```{r}
+davis_tidy <-
+  trentdavis %>% 
+  filter(!Lab == "Trent") %>% 
+
+# subset columns of interest + marker columns for individual ID
+  select(Herd, Subspecies, ID.NAME, Metadata.file, Date.sampled, BMS1117, 
+         BMS1117_2, TGLA53, TGLA53_2, BMC4214, BMC4214_2) %>% 
+  
+# ensure column names match between Trent and Davis
+  setNames(c("Population", "Subspecies", "Sample.ID", "Metadata.file", "Date.collected", 
+             "BMS1117", "BMS1117_2", "TGLA53", "TGLA53_2", "BMC4214", "BMC4214_2"))
+
+trent_tidy <-
+  trent %>% 
+  
+# subset columns of interest + marker columns for individual ID
+  select(Population, Subspecies, Sample.ID, Metadata.file, Date.collected, 
+         BMS1117, BMS1117_2, TGLA53, TGLA53_2, BMC4214, BMC4214_2)
+
+
+trentdavis_tidy <- 
+  rbind(trent_tidy, davis_tidy) %>%
+
+# ensure Subspecies names are consistent
+  mutate(Subspecies = gsub("wood", "Wood Bison", Subspecies),
+         Subspecies = gsub("plains", "Plains Bison", Subspecies)) %>%
+  
+# assign population abbreviations
+  mutate(Population = gsub("Banff National Park", "BNP", Population),
+         Population = gsub("Chitek Lake", "CL", Population),
+         Population = gsub("Etthithun", "ETH", Population),
+         Population = gsub("Grasslands National Park", "GNP", Population),
+         Population = gsub("Hay Zama", "HZ", Population),
+         Population = gsub("Mackenzie", "MBS", Population), 
+         Population = gsub("McCusker River", "MCR", Population), 
+         Population = gsub("Nahanni", "NAH", Population), 
+         Population = gsub("Nordquist", "NORD", Population),
+         Population = gsub("Pink Mountain", "PM", Population),
+         Population = gsub("Prince Albert National Park", "Sturgeon River", Population),
+         Population = gsub("Rainbow Lake", "HZ", Population),
+         Population = gsub("PANP", "Sturgeon River", Population),
+         Population = gsub("Ronald Lake", "RL", Population),
+         Population = gsub("Wabasca", "WAB", Population),
+         Population = gsub("Waterton Lakes", "WLNP", Population),
+         Population = gsub("WBNP / Garden River", "WBNPGR", Population),
+         Population = gsub("WBNP / Sweetgrass", "WBNPPAD", Population),
+         Population = gsub("WBNP / Nyarling", "WBNPNY", Population),
+         Population = gsub("WBNP/Nyarling", "WBNPNY", Population),
+         Population = gsub("WBNP / Slave River Lowlands", "WBNPLB", Population),
+         Population = gsub("WBNP / Hay Camp", "WBNPHC", Population),
+         Population = gsub("WBNP/Hay Camp", "WBNPHC", Population),
+         Population = gsub("WBNP / PAD", "WBNPPAD", Population),
+         Population = gsub("WBNP/Little Buffalo", "WBNPLB", Population), 
+         Population = gsub("MACK", "MBS", Population),
+         Population = gsub("WBNPSRL", "WBNPLB", Population),
+         Population = gsub("Wentzel", "WENT", Population)) %>% 
+
+# assign subspecies based on populations
+  mutate(Subspecies = ifelse(Population == "BNP", "Plains Bison",
+                      ifelse(Population == "CL", "Wood Bison",
+                      ifelse(Population == "Delta", "Plains Bison",
+                      ifelse(Population == "GNP", "Plains Bison",
+                      ifelse(Population == "MCR", "Plains Bison",
+                      ifelse(Population == "NAH", "Wood Bison",
+                      ifelse(Population == "PM", "Plains Bison", 
+                      ifelse(Population == "Sturgeon River", "Plains Bison", 
+                      ifelse(Population == "WAB", "Wood Bison", 
+                      ifelse(Population == "WLNP", "Plains Bison", 
+                      ifelse(grepl("WBNP", Population), "Wood Bison",
+                      ifelse(Population == "Piikani", "Plains Bison",
+                      Subspecies))))))))))))) %>% 
+  
+# rename empty metadata/date collected columns
+  mutate(Metadata.file = ifelse(Metadata.file == "", NA, Metadata.file),
+         Date.collected = ifelse(Date.collected == "", NA, Date.collected)) %>% 
+
+# filter out empty metadata/date collected records - not useful
+  filter(!is.na(Date.collected)) %>% 
+  
+# ensure only unique records remain
+  unique() %>% 
+  
+# rename columns 
+  rename(SAMPLE.ID = Sample.ID) %>% 
+  rename(Population_Assign = Population) %>% 
+  rename(Subspecies_Assign = Subspecies) %>% 
+  
+# sample 37 has two records, one with and one without date collected. Filter out NA Date
+  filter(!SAMPLE.ID == "37" | !Date.collected == "NA") %>% 
+
+# rename empty microsat data
+  mutate_all(~gsub("//", NA, .)) %>% 
+
+# format microsat columns as characters
+  mutate(across(c(6:11), as.character)) %>% 
+    
+# ensure naming conventions are consistent
+  mutate(SAMPLE.ID = ifelse(grepl("MAN", SAMPLE.ID),
+                            gsub("MAN", "MAN-", SAMPLE.ID),
+                            SAMPLE.ID),
+         SAMPLE.ID = ifelse(grepl("MAN", SAMPLE.ID),
+                            paste(SAMPLE.ID, "-Fe", sep = ""),
+                            SAMPLE.ID))
+
+# Check duplicate records - should be 0 after all tidying above
+duplicate_trentdavis <- 
+  trentdavis_tidy %>% 
+  group_by(SAMPLE.ID, BMS1117, BMS1117_2, TGLA53, TGLA53_2, BMC4214, BMC4214_2) %>% 
+  filter(n() > 1) %>% 
+  ungroup() 
+```
+
+
+# Tidy microsat database
+```{r}
+microsat_database_tidy <-
+  microsat_database %>%
+
+# filter out misc. rows 
+  filter(!grepl("Samples below", YEAR),
+         !YEAR == "") %>% 
+
+  
+# ensure naming conventions are consistent
+  mutate(SAMPLE.ID = ifelse(grepl("MAN", SAMPLE.ID),
+                            gsub("MAN", "MAN-", SAMPLE.ID),
+                            SAMPLE.ID),
+         SAMPLE.ID = ifelse(grepl("MAN", SAMPLE.ID),
+                            paste(SAMPLE.ID, "-Fe", sep = ""),
+                            SAMPLE.ID),
+         SAMPLE.ID = ifelse(grepl("^PANP", SAMPLE.ID),
+                            gsub("PANP", "PANP-", SAMPLE.ID),
+                            SAMPLE.ID),
+         SAMPLE.ID = ifelse(grepl("^PANP-", SAMPLE.ID),
+                            paste(SAMPLE.ID, "-Fe", sep = ""),
+                            SAMPLE.ID),
+         SAMPLE.ID = ifelse(grepl("YUK", SAMPLE.ID), 
+                            gsub("YUK", "YUK-", SAMPLE.ID), 
+                            SAMPLE.ID),
+         SAMPLE.ID = ifelse(grepl("YUK-", SAMPLE.ID),
+                            paste(SAMPLE.ID, "-Fe", sep = ""), 
+                            SAMPLE.ID),
+         SAMPLE.ID = gsub("WPNB", "WBNP", SAMPLE.ID),
+         SAMPLE.ID = ifelse(SAMPLE.ID %in% renee_wbnp$SampleID_edit, 
+                            paste(SAMPLE.ID, "-Fe", sep = ""),
+                            SAMPLE.ID),
+         SAMPLE.ID = ifelse(grepl("-Fe", SAMPLE.ID),
+                            gsub("WBNP", "WBNP-", SAMPLE.ID),
+                            SAMPLE.ID),
+         SAMPLE.ID = gsub("WBNP--", "WBNP-", SAMPLE.ID),
+         
+         SAMPLE.ID = ifelse(grepl("WBNP\\d{3}", SAMPLE.ID),
+                            gsub("WBNP", "WBNP_Oct24_", SAMPLE.ID),
+                            SAMPLE.ID),
+         SAMPLE.ID = ifelse(grepl("WB", SAMPLE.ID) & grepl("EINP", HERD),
+                             paste("EINP_", SAMPLE.ID, sep = ""),
+                             SAMPLE.ID),
+         SAMPLE.ID = ifelse(grepl("PB", SAMPLE.ID), 
+                            paste("EINP_", SAMPLE.ID, sep = ""),
+                            SAMPLE.ID),
+         SAMPLE.ID = gsub("EINPW", "EINP_WB", SAMPLE.ID)) %>% 
+
+# edit sample names presumed to be errors
+  mutate(SAMPLE.ID = gsub("WBNP_Oct24_1140", "WBNP_Oct24_114", SAMPLE.ID),
+         SAMPLE.ID = gsub("WBNP_Oct24_740", "WBNP_Oct24_074", SAMPLE.ID),
+         SAMPLE.ID = gsub("PANP-74-Fe", "PANP-074-Fe", SAMPLE.ID)) %>% 
+
+# combine with trentdavis_tidy based on ID & markers to delineate duplicate ID names
+  left_join(., trentdavis_tidy, 
+            by = c("SAMPLE.ID", "BMS1117", "BMS1117_2", "TGLA53", "TGLA53_2", "BMC4214",
+                   "BMC4214_2")) %>% 
+
+# reorder columns
+  relocate(Subspecies_Assign, .after = SUBSPECIES) %>% 
+  relocate(Metadata.file, .after = SAMPLE.ID) %>% 
+  relocate(Date.collected, .after = SAMPLE.ID) %>% 
+  relocate(Population_Assign, .after = HERD) %>%
+
+# fill in Population_Assign
+  mutate(Population_Assign = ifelse(is.na(Population_Assign), HERD, Population_Assign),
+         Population_Assign = ifelse(Population_Assign == "PANP", "Sturgeon River", Population_Assign),
+         Population_Assign = ifelse(SAMPLE.ID %in% petri_metadata$Sample.name & grepl("WBNP", SAMPLE.ID),
+                                    petri_metadata$Bison.Herd[match(SAMPLE.ID, petri_metadata$Sample.name)],
+                                    Population_Assign)) %>% 
+
+# fill in subspecies assignments
+  mutate(Subspecies_Assign = ifelse(Population_Assign == "BNP", "Plains Bison",
+                             ifelse(Population_Assign == "EINP" & grepl("_P", SAMPLE.ID), "Plains Bison",
+                             ifelse(Population_Assign == "EINP" & grepl("_W", SAMPLE.ID), "Wood Bison",
+                             ifelse(Population_Assign == "ETH", "Wood Bison", 
+                             ifelse(Population_Assign == "HZ", "Wood Bison",
+                             ifelse(Population_Assign == "Sturgeon River", "Plains Bison", 
+                             ifelse(Population_Assign == "RL", "Wood Bison",
+                             ifelse(grepl("WBNP", Population_Assign), "Wood Bison",
+                             ifelse(Population_Assign == "Dan Fox / Blood", "Plains Bison", 
+                             ifelse(Population_Assign == "Delta" & grepl("DBH", SAMPLE.ID), "Plains Bison", 
+                             ifelse(Population_Assign == "Delta" & grepl("WBNP", SAMPLE.ID), "Wood Bison",      
+                             ifelse(Population_Assign == "MBS", "Wood Bison",
+                             ifelse(Population_Assign == "Piikani", "Plains Bison",
+                             ifelse(Population_Assign == "PM", "Plains Bison", 
+                             ifelse(Population_Assign == "WENT", "Wood Bison", 
+                             ifelse(Population_Assign == "Yukon", "Wood Bison",
+                             ifelse(Population_Assign == "WAB", "Wood Bison", 
+                             ifelse(Population_Assign == "Ronald Lake", "Wood Bison",
+                             ifelse(Population_Assign == "RMNP", "Plains Bison", 
+                             ifelse(Population_Assign == "AK", "Wood Bison",
+                             ifelse(Population_Assign == "NORD", "Wood Bison",
+                             ifelse(Population_Assign == "EINPP", "Plains Bison",
+                             ifelse(Population_Assign == "EINPW", "Wood Bison",
+                             ifelse(Population_Assign == "GNP", "Plains Bison",
+                             ifelse(Population_Assign == "AB?", "Wood Bison", 
+                             Subspecies_Assign)))))))))))))))))))))))))) %>% 
+
+# re-do Populatin_Assign for EINP - separate EINPP and EINPW
+  mutate(Population_Assign = ifelse(Population_Assign == "EINP" & Subspecies_Assign == "Plains Bison",
+                                    "EINPP", 
+                                    Population_Assign),
+         Population_Assign = ifelse(Population_Assign == "EINP" & Subspecies_Assign == "Wood Bison",
+                                    "EINPW", 
+                                    Population_Assign)) %>% 
+
+# join with center metadata
+  left_join(., center_metadata[,c(2, 3, 5)], 
+            by = c("SAMPLE.ID" = "Sample.ID", "Population_Assign" = "Population"),
+            multiple = "first") %>% 
+  
+# relocate date column to compare
+  relocate(Date.collected.y, .after = Date.collected.x) %>% 
+
+# Merge date collected columns into single column
+  mutate(Date.collected.x = ifelse(is.na(Date.collected.x), 
+                                   Date.collected.y, 
+                                   Date.collected.x)) %>% 
+  select(!Date.collected.y) %>%
+  rename("Date.collected" = "Date.collected.x") %>% 
+
+# add date collected from Petri & Grant metadata files
+  mutate(Date.collected = ifelse(Date.collected == "", NA, Date.collected),
+         Date.collected = ifelse(SAMPLE.ID %in% petri_metadata$Sample.name,
+                                 petri_metadata$Date.of.Collection[match(SAMPLE.ID, petri_metadata$Sample.name)],
+                                 Date.collected),
+         Date.collected = ifelse(SAMPLE.ID %in% mg_thesis_metadata$Sample.ID & is.na(Date.collected),
+                                 mg_thesis_metadata$collection.date[match(SAMPLE.ID, mg_thesis_metadata$Sample.ID)],
+                                 Date.collected)) %>%
+
+# create year collected column
+  mutate(YEAR.COLLECTED = Date.collected) %>% 
+  relocate(YEAR.COLLECTED, .after = Date.collected) %>% 
+  mutate(YEAR.COLLECTED = gsub(".*/", "", YEAR.COLLECTED),
+         YEAR.COLLECTED = gsub(".*-", "", YEAR.COLLECTED),
+         YEAR.COLLECTED = as.numeric(YEAR.COLLECTED), 
+         YEAR.COLLECTED = ifelse(YEAR.COLLECTED < 99,
+                                paste("20", YEAR.COLLECTED, sep = ""),
+                                YEAR.COLLECTED),
+         YEAR.COLLECTED = ifelse(YEAR.COLLECTED == "202",
+                                "2022", 
+                                YEAR.COLLECTED),
+         YEAR.COLLECTED = ifelse(SAMPLE.ID == "PANP-039-Fe",
+                                "2021",
+                                YEAR.COLLECTED)) %>% 
+
+# tidy up columns
+  select(!HERD & !SUBSPECIES) %>% 
+  rename(HERD = Population_Assign) %>% 
+  rename(SUBSPECIES = Subspecies_Assign) %>% 
+  rename(DATE.COLLECTED = Date.collected)
+
+# Check for duplicates, select BSN samples without sample type
+duplicate_microsat_database_tidy <- 
+  microsat_database_tidy %>% 
+  group_by(SAMPLE.ID, BMS1117, BMS1117_2, TGLA53, TGLA53_2, BMC4214, BMC4214_2) %>% 
+  filter(n() > 1) %>% 
+  ungroup() %>% 
+  filter(grepl("BSN", SAMPLE.ID)) %>% 
+  filter(SAMPLE.TYPE == "")
+
+# remove BSN duplicate samples
+microsat_database_tidy <- 
+  microsat_database_tidy %>% 
+  anti_join(., duplicate_microsat_database_tidy, by = names(.))
+
+# Check duplicates again 
+duplicate_microsat_database_tidy <- 
+  microsat_database_tidy %>% 
+  group_by(SAMPLE.ID, BMS1117, BMS1117_2, TGLA53, TGLA53_2, BMC4214, BMC4214_2) %>% 
+  filter(n() > 1) %>% 
+  ungroup() 
+
+write.csv(microsat_database_tidy, "Comprehensive_Bison_Database_Metadata_18.12.2025.csv")
+```

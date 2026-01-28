@@ -1,0 +1,229 @@
+---
+title: "Bison Database Merging"
+author: "Alex Depew"
+date: "2025-12-16"
+output: html_document
+---
+
+# File information
+This script is for cleaning and merging Trent, UC Davis, and Reamplified Trent samples
+Files used described below:
+
+- `Bison_Genotypes_All_06.11.2025.csv`
+   - All samples from Audrey
+- `All Trent And Davis Samples.csv`
+   - Bison microsatellite database from Greg Wilson
+   - Mainly UC Davis samples with some overlapping Trent samples
+    
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Clear environment and load required libraries
+```{r, warning = FALSE, message = FALSE}
+rm(list = ls())
+library(tidyverse)
+```
+
+#### Load required data
+```{r}
+alltrentdata <- read.csv("Bison_Genotypes_All_06.11.2025.csv",
+                         check.names = F)
+
+alldavisdata <- read.csv("All Trent And Davis Samples.csv",
+                         check.names = F)
+
+reamps <- read.csv("Reamped_samples_52_markers_16.12.2025.csv",
+                   skip = 1,
+                   header = T,
+                   check.names =F)
+```
+
+## Individual Dataset Cleaning for Merging
+Each locus is has one column per allele, but the leading column contains the locus name. For downstream merging, these need to match between datasets, so the column names must be populated with their respective locus/allele
+```{r}
+# Remove the trailing letters from locus names
+colnames(alltrentdata)[8:ncol(alltrentdata)] <-
+  gsub("[FRB]+$", "", colnames(alltrentdata)[8:ncol(alltrentdata)], ignore.case = TRUE)
+
+colnames(reamps)[8:ncol(reamps)] <-
+  gsub("[FRB]+$", "", colnames(reamps)[8:ncol(reamps)], ignore.case = TRUE)
+
+colnames(alldavisdata)[10:ncol(alldavisdata)] <-
+  gsub("[FRB]+$", "", colnames(alldavisdata)[10:ncol(alldavisdata)], ignore.case = TRUE)
+
+# Loop through column names, if the following allele column is empty, assign it the leading allele column name but add "_2"
+
+# Trent dataset
+alltrentnames<- colnames(alltrentdata)
+
+for (i in 8:length(alltrentnames)) {
+  if (alltrentnames[i] == "" | grepl("^\\.\\d+$", alltrentnames[i])) {
+    alltrentnames[i] <- paste0(alltrentnames[i - 1], "_2")
+  }
+}
+
+colnames(alltrentdata) <- alltrentnames
+
+
+# Cut database columns to length
+alltrentdata <- alltrentdata[, 1:135] # This removes the extra columns which were added through the loop
+
+# Reamped samples
+reampnames <- colnames(reamps)
+
+for (i in 8:length(reampnames)) {
+  if (grepl("^X(\\.\\d+)?$", reampnames[i])) {
+    reampnames[i] <- paste0(reampnames[i - 1], "_2")
+  }
+}
+
+colnames(reamps) <- reampnames
+
+# Cut database columns to length
+reamps <- reamps[, 1:111]
+
+# Davis dataset
+alldavisnames <- colnames(alldavisdata)
+
+for (i in 10:length(alldavisnames)) {
+  if (alldavisnames[i] == "" | grepl("^\\.\\d+$", alldavisnames[i])) {
+    alldavisnames[i] <- paste0(alldavisnames[i - 1], "_2")
+  }
+}
+
+colnames(alldavisdata) <- alldavisnames
+
+# Cut database columns to length
+alldavisdata <- alldavisdata[, 1:115]
+```
+
+
+All three datasets have slightly different metadata names. For downstream merging, they must be consistent
+```{r}
+# alltrentdata
+alltrentdata <- alltrentdata %>% 
+  rename(
+    YEAR = `Contract Year`,
+    HERD = Population,
+    SUBSPECIES = Subspecies,
+    `SAMPLE TYPE` = `Sample Type`,
+    `SAMPLE ID` = `Sample ID`,
+    INDIVIDUAL = Individual,
+    AMPLIFICATION = `% Complete`
+  ) %>% 
+  rename_with(toupper) %>% 
+  mutate(across(8:ncol(alltrentdata), as.character))
+
+# reamps
+reamps <- reamps %>% 
+  rename(
+    YEAR = `Contract.Year`,
+    HERD = Population,
+    SUBSPECIES = Subspecies,
+    `SAMPLE TYPE` = `Sample.Type`,
+    `SAMPLE ID` = `Sample.ID`,
+    INDIVIDUAL = Individual,
+    AMPLIFICATION = Amplification
+  ) %>% 
+  rename_with(toupper) %>% 
+  mutate(across(8:ncol(reamps), as.character))
+
+# alldavisdata
+alldavisdata <- alldavisdata %>% 
+  rename(
+    HERD = Herd,
+    SUBSPECIES = Subspecies,
+    `CASE #` = `Case #`,
+    LAB = Lab,
+    YEAR = `Genotypes received`,
+    FILE = File,
+    `SAMPLE ID` = `ID NAME`,
+    `SAMPLE TYPE` = Sample
+  ) %>% 
+  rename_with(toupper) %>% 
+  mutate(across(10:ncol(alldavisdata), as.character))
+```
+
+## Trent and Davis Data Merging
+```{r Duplicated Trent samples in Davis dataframe}
+# The Davis dataframe contains duplicated samples which exist in the Trent file
+trent_in_davis <- alldavisdata[alldavisdata$LAB == "Trent", ] # 559 samples exist in the Davis file which are labelled as originating from the Trent lab
+
+trent_in_davis_ids <- unique(trent_in_davis$`SAMPLE ID`) # 551 unique samples
+
+sum(unique(alltrentdata$`SAMPLE ID`) %in% unique(trent_in_davis_ids)) # All 551 "Trent" samples from the Davis dataframe exist in the Trent dataframe, so they can be removed prior to merging
+
+# Remove any samples which are not labelled as originating from the Davis lab
+alldavisdata <- alldavisdata[alldavisdata$LAB == "Davis", ]
+```
+Now these datasets can be merged
+```{r}
+fulldata <- bind_rows(alltrentdata, alldavisdata)
+```
+
+#### Replace reamplified samples with their low-amplified counterparts
+```{r Reamplificiation Replacement}
+# Check if any duplicate sample IDs exist in the remplified dataset
+any(duplicated(reamps$`SAMPLE ID`))
+
+reampids <- reamps$`SAMPLE ID`
+
+sum(reampids %in% fulldata$`SAMPLE ID`) # Therefore, all reamplified samples are present in the fulldataset by their IDs. They can be subbed in and the old ones removed
+
+sum(fulldata$`SAMPLE ID` %in% reampids) # There are no duplicate sample IDs within the full dataset which correspond with the reamplified samples. Therefore, they can be subbed in by the `SAMPLE ID` column alone
+```
+```{r Removal and Replacement of Reamplified Samples}
+# Remove the sample rows containing the sample IDs from the reamps
+fixeddata <- fulldata[!fulldata$`SAMPLE ID` %in% reampids, ]
+
+# Now add the reamplified data back in
+fixeddata <- bind_rows(fixeddata, reamps)
+
+# This was done correctly as the dataframe size pre-removal (fulldata) and post-addition (fixeddata) are the same (2638 samples)
+```
+
+## Global Data Cleaning
+```{r Global Data Cleaning}
+# Remove the tetranucleotide markers, relocate metadata columns to be consistent with other metadata, and make all missing data values blank
+cleaned_db <- fixeddata %>% 
+  select(-starts_with("WB")) %>% 
+  relocate(c(`CASE #`, LAB, FILE, ID), .after = INDIVIDUAL) %>% 
+  mutate(across(everything(), ~replace(., is.na(.) | . == "-" | . == "//", "")))
+
+# Rename the herds to be consistent
+cleaned_db_herds_fixed <- cleaned_db %>%
+  mutate(HERD = case_when(
+    HERD == "WBNPSRL" ~ "WBNPLB",
+    HERD == "MACK" ~ "MBS",
+    HERD == "Banff National Park" ~ "BNP",
+    HERD == "Grasslands National Park" ~ "GNP",
+    HERD == "McCusker River" ~ "MCR",
+    HERD == "Pink Mountain" ~ "PM",
+    HERD %in% c("Prince Albert National Park", "Sturgeon River") ~ "PANP",
+    HERD %in% c("Nordquist/Liard", "Nordquist") ~ "NORD",
+    HERD == "Wabasca" ~ "WAB",
+    HERD %in% c("Chinchaga", "Hay Zama", "Rainbow Lake") ~ "HZ",
+    HERD == "Ronald Lake" ~ "RL",
+    HERD == "Nahanni" ~ "NAH",
+    HERD == "Chitek Lake" ~ "CL",
+    HERD == "Etthithun" ~ "ETH",
+    HERD == "Mackenzie" ~ "MBS",
+    HERD %in% c("WBNP/Little Buffalo") ~ "WBNPLB",
+    HERD %in% c("WBNP / Hay Camp", "WBNP/Hay Camp") ~ "WBNPHC",
+    HERD %in% c("WBNP / Nyarling", "WBNP/Nyarling") ~ "WBNPNY",
+    HERD == "Garden River" ~ "WBNPGR",
+    HERD == "Wentzel" ~ "WENT",
+    TRUE ~ HERD
+  ))
+
+# Remove pseudo-header 
+cleaned_data <- cleaned_db_herds_fixed %>% 
+    filter(!grepl("^Samples", YEAR))
+```
+
+Write out to a csv file
+```{r}
+write.csv(cleaned_data, "Full_Bison_Dataset_18.12.2025.csv", row.names = F)
+```
+

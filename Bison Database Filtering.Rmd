@@ -1,0 +1,494 @@
+---
+title: "Data Filtering"
+author: "Alex Depew"
+date: "2025-12-18"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# File information
+This script is for filtering the overall database for subsequent analyses
+Files used described below:
+
+- `Comprehensive_Bison_Database_Metadata_18.12.2025.csv`
+   - Contains all bison microsatellite data from wood and plains bison with added metadata for year collected
+
+
+#### Clear environment and load required libraries
+```{r, warning = FALSE, message = FALSE}
+rm(list = ls())
+library(tidyverse)
+library(adegenet)
+library(strataG)
+```
+
+#### Load required data
+```{r}
+fulldf <- read.csv("Comprehensive_Bison_Database_Metadata_18.12.2025.csv",
+                         check.names = F)
+```
+
+## Global data cleaning and organization
+
+#### Filter out sex/X-linked loci
+Loci BM6017 and BMS911 are X-linked, and must be removed for analyses
+```{r}
+# Add a name to the first column name
+colnames(fulldf)[1] <- "Spreadsheet_ID"
+
+# Remove loci 
+fulldf_50 <- fulldf %>% 
+  dplyr::select(-BM6017, -BM6017_2, -BMS911, -BMS911_2, -SE4748, -SE4748_2)
+```
+
+#### Herd naming consistency
+Personal correspondence with Greg Wilson indicated that WBNP Carlson is likely Hay Camp, and WBNP Lake One is likely Garden River.
+Other herds must have their names made to be consistent with the remainder of the samples.
+```{r}
+fulldf_50 <- fulldf_50 %>%
+  mutate(HERD = case_when(
+    HERD == "WBNPCarlson" ~ "WBNPHC",
+    HERD == "WBNPLakeOne" ~ "WBNPGR",
+    HERD == "NORD/Liard" ~ "NORD",
+    HERD == "Ronald Lake" ~ "RL",
+    HERD == "Delta" & SUBSPECIES == "Wood Bison" ~ "WBNPPAD",
+    HERD == "AB?" ~ "RL",
+    HERD == "Yukon" ~ "AISH",
+    TRUE ~ HERD
+))
+```
+
+#### Profile completeness metric
+Downstream stringency filtering will select only samples with well amplified profiles. 
+```{r Profile Completeness}
+  fulldf_50 <- fulldf_50 %>%
+  # Convert "", "**", or "0" to NA for all character columns
+  mutate(across(
+    where(is.character),
+    ~ replace(.x, .x %in% c("", "**", "0"), NA)
+  )) %>%
+  
+  # Calculates a row sum of non-NA values (% of profile amplified)
+  mutate(COMPLETE = rowSums(!is.na(across(16:115)))) %>%
+  
+  # Moves newly created column with profile completeness (%) after AMPLIFICATION
+  relocate(COMPLETE, .after = AMPLIFICATION)
+```
+
+#### Wood Bison Subsetting
+```{r}
+# Vector containing herds for analysis
+target_herds <- c("EINPP",
+                  "EINPW",
+                  "WBNP",
+                  "WBNPHC",
+                  "WBNPGR",
+                  "WBNPNY",
+                  "WBNPPAD",
+                  "WBNPLB",
+                  "NORD",
+                  "NAH",
+                  "ETH",
+                  "MBS",
+                  "HZ",
+                  "WENT",
+                  "AISH",
+                  "RL",
+                  "WAB",
+                  "CL")
+
+wb_df <- fulldf_50 %>% 
+  filter(HERD %in% target_herds)
+
+```
+
+## Duplicate ID Removal
+Samples genotyped at Trent University have had duplicate genotypes identified usingS GENECAP. In the data file, samples identified as originating from the same individual are denoted with unique alphabetic identifiers per individual in the "INDIVIDUAL" column. Samples containing these pre-identified alphabetic individual identifier must be filtered, so the dataset contains just one instance of each individual. However, profiles will be manually checked to ensure:
+- A. Maximum heterozygosity (fecal samples are more prone to null alleles and allelic dropout)
+- B. Profile completeness (fuller profiles are more likley to yield better quality data)
+- C. Sample type (prefer tissue samples over hair/fecal)
+```{r Duplicate Individual Removal}
+# Dataframe with individuals pre-identified as duplicate profiles
+duplicatedid <- wb_df[!is.na(wb_df$INDIVIDUAL), ]
+
+# Write out to csv for manual selection
+write.csv(duplicatedid, "dup.sample.selection.csv", row.names = F)
+
+# Dataframe without pre-identified duplicate profiles 
+non_duplicatedid <- wb_df[is.na(wb_df$INDIVIDUAL), ]
+
+# Import the dataframe with manually selected samples to keep
+sample_selection <- read.csv("selected_dupes.csv",
+         check.names = F)
+
+# Make a dataframe containing the samples that have been chosen to keep
+sample_keep <- sample_selection %>% 
+  filter(KEEP == "TRUE")
+
+# Vector containing positions in the spreadsheet (samples) to keep. This is done as some of the sample IDs themselves are duplicates, and they would not be identical matches
+keep_vec <- sample_keep$Spreadsheet_ID
+
+# Filter the duplicated ID dataframe to just contain the samples as identified
+dup_fix <- duplicatedid %>% 
+  filter(Spreadsheet_ID %in% keep_vec)
+
+# Bind the fixed duplicated and non-duplicated ID dataframes back together
+wb_fixed_ids <- rbind(dup_fix, non_duplicatedid)
+
+which(duplicated(dup_fix$INDIVIDUAL))
+```
+#### Profile Coverage Filtering
+As per Zimmerman et al. 2025, remove samples containing missing data at more than 4 loci (ie. >= 46 loci, or 92%). Filtering to include "usuable" high-amplification samples at this step allow for accurate duplicate filtering by genotypes in later steps.
+## Plot
+
+```{r}
+summary(wb_fixed_ids$COMPLETE)
+```
+
+
+```{r}
+p <- ggplot(wb_fixed_ids, aes(x = COMPLETE)) +
+  geom_bar(fill = "grey40", width = 1.5) +
+  labs(
+    x = "% Profile Amplified",
+    y = "Number of Samples"
+  ) +
+  theme_bw(base_size = 12) +
+  theme(
+
+    axis.title = element_text(size = 10)
+  )
+
+ggsave(
+  filename = "wb_profile_completeness_distribution.png",
+  plot = p,
+  width = 100,      
+  height = 70,
+  units = "mm",
+  dpi = 600
+)
+```
+
+```{r Profile Coverage Stringency}
+wb_qual <- wb_fixed_ids %>% 
+  filter(COMPLETE >= 92)
+
+wb_low_qual <- wb_fixed_ids %>% 
+  filter(COMPLETE <92)
+
+table(wb_low_qual$HERD)
+table(wb_low_qual$YEAR.COLLECTED, wb_low_qual$HERD)
+sum(grepl("Thesis", wb_low_qual$YEAR))
+wb_low_noM <- wb_low_qual %>% 
+  filter(!grepl("Thesis", wb_low_qual$YEAR))
+table(wb_low_noM$YEAR.COLLECTED, wb_low_noM$HERD)
+```
+
+## Year Assignments
+```{r}
+sum(is.na(wb_qual$YEAR.COLLECTED))
+```
+#### Identify patterns in year
+```{r}
+# Make a new database containing columns of YEAR.ASSIGN, which (at first) is identical to YEAR.COLLECTED, and will be populated with inferences of patterns in sample IDs
+year_manipulation <- wb_qual %>% 
+  mutate(
+    YEAR.ASSIGN = YEAR.COLLECTED,
+    YEAR.BIN = "", 
+  ) %>% 
+  relocate(YEAR.ASSIGN, YEAR.BIN, .after = YEAR.COLLECTED)
+
+# Write out to csv to identify patterns in sample naming
+write.csv(year_manipulation, "year_pattern_assign.csv", row.names = F)
+```
+
+Almost 1/3 (318) of samples do not have year collection metadata. A file containing samples used in the Ball et al. 2016 publication provides information on what was collected, but only as specific as to pre-2016.
+
+#### Ball et al. 2016 Sample List
+A list of samples used in the Ball et al. 2016 publication was provided for insight into collection year
+```{r}
+# Import list of genotypes used in Ball 2016 - 
+ball_samples <- read.table("GWilson_goldgenotypes_AB sample info list.txt",
+                           sep = "\t", header = T)
+
+ball_samples <- ball_samples %>% 
+  
+  # Fix the ID names to match what is present in the database
+  mutate(
+    IDrework = ID %>%
+      gsub("^Bison-", "", .) %>%
+      gsub("_", "-", .) %>% 
+      gsub("RainbowLake1", "rainbow lake 1", .) %>% 
+      gsub("Chinchaga-1", "chinchaga 1", .) %>% 
+      gsub("Chinchaga-2", "chinchaga 2", .) %>% 
+      gsub("RonaldLakeFetus", "ronald lake fetus", .)
+  ) %>% 
+  relocate(IDrework, .after = ID) %>% 
+  
+  # Make herd names consistent with the abbreviations in the main database
+  mutate(
+    HERD = case_when(
+      Population == "RonaldLake"   ~ "RL",
+      Population == "NWT"          ~ "MBS",
+      Population == "Rainbow Lake" ~ "HZ",
+      Population == "Wentzel"      ~ "WENT",
+      Population == "Harpercreek"  ~ "WAB",
+      Population == "Hay zama"     ~ "HZ",
+      TRUE ~ Population
+    )
+  ) %>% 
+  relocate(HERD, .after = Population)
+```
+
+The goal is to bin these samples pre-2016
+```{r}
+# How many samples can be successfully matched between the Ball et al. 2016 sample list, and the dataset to determine collection year bin in samples with unknown collection years?
+
+years_unknown <- year_manipulation %>% 
+  filter(is.na(YEAR.COLLECTED))
+
+sum(years_unknown$SAMPLE.ID %in% ball_samples$IDrework & years_unknown$HERD %in% ball_samples$HERD)
+```
+Therefore 72 of the samples with unknown collection years can be assigned a pre-2016 collection bin.
+
+From the Ball et al. 2016 sample list, the arbitrary year "2004" may be assigned to their year assignment, as no other samples originate from 2004. 
+```{r}
+year_manipulation_added_ball <- year_manipulation %>% 
+  mutate(
+    YEAR.ASSIGN = replace(
+      YEAR.ASSIGN,
+      is.na(YEAR.ASSIGN) &
+      SAMPLE.ID %in% ball_samples$IDrework &
+      HERD %in% ball_samples$HERD,
+      2015    
+    )
+  )
+
+# Confirm 72 samples were changed
+sum(year_manipulation_added_ball$YEAR.ASSIGN == 2015, na.rm = TRUE)
+```
+#### Sample Naming Schemes
+"W" and "WR" naming conventions used at EINP for both wood and plains bison indicate tagging year
+```{r}
+year_manipulation_added_GW <- year_manipulation_added_ball %>%
+  mutate(
+    # Handle WR##### IDs
+    YEAR.ASSIGN = ifelse(
+      is.na(YEAR.ASSIGN) & grepl("^WR\\d{5}", SAMPLE.ID),
+      {
+        two_digits <- str_sub(str_remove(SAMPLE.ID, "^WR"), 1, 2)
+        two_digits <- as.numeric(two_digits)
+        ifelse(two_digits >= 50, 1900 + two_digits, 2000 + two_digits)
+      },
+      YEAR.ASSIGN
+    ),
+    
+    # Handle W##### IDs
+    YEAR.ASSIGN = ifelse(
+      is.na(YEAR.ASSIGN) & grepl("^W\\d{5}", SAMPLE.ID),
+      {
+        two_digits <- str_sub(str_remove(SAMPLE.ID, "^W"), 1, 2)
+        two_digits <- as.numeric(two_digits)
+        ifelse(two_digits >= 50, 1900 + two_digits, 2000 + two_digits)
+      },
+      YEAR.ASSIGN
+    )
+  )
+
+sum(grepl("^WR\\d{5}$|^W\\d{5}$", year_manipulation_added_ball$SAMPLE.ID))
+```
+#### Sample Naming Patterns
+When reviewing the whole dataset, samples without collection year information sometimes have SAMPLE.ID which is consistent with samples containing collection year information. It is reasonable to assume that these samples may originate from the same sampling event, and therefore can be assigned a year. Some samples have indicators of collection year within their SAMPLE.ID ex.
+- 25WBNP_19BF1 likely was collected in 2025
+- 2009-2238 likely was collected in 2009
+
+```{r}
+year_manipulation_added_IDpatterns <- year_manipulation_added_GW %>% 
+  mutate(
+    # Add year collection for 25WBNP samples
+    YEAR.ASSIGN = ifelse(
+      is.na(YEAR.ASSIGN) & grepl("^25WBNP", SAMPLE.ID),
+      2025,
+      YEAR.ASSIGN
+    ),
+    
+    # Add year collection for 2009 samples
+    YEAR.ASSIGN = ifelse(
+      is.na(YEAR.ASSIGN) & grepl("^2009", SAMPLE.ID),
+      2009,
+      YEAR.ASSIGN
+    ),
+    
+    # Add year collection to specific samples based on 
+    YEAR.ASSIGN = case_when(
+      SAMPLE.ID == "YUK-223-Fe" ~ 2022,
+      SAMPLE.ID == "P86064" ~ 1986,
+      SAMPLE.ID == "P85033" ~ 1985,
+      SAMPLE.ID == "P85030" ~ 1985,
+      SAMPLE.ID == "P84030" ~ 1984,
+      SAMPLE.ID == "86063" ~ 1986,
+      SAMPLE.ID == "85029" ~ 1985,
+      TRUE ~ YEAR.ASSIGN
+    ),
+    
+    # Add years from Ball et al. 2016
+    YEAR.ASSIGN = ifelse(
+      is.na(YEAR.ASSIGN) &
+      HERD == "EINPW" &
+      between(
+        as.numeric(str_extract(SAMPLE.ID, "\\d+")),
+        88, 149
+      ),
+      2015,
+      YEAR.ASSIGN
+    ),
+    # Add years from Wilson 1999
+    YEAR.ASSIGN = ifelse(
+      is.na(YEAR.ASSIGN) &
+      HERD == "EINPP" &
+      between(
+        as.numeric(str_extract(SAMPLE.ID, "\\d+")),
+        414, 478
+      ),
+      2015,
+      YEAR.ASSIGN
+    ),
+    YEAR.ASSIGN = ifelse(
+      is.na(YEAR.ASSIGN) &
+      grepl("^Mackenzie Bison Sanctuary", SAMPLE.ID),
+      1999,
+      YEAR.ASSIGN
+    ),
+      # Add year collection for Wentzel 2025 samples
+    YEAR.ASSIGN = ifelse(
+      is.na(YEAR.ASSIGN) & HERD == "WENT" & grepl("^BISO25", SAMPLE.ID),
+      2025,
+      YEAR.ASSIGN
+    ),
+    YEAR.ASSIGN = ifelse(
+      is.na(YEAR.ASSIGN) & HERD == "EINPP" &grepl("2v", SAMPLE.ID, ignore.case = TRUE),
+      1990,
+      YEAR.ASSIGN
+    )
+)
+
+wb_years_added <- year_manipulation_added_IDpatterns
+```
+
+## Sample Removal
+Some samples have been identified as incompatible for downstream analyses. These include duplicate genotypes and samples containing nonsense data
+
+#### Problem Samples
+Wab24_011 needs to be removed (3 alleles)
+```{r}
+wb_years_added <- wb_years_added %>% 
+  filter(SAMPLE.ID != "Wab24_011")
+```
+
+#### Duplicate Genotypes
+Use package adegenet and strataG to identify duplicates across the whole dataset by their genotypes. Before using these packages, reformatting of the allele data must occur.
+
+```{r}
+# Need to import dataframe as a gtypes object. For this, columns need to be merged.
+locus_cols <- names(wb_years_added)[19:ncol(wb_years_added)]
+
+# Get base locus names without "_2"
+base_loci <- unique(gsub("_2$", "", locus_cols))
+
+# Loop through each locus and combine alleles
+for (locus in base_loci) {
+  
+  col1 <- locus
+  col2 <- paste0(locus, "_2")
+  
+  if (col1 %in% names(wb_years_added) && col2 %in% names(wb_years_added)) {
+    wb_years_added[[col1]] <- paste(wb_years_added[[col1]], wb_years_added[[col2]], sep = "/")
+  }
+}
+
+# Remove all the _2 columns
+wb_years_added <- wb_years_added[, !grepl("_2$", names(wb_years_added))]
+
+# Fix missing data values
+wb_years_added[wb_years_added == "0/0"] <- NA
+wb_years_added[wb_years_added == "**/**"] <- NA
+wb_years_added[wb_years_added == "NA/NA"] <- NA
+
+# Import as a gtypes object with strataG package
+wb_dup.genind <- df2genind(X=wb_years_added[,c(19:ncol(wb_years_added))],
+                              sep = "/",
+                              ind.names = wb_years_added$Spreadsheet_ID,
+                              loc.names = NULL,
+                              pop = wb_years_added$HERD,
+                              NA.char = "NA",
+                              ploidy = 2,
+                              type = "codom",
+                              strata = NULL,
+                              hierarchy = NULL)
+
+# Convert to a gtypes object
+bison.gtype <- genind2gtypes(wb_dup.genind)
+```
+
+Determine genotype duplicates with an 80% profile concordance or greater
+```{r}
+dupGenotypes(bison.gtype, num.shared = 0.8)
+```
+
+We can see that strataG called 16 samples which share over 80% profile similarity - ie. 8 pairs of profiles
+```{r}
+# Isolate samples identified as potential duplicates
+dup_check <- wb_years_added[wb_years_added$Spreadsheet_ID %in% c("1080", "892",
+                                                               "2371", "2388", 
+                                                               "2368", "983",
+                                                               "566", "894",
+                                                               "533", "536",
+                                                               "948", "959",
+                                                               "2484", "2491",
+                                                               "2486", "2595",
+                                                               "1029", "2418",
+                                                               "2508", "2521"), ]
+# Write out to csv to manually inspect genotypes
+write.csv(dup_check, "dup_check.csv", row.names= F)
+
+
+# Following selection of best quality genotypes (as per same criteria used previously), reimport dataset with additional "KEEP" Column
+dup_genotype_filter <- read.csv("dup_genotype_filter.csv", check.names = F)
+
+# Make dataframe containing samples identified to keep
+dup_removals <- dup_genotype_filter %>% 
+  filter(
+    is.na(KEEP)
+  )
+
+# Make vector containing IDs we want to remove
+dup_removals_ids <- dup_removals$Spreadsheet_ID
+
+# Now filter out the duplicate genotype samples from the original dataset
+wb_cleaned_samples <- wb_years_added %>% 
+  filter(
+    !Spreadsheet_ID %in% dup_removals_ids
+  )
+```
+At this stage, all samples have been cleaned and the dataset should have no duplicates.
+
+#### Year Filtering
+Following the year assignments, the removal of samples without collection year information is necessary
+```{r}
+# Remove any samples without year metadata
+wb_cleaned_years <- wb_cleaned_samples %>% 
+  filter(
+    !is.na(YEAR.ASSIGN)
+  )
+```
+
+Write the cleaned product out to a csv
+```{r}
+write.csv(wb_cleaned_years, "Cleaned_samples.06.01.2026", row.names = F)
+```
+
+
+

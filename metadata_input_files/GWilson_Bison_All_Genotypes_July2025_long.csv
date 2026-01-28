@@ -1,0 +1,965 @@
+Contract Year,Population,Metadata file,Date collected,Subspecies,Sample Type,Sample ID,BMS1117,BMS1117_2,TGLA53,TGLA53_2,BMC4214,BMC4214_2
+2024,Banff National Park,Bison_2023_2024_ContractSamples,2024,-,Fecal,24BNP_004,91,91,136,138,175,175
+2024,Banff National Park,Bison_2023_2024_ContractSamples,2024,-,Fecal,24BNP_005,91,91,136,138,175,175
+2024,Banff National Park,Bison_2023_2024_ContractSamples,2024,-,Fecal,24BNP_010,91,91,136,136,175,175
+2024,Banff National Park,Bison_2023_2024_ContractSamples,2024,-,Fecal,24BNP_011,91,91,136,136,175,175
+2024,Banff National Park,Bison_2023_2024_ContractSamples,2024,-,Fecal,24BNP_012,91,91,136,136,175,187
+2024,Banff National Park,Bison_2023_2024_ContractSamples,2024,-,Fecal,24BNP_014,91,91,136,136,175,187
+2024,Banff National Park,Bison_2023_2024_ContractSamples,2024,-,Fecal,24BNP_015,91,91,136,136,175,187
+2024,Banff National Park,Bison_2023_2024_ContractSamples,2024,-,Fecal,24BNP_006,89,89,136,136,187,187
+2025,Banff National Park,,2024,-,Fecal,25BNP019,89,89,136,136,187,187
+2024,Banff National Park,Bison_2023_2024_ContractSamples,2024,-,Fecal,24BNP_013,89,91,136,136,175,175
+2025,Banff National Park,,,-,Fecal,25BNP026,89,91,134,136,175,175
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP001,89,91,136,138,175,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP012,89,91,136,138,175,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP015,89,91,136,138,175,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP016,89,91,136,138,175,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP033,89,91,136,138,175,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP003,89,91,136,136,175,181
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP014,89,91,136,136,175,181
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP018,89,91,136,136,175,181
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP004,91,91,136,136,175,175
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP006,91,91,136,136,175,175
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP007,91,91,136,136,185,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP008,91,91,136,136,185,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP021,89,91,136,136,187,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP028,89,91,136,136,187,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP022,89,89,136,136,187,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP025,89,89,136,136,187,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP030,89,89,136,136,187,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP024,89,89,134,136,185,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP035,89,89,134,136,185,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP038,89,89,134,136,185,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP027,89,91,136,136,185,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP037,89,91,136,136,185,187
+2024,Banff National Park,Bison_2023_2024_ContractSamples,2024,-,Fecal,24BNP_002,89,91,134,136,175,187
+2024,Banff National Park,Bison_2023_2024_ContractSamples,2024,-,Fecal,24BNP_003,91,91,136,140,181,187
+2024,Banff National Park,Bison_2023_2024_ContractSamples,2024,-,Fecal,24BNP_007,89,89,136,136,185,187
+2024,Banff National Park,Bison_2023_2024_ContractSamples,2024,-,Fecal,24BNP_008,89,89,136,136,181,185
+2024,Banff National Park,Bison_2023_2024_ContractSamples,2024,-,Fecal,24BNP_009,91,93,136,138,181,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP002,89,91,136,136,175,181
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP005,89,91,136,140,181,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP009,91,91,136,136,181,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP010,91,91,134,140,185,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP011,91,91,136,138,185,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP013,89,89,134,136,187,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP017,91,91,134,134,187,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP023,89,91,136,138,181,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP029,89,89,136,136,185,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP031,89,89,136,138,175,185
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP032,91,91,136,136,187,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP036,89,91,136,136,175,175
+2024,Banff National Park,Bison_2023_2024_ContractSamples,2024,-,Fecal,24BNP_001,89,91,136,136,181,187
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP020,91,91,//,//,//,//
+2025,Banff National Park,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25BNP034,//,//,//,//,//,//
+2023,Chinchaga,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,chinchaga 1,89,91,136,138,187,187
+2023,Chinchaga,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,chinchaga 2,89,89,134,138,187,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN394,89,89,136,138,187,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN396,89,89,136,138,187,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN397,89,89,136,138,187,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN398,89,89,136,138,187,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN417,89,93,138,140,187,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN418,89,93,138,140,187,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN419,89,93,138,140,187,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN405,89,93,136,138,179,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN407,89,93,136,138,179,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN393,89,89,136,138,179,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN395,89,89,136,138,179,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN406,89,91,136,138,179,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN408,89,91,136,138,179,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN410,89,91,138,138,181,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN415,89,91,138,138,181,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN392,93,93,136,140,179,181
+2025,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal ,MAN401,93,93,136,140,179,181
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN391,91,91,134,136,181,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN399,89,91,134,140,187,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN400,89,89,136,136,181,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN402,89,89,134,136,187,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN403,89,89,136,138,181,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN404,89,91,136,138,187,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN409,89,89,138,138,187,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN411,89,91,134,136,179,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN412,91,93,138,138,187,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN413,89,89,138,138,181,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN414,89,93,136,136,187,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN416,89,91,136,136,181,187
+2024,Chitek Lake,Bison_2023_2024_ContractSamples,2023,-,Fecal,MAN420,89,91,134,136,179,187
+2023,Dan Fox / Blood,Bison_samples_received_June21-22_Updated,2021,Plains Bison,Hair,0124 000 300 931 364,89,91,136,138,181,187
+2023,Dan Fox / Blood,Bison_samples_received_June21-22_Updated,2021,Plains Bison,Hair,0124 000 300 931 365,89,91,136,136,181,187
+2023,Dan Fox / Blood,Bison_samples_received_June21-22_Updated,2021,Plains Bison,Hair,0124 000 300 931 366,89,93,136,136,187,187
+2023,Dan Fox / Blood,Bison_samples_received_June21-22_Updated,2021,Plains Bison,Hair,0124 000 300 931 367,91,91,136,136,179,187
+2023,Dan Fox / Blood,Bison_samples_received_June21-22_Updated,2021,Plains Bison,Hair,0124 000 300 931 374,91,93,136,140,185,187
+2023,Dan Fox / Blood,Bison_samples_received_June21-22_Updated,2021,Plains Bison,Hair,0124 000 300 931 375,89,91,134,136,179,187
+2023,Dan Fox / Blood,Bison_samples_received_June21-22_Updated,2021,Plains Bison,Hair,0124 000 300 931 376,89,91,134,136,175,187
+2023,Dan Fox / Blood,Bison_samples_received_June21-22_Updated,2021,Plains Bison,Hair,0124 000 300 931 377,89,91,136,140,185,187
+2023,Dan Fox / Blood,Bison_samples_received_June21-22_Updated,2021,Plains Bison,Hair,0124 000 300 931 378,89,89,134,136,187,187
+2023,Dan Fox / Blood,Bison_samples_received_June21-22_Updated,2021,Plains Bison,Hair,0124 000 300 931 379,91,93,136,136,181,187
+2023,Dan Fox / Blood,Bison_samples_received_June21-22_Updated,2021,Plains Bison,Hair,0124 000 300 931 380,89,89,134,136,185,187
+2023,Dan Fox / Blood,Bison_samples_received_June21-22_Updated,2021,Plains Bison,Hair,0124 000 300 931 381,89,91,136,136,187,187
+2023,Dan Fox / Blood,Bison_samples_received_June21-22_Updated,2021,Plains Bison,Hair,0124 000 300 931 382,89,91,136,136,181,187
+2023,Dan Fox / Blood,Bison_samples_received_June21-22_Updated,2021,Plains Bison,Hair,124 000 300 684 696 2020,93,93,136,136,187,187
+2023,Dan Fox / Blood,Bison_samples_received_June21-22_Updated,2021,Plains Bison,Hair,124 000 300 684 697 2020,89,91,136,136,185,187
+2023,Dan Fox / Blood,Bison_samples_received_June21-22_Updated,2021,Plains Bison,Hair,124 000 300 703 245 2019,89,91,136,136,185,187
+2023,Dan Fox / Blood,Bison_samples_received_June21-22_Updated,2021,Plains Bison,Hair,124 000 300 931 368 2020,89,91,136,136,187,187
+2023,Dan Fox / Blood,Bison_samples_received_June21-22_Updated,2021,Plains Bison,Hair,124 000 300 931 369 2020,89,93,134,136,181,187
+2023,Dan Fox / Blood,Bison_samples_received_June21-22_Updated,2021,Plains Bison,Hair,124 000 300 931 370 2020,93,93,136,142,179,187
+2023,Dan Fox / Blood,Bison_samples_received_June21-22_Updated,2021,Plains Bison,Hair,124 000 300 931 371 2020,93,93,136,136,181,187
+2023,Dan Fox / Blood,Bison_samples_received_June21-22_Updated,2021,Plains Bison,Hair,124 000 300 931 372 2020,89,91,136,136,187,187
+2023,Dan Fox / Blood,Bison_samples_received_June21-22_Updated,2021,Plains Bison,Hair,124 000 300 931 373,89,93,136,136,181,187
+2023,Dan Fox / Blood,Bison_samples_received_June21-22_Updated,2021,Plains Bison,Hair,124 000 300 931 246 2019,89,91,136,136,181,187
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-16-15,93,93,138,140,175,187
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-16-18,89,93,134,136,175,185
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-16-22,89,93,132,134,175,187
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-16-34,93,93,134,134,187,187
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-02,89,93,134,134,185,187
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-07,93,93,136,140,175,187
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-08,89,89,134,140,175,187
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-09,91,93,132,138,175,187
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-11,91,93,134,140,175,185
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-13,93,93,138,138,175,179
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-14,91,93,134,140,175,185
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-19,91,93,136,140,187,187
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-20,89,93,132,138,181,185
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-21,93,93,134,138,185,187
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-22,91,91,134,140,175,175
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-24,89,91,138,138,175,175
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-25,89,93,134,134,187,187
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-26,89,93,136,140,185,187
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-28,91,93,132,138,175,187
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-29,91,93,136,138,175,175
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-33-1,89,93,132,138,175,175
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-33-2,89,91,132,136,175,187
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-34,91,93,134,134,175,175
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-37,91,93,136,140,181,187
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-38,91,91,136,136,175,175
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-41,93,93,136,140,175,175
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-43,89,91,136,138,179,187
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-45,93,93,134,140,187,187
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-46,93,93,134,140,185,187
+2025,Delta,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,DBH-19-48,91,91,134,138,185,187
+2023,Etthithun,Bison samples freezer,2020,Wood Bison,Fecal swab,150_080,89,93,134,136,179,187
+2023,Etthithun,Bison samples freezer,2020,Wood Bison,Hair,150_080,89,93,134,136,179,187
+2023,Etthithun,Bison samples freezer,2020,Wood Bison,Hair,150_020,91,91,136,136,179,187
+2023,Etthithun,Bison samples freezer,2020,Wood Bison,Fecal swab,150_020,91,91,136,136,179,187
+2023,Etthithun,Bison samples freezer,2020,Wood Bison,Fecal swab,150_060,89,89,136,140,179,187
+2023,Etthithun,Bison samples freezer,2020,Wood Bison,Hair,150_060,89,89,136,140,179,187
+2023,Etthithun,Bison samples freezer,2020,Wood Bison,Hair,150_070,89,91,136,138,179,187
+2023,Etthithun,Bison samples freezer,2020,Wood Bison,Fecal swab,150_070,89,91,136,138,179,187
+2023,Etthithun,Bison samples freezer,,Wood Bison,Fecal (Pre-Swabbed),74GP5,89,91,136,138,179,187
+2023,Etthithun,Bison samples freezer,2020,Wood Bison,Fecal swab,150_100,91,91,134,140,179,179
+2023,Etthithun,Bison samples freezer,2020,Wood Bison,Hair,150_100,91,91,134,140,179,179
+2023,Etthithun,Bison samples freezer,2020,Wood Bison,Hair,150_130,89,91,134,134,179,187
+2023,Etthithun,Bison samples freezer,2020,Wood Bison,Fecal swab,150_130,89,91,134,134,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal swab,10 GP2,89,91,136,138,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal swab,16 GP1,89,91,136,138,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal swab,14 GP1,89,89,136,138,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal swab,3 GP1,89,89,136,138,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal swab,23 GP2,91,91,136,136,187,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal swab,24 GP2,91,91,136,136,187,187
+2023,Etthithun,Bison_ Samples_BC_2June2022,2022,Wood Bison,Biopsy,5,89,89,136,136,187,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal swab,25 GP2,89,89,136,136,187,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),51GP3,89,91,134,138,181,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),59GP3,89,91,134,138,181,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal swab,13 GP1,89,93,134,134,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),7GP1,89,93,134,134,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal swab,17 GP1,89,91,136,136,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),9GP1,89,91,136,136,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal swab,19 GP2,91,91,136,136,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),31GP3,91,91,136,136,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),46GP3,91,91,136,138,187,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),48GP3,91,91,136,138,187,187
+2023,Etthithun,Bison_ Samples_BC_2June2022,2022,Wood Bison,Biopsy,20,91,91,136,136,181,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),83GP5,91,91,136,136,181,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),70GP5,91,91,136,136,181,187
+2023,Etthithun,Bison_ Samples_BC_2June2022,2022,Wood Bison,Biopsy,21,89,91,136,136,179,179
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),80GP5,91,91,136,136,179,179
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),64/84GP5,89,91,136,136,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),73GP5,89,91,136,136,179,187
+2023,Etthithun,Bison_ Samples_BC_2June2022,2022,Wood Bison,Biopsy,2,89,89,134,136,187,187
+2023,Etthithun,Bison_ Samples_BC_2June2023,2022,Wood Bison,Biopsy,3,89,93,136,136,187,187
+2023,Etthithun,Bison_ Samples_BC_2June2024,2022,Wood Bison,Biopsy,7,93,93,134,136,187,187
+2023,Etthithun,Bison_ Samples_BC_2June2025,2022,Wood Bison,Biopsy,9,91,93,134,136,187,187
+2023,Etthithun,Bison_ Samples_BC_2June2026,2022,Wood Bison,Biopsy,12,89,91,136,136,187,187
+2023,Etthithun,Bison_ Samples_BC_2June2027,2022,Wood Bison,Biopsy,22,89,91,136,136,179,181
+2023,Etthithun,Bison_ Samples_BC_2June2028,2022,Wood Bison,Biopsy,23,91,93,136,136,187,187
+2023,Etthithun,Bison_ Samples_BC_2June2029,2022,Wood Bison,Biopsy,24,91,91,136,136,179,179
+2023,Etthithun,Bison_ Samples_BC_2June2030,2022,Wood Bison,Biopsy,25,91,91,134,138,179,187
+2023,Etthithun,Bison_ Samples_BC_2June2031,2022,Wood Bison,Biopsy,26,89,91,136,136,179,187
+2023,Etthithun,Bison_ Samples_BC_2June2032,2022,Wood Bison,Biopsy,27,89,93,136,136,179,187
+2023,Etthithun,Bison_ Samples_BC_2June2033,2022,Wood Bison,Biopsy,28,89,91,134,134,179,187
+2023,Etthithun,Bison_ Samples_BC_2June2034,2022,Wood Bison,Biopsy,29,91,91,136,138,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal swab,1 GP1,89,91,136,138,179,181
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal swab,11 GP1,91,93,134,136,187,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal swab,12 GP1,89,91,136,140,179,179
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal swab,15 GP1,89,93,136,138,187,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal swab,18 GP2,89,93,134,138,187,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal swab,2 GP1,91,91,136,138,187,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal swab,20 GP2,89,93,136,138,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal swab,21 GP2,89,89,136,138,187,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal swab,22 GP2,89,93,134,134,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal swab,26 GP2,89,89,134,136,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),33GP3,91,91,136,136,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),34GP3,91,91,136,138,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),35GP3,91,91,136,140,179,179
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),36GP3,89,91,136,136,181,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),39GP3,89,91,136,138,179,181
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),43GP3,91,93,136,136,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),44GP3,89,91,134,136,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),45GP3,91,91,134,138,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),47GP3,91,91,136,136,179,179
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),49GP3,89,91,134,136,185,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),4GP1,91,91,136,138,187,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),50GP3,91,91,136,136,179,179
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),52GP3,91,91,136,136,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),53GP3,91,91,134,138,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),54GP3,89,91,136,136,187,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),55GP3,91,93,134,136,187,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),56GP3,89,89,136,136,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),58GP3,89,91,136,136,181,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),5GP1,89,93,136,136,181,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),60GP3,89,89,136,136,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),61GP3,89,89,136,136,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),62GP3,91,91,136,136,187,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),63GP3,91,91,136,138,187,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),65GP5,89,93,134,134,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),66GP5,89,89,134,140,179,179
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),67GP5,91,93,134,136,179,181
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),68GP5,89,91,134,138,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),6GP1,89,89,134,136,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),72GP5,91,91,136,138,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),75GP5,89,91,134,138,179,179
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),77GP5,89,91,136,136,181,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),78GP5,93,93,136,136,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),79GP5,89,91,136,136,181,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),81GP5,89,91,136,136,181,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),82GP5,89,93,134,138,179,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),85GP5,89,91,136,138,187,187
+2023,Etthithun,Bison_samples_received_June21-22_Updated,,Wood Bison,Fecal (Pre-Swabbed),8GP1,89,91,134,138,179,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000300955494,89,91,136,138,179,191
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008024,89,89,136,138,175,179
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008026,89,91,136,136,175,179
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008028,89,91,134,136,175,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008032,91,91,138,138,175,185
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008034,91,91,136,138,185,185
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008039,91,93,138,138,175,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008040,89,91,136,136,185,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008044,89,91,134,136,187,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008050,91,91,136,136,175,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008052,89,91,134,136,187,191
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008057,91,91,136,136,187,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008059,89,91,136,138,185,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008062,89,91,136,138,179,185
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008064,89,89,136,136,187,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008065,89,91,136,140,185,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008083,89,91,136,138,175,185
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008097,89,91,134,136,175,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008110,91,91,136,138,187,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008117,89,91,136,136,175,185
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008118,91,91,136,138,175,175
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008122,91,91,134,136,175,185
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008128,91,91,136,138,175,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008141,91,91,136,136,181,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008145,89,89,136,136,187,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008151,91,91,136,136,187,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008154,91,91,136,136,185,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008164,89,93,136,138,179,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008173,89,91,134,138,185,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008179,89,89,136,136,187,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008184,91,91,136,136,175,185
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008190,89,91,136,136,175,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008193,91,91,136,140,185,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008197,89,89,136,138,175,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008207,91,91,136,138,175,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008209,91,91,134,136,179,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008233,91,91,136,136,175,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008236,91,91,136,138,175,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008246,91,91,136,136,179,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301008253,89,91,136,138,187,191
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071927,91,91,136,138,175,185
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071929,89,91,134,136,175,179
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071930,91,91,136,136,175,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071931,89,91,136,136,187,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071932,89,91,136,136,175,179
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071933,89,91,134,136,187,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071934,89,91,136,138,175,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071935,89,91,136,138,175,179
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071936,89,91,134,136,175,179
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071939,89,91,//,//,185,185
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071940,89,91,136,136,185,185
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071941,89,91,136,138,187,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071945,89,91,136,136,179,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071947,89,91,136,136,175,179
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071949,91,91,136,138,175,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071950,91,91,136,136,185,185
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071959,91,91,136,138,187,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071960,89,91,136,138,185,185
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071962,91,91,134,134,175,175
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071964,91,91,136,136,179,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071965,89,89,138,138,187,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071966,91,91,136,138,185,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071967,91,91,136,138,175,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071969,89,91,138,138,175,179
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071974,89,91,136,138,175,179
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071975,91,91,136,136,175,185
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071976,89,91,138,138,175,185
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071977,89,89,136,136,187,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071979,89,91,138,138,187,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071981,91,91,136,136,187,191
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071983,89,91,138,138,175,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071985,89,91,136,138,175,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,124000301071987,89,89,138,138,185,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,214000301008268,89,91,136,136,179,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,214000301008274,89,89,136,136,187,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,214000301008275,89,91,136,136,185,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,214000301008280,89,91,136,136,175,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,214000301008290,89,93,134,138,175,187
+2024,Grasslands National Park,Bison_2023_2024_ContractSamples,2023,-,hair,214000301008296,91,91,136,138,175,179
+2023,Hay Zama,Bison samples freezer,2020,Wood Bison,Fecal swab,150_510,89,91,138,140,187,187
+2023,Hay Zama,Bison samples freezer,2020,Wood Bison,Hair,150_510,89,91,138,140,187,187
+2023,Hay Zama,Bison samples freezer,2020,Wood Bison,Fecal swab,150_400,89,89,136,140,187,191
+2023,Hay Zama,Bison samples freezer,2020,Wood Bison,Hair,150_400,89,89,136,140,187,191
+2023,Hay Zama,Bison samples freezer,2020,Wood Bison,Fecal swab,150_490,89,89,136,138,187,187
+2023,Hay Zama,Bison samples freezer,2020,Wood Bison,Hair,150_490,89,89,136,138,187,187
+2023,Hay Zama,Bison samples freezer,2020,Wood Bison,Fecal swab,150_610,89,89,136,138,179,187
+2023,Hay Zama,Bison samples freezer,2020,Wood Bison,Hair,150_610,89,89,136,138,179,187
+2023,Hay Zama,Bison samples freezer,2020,Wood Bison,Hair,150_620,89,91,138,138,187,191
+2023,Hay Zama,Bison samples freezer,2020,Wood Bison,Fecal swab,150_620,89,91,138,138,187,191
+2023,Hay Zama,Bison samples freezer,2020,Wood Bison,Fecal swab,150_790,89,91,136,138,187,191
+2023,Hay Zama,Bison samples freezer,2020,Wood Bison,Hair,150_790,89,91,136,138,187,191
+2023,Hay Zama,Bison samples freezer,2020,Wood Bison,Fecal swab,151_060,89,89,136,136,181,187
+2023,Hay Zama,Bison samples freezer,2020,Wood Bison,Hair,151_060,89,89,136,136,181,187
+2023,Hay Zama,Bison samples freezer,2020,Wood Bison,Fecal swab,151_220,93,93,136,140,179,187
+2023,Hay Zama,Bison samples freezer,2020,Wood Bison,Hair,151_220,93,93,136,140,179,187
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,45,89,91,134,136,187,187
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,48,89,91,138,140,179,187
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,52,89,89,138,138,187,187
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,54,89,89,136,140,179,179
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,55,89,89,134,136,187,187
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,57,89,89,136,136,179,187
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,68,89,93,136,138,179,187
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,71,89,93,138,140,179,187
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,79,89,91,//,//,187,187
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,88,89,89,136,140,185,187
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,89,89,93,138,140,179,187
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,90,89,93,138,140,179,187
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,92,89,89,136,138,179,179
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,95,89,89,136,136,191,191
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,96,89,89,136,138,179,187
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,98,89,89,136,138,187,191
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,100,89,93,136,140,187,187
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,135,89,89,134,136,187,187
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,136,89,89,138,140,179,187
+2023,Hay Zama,Bison samples freezer,2020,Wood Bison,Hair,150_000,89,93,136,138,187,187
+2023,Hay Zama,Bison samples freezer,2020,Wood Bison,Hair,150_320,89,91,136,136,187,187
+2023,Hay Zama,Bison samples freezer,2020,Wood Bison,Hair,150_680,89,89,136,136,179,179
+2023,Hay Zama,Bison samples freezer,2020,Wood Bison,Hair,150_820,89,91,138,140,179,187
+2023,Hay Zama,Bison samples freezer,2020,Wood Bison,Hair,151_310,89,89,136,136,179,187
+2023,Hay Zama,Bison samples freezer,2020,Wood Bison,Hair,151_390,89,91,138,138,187,187
+2023,Hay Zama,Bison samples freezer,2020,Wood Bison,Hair,151_410,89,89,136,138,187,187
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,154,89,91,134,136,179,181
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,155,89,91,136,138,187,191
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,170,93,93,136,136,187,187
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,174,89,91,136,136,187,187
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,177,89,91,138,138,187,191
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,178,89,89,136,136,179,191
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,180,89,89,136,138,179,187
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,28,89,93,136,138,181,191
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,33,89,93,138,140,179,191
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,36,89,93,136,140,179,191
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,38,89,89,138,138,187,191
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,4,89,91,138,138,179,191
+2023,Hay Zama,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,41,89,89,138,138,179,187
+2023,Mackenzie,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,2161,89,93,134,136,179,179
+2023,Mackenzie,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,2162,91,91,136,142,179,181
+2023,Mackenzie,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,2163,89,91,136,138,179,187
+2023,Mackenzie,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,2165,89,91,136,142,179,181
+2023,Mackenzie,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,2166,91,91,136,138,179,179
+2023,Mackenzie,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,2171,89,91,134,134,179,179
+2023,Mackenzie,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,2176,91,91,136,142,179,187
+2023,Mackenzie,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,2177,89,91,134,136,179,181
+2023,Mackenzie,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,2182,91,93,134,138,179,181
+2023,Mackenzie,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,2187,89,89,134,138,179,181
+2023,Mackenzie,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,2188,89,89,134,134,179,179
+2023,Mackenzie,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,2190,89,89,136,136,179,179
+2023,Mackenzie,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,2196,89,89,134,136,179,187
+2023,Mackenzie,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,2198,89,91,134,134,179,187
+2023,Mackenzie,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,2272,89,89,134,134,179,179
+2023,Mackenzie,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,2276,91,91,136,136,175,179
+2023,Mackenzie,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,2277,89,89,136,136,175,187
+2023,Mackenzie,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,2283,89,91,136,136,181,187
+2023,Mackenzie,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,2289,89,91,136,136,175,181
+2023,Mackenzie,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,2295,89,91,134,138,179,181
+2023,Mackenzie,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,2296,91,91,136,138,179,181
+2023,Mackenzie,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,2310,89,91,136,136,181,181
+2024,McCusker River,Bison_2023_2024_ContractSamples,2024,-,Fecal,24_McCR_005,89,89,138,140,185,187
+2024,McCusker River,Bison_2023_2024_ContractSamples,2024,-,Fecal,24_McCR_008,89,89,138,140,185,187
+2024,McCusker River,Bison_2023_2024_ContractSamples,2024,-,Fecal,24_McCR_001,89,89,138,140,185,187
+2024,McCusker River,Bison_2023_2024_ContractSamples,2024,-,Fecal,24_McCR_003,89,89,136,136,179,185
+2024,McCusker River,Bison_2023_2024_ContractSamples,2024,-,Fecal,24_McCR_006,89,89,136,136,179,185
+2024,McCusker River,Bison_2023_2024_ContractSamples,2024,-,Fecal,24_McCR_013,89,89,136,136,179,185
+2024,McCusker River,Bison_2023_2024_ContractSamples,2024,-,Fecal,24_McCR_010,89,91,136,138,175,185
+2024,McCusker River,Bison_2023_2024_ContractSamples,2024,-,Fecal,24_McCR_011,89,91,136,138,175,185
+2024,McCusker River,Bison_2023_2024_ContractSamples,2024,-,Fecal,24_McCR_012,89,91,136,138,175,185
+2024,McCusker River,Bison_2023_2024_ContractSamples,2024,-,Fecal,24_McCR_004,91,91,136,138,175,185
+2024,McCusker River,Bison_2023_2024_ContractSamples,2024,-,Fecal,24_McCR_007,91,91,136,138,175,185
+2024,McCusker River,Bison_2023_2024_ContractSamples,2024,-,Fecal,24_McCR_002,89,91,136,136,175,185
+2024,McCusker River,Bison_2023_2024_ContractSamples,2024,-,Fecal,24_McCR_009,91,91,136,138,175,175
+2024,Nahanni,BisonScat_NahanniNPR_Metadata_20210318,2021,-,Fecal,Nahanni-2,89,91,136,136,179,187
+2024,Nahanni,BisonScat_NahanniNPR_Metadata_20210319,2021,-,Fecal,Nahanni-3,89,91,136,136,179,187
+2024,Nahanni,BisonScat_NahanniNPR_Metadata_20210320,2021,-,Fecal,Nahanni-4,89,91,136,136,179,187
+2024,Nahanni,BisonScat_NahanniNPR_Metadata_20210321,2021,-,Fecal,Nahanni-7,89,89,134,136,179,187
+2024,Nahanni,BisonScat_NahanniNPR_Metadata_20210322,2021,-,Fecal,Nahanni-9,89,89,134,136,179,187
+2024,Nahanni,BisonScat_NahanniNPR_Metadata_20210323,2021,-,Fecal,Nahanni-5,89,91,136,136,179,187
+2024,Nahanni,BisonScat_NahanniNPR_Metadata_20210324,2021,-,Fecal,Nahanni-6,89,91,136,136,179,187
+2023,Nahanni,bison samples freezer,2022,Wood Bison,Biopsy,1,91,91,136,136,187,187
+2024,Nahanni,BisonScat_NahanniNPR_Metadata_20210324,2021,-,Fecal,Nahanni-1,91,91,136,136,179,187
+2024,Nahanni,BisonScat_NahanniNPR_Metadata_20210324,2021,-,Fecal,Nahanni-10,89,89,136,136,181,187
+2024,Nahanni,BisonScat_NahanniNPR_Metadata_20210324,2021,-,Fecal,Nahanni-8,89,91,136,136,179,187
+2023,Nordquist,Bison Samples_to_GregWilson_25Oct2022-BC,2022,Wood Bison,Biopsy,31,89,91,134,138,179,187
+2023,Nordquist,Bison Samples_to_GregWilson_25Oct2022-BC,2022,Wood Bison,Biopsy,32,89,89,136,140,187,187
+2023,Nordquist,Bison Samples_to_GregWilson_25Oct2022-BC,2022,Wood Bison,Biopsy,33,89,89,136,140,187,187
+2023,Nordquist,Bison Samples_to_GregWilson_25Oct2022-BC,2022,Wood Bison,Biopsy,34,91,91,136,138,187,187
+2023,Nordquist,Bison Samples_to_GregWilson_25Oct2022-BC,2022,Wood Bison,Biopsy,35,89,91,138,140,179,179
+2023,Nordquist/Liard,Bison Samples_BC_2June22,2021,Wood Bison,Biopsy,4,89,89,134,134,179,187
+2023,Nordquist/Liard,Bison Samples_BC_2June23,2021,Wood Bison,Biopsy,6,89,91,136,136,181,187
+2023,Nordquist/Liard,Bison Samples_BC_2June24,2021,Wood Bison,Biopsy,8,89,89,136,140,181,187
+2023,Nordquist/Liard,Bison Samples_BC_2June25,2021,Wood Bison,Biopsy,10,89,91,136,140,181,187
+2023,Nordquist/Liard,Bison Samples_BC_2June26,2021,Wood Bison,Biopsy,11,89,91,136,138,187,187
+2023,Nordquist/Liard,Bison Samples_BC_2June27,2021,Wood Bison,Biopsy,13,89,91,134,138,179,179
+2023,Nordquist/Liard,Bison Samples_BC_2June28,2021,Wood Bison,Biopsy,14,89,91,138,138,181,187
+2023,Nordquist/Liard,Bison Samples_BC_2June29,2021,Wood Bison,Biopsy,15,89,91,138,140,187,187
+2023,Nordquist/Liard,Bison Samples_BC_2June30,2021,Wood Bison,Biopsy,16,89,91,138,138,179,181
+2023,Nordquist/Liard,Bison Samples_BC_2June31,2021,Wood Bison,Biopsy,17,89,89,134,140,187,187
+2023,Nordquist/Liard,Bison Samples_BC_2June32,2021,Wood Bison,Biopsy,18,91,91,138,138,181,181
+2023,Nordquist/Liard,Bison Samples_BC_2June33,2021,Wood Bison,Biopsy,19,89,91,138,138,179,181
+2025,Piikani,,2024,-,Fecal (summer collection),1_Piikani,89,91,136,136,175,185
+2025,Piikani,,2024,-,Fecal (summer collection),3_Piikani,89,91,136,136,185,185
+2025,Piikani,,2024,-,Fecal (summer collection),6_Piikani,91,91,134,136,175,187
+2025,Piikani,,,-,Fecal (summer collection),8_Piikani,89,93,136,138,185,187
+2025,Piikani,,2024,-,Fecal (summer collection),2_Piikani,95,95,//,//,//,//
+2025,Piikani,,,-,Fecal (summer collection),4_Piikani,87,95,//,//,189,189
+2025,Piikani,,,-,Fecal (summer collection),5_Piikani,93,95,142,142,//,//
+2025,Piikani,,2024,-,Fecal (summer collection),7_Piikani,//,//,//,//,//,//
+2025,Pink Mountain,Bison_2025_Genotypes_ClientCopy_July2025,2021,-,hide,PM24_01,91,91,136,140,175,187
+2025,Pink Mountain,Bison_2025_Genotypes_ClientCopy_July2025,2022,-,hide,PM24_02,89,91,136,138,175,175
+2025,Pink Mountain,Bison_2025_Genotypes_ClientCopy_July2025,2020,-,hide,PM24_03,91,91,134,140,175,187
+2025,Pink Mountain,Bison_2025_Genotypes_ClientCopy_July2025,,-,hide,PM24_04,91,91,136,138,187,187
+2025,Pink Mountain,Bison_2025_Genotypes_ClientCopy_July2025,2022,-,hide,PM24_05,91,91,136,136,175,185
+2025,Pink Mountain,Bison_2025_Genotypes_ClientCopy_July2025,2022,-,hide,PM24_06,89,91,138,138,175,181
+2025,Pink Mountain,Bison_2025_Genotypes_ClientCopy_July2025,2023,-,hide,PM24_07,89,89,138,138,181,187
+2025,Pink Mountain,Bison_2025_Genotypes_ClientCopy_July2025,2022,-,hide,PM24_08,89,91,136,138,175,185
+2025,Pink Mountain,Bison_2025_Genotypes_ClientCopy_July2025,2022,-,hide,PM24_09,91,91,134,136,185,187
+2025,Pink Mountain,Bison_2025_Genotypes_ClientCopy_July2025,2022,-,hide,PM24_10,91,91,136,138,185,187
+2025,Prince Albert National Park,PVA/Bison samples/2012 Bison tooth collection,2012,-,Teeth,7A_PANP,91,91,136,142,185,185
+2025,Prince Albert National Park,PVA/Bison samples/2012 Bison tooth collection,2012,-,Teeth,7B_PANP,91,91,136,142,185,185
+2025,Prince Albert National Park,PVA/Bison samples/2012 Bison tooth collection,2012,-,Teeth,1_PANP,91,91,136,142,185,185
+2025,Prince Albert National Park,PVA/Bison samples/2012 Bison tooth collection,2011 or older,-,Teeth,2_PANP,//,//,//,//,//,//
+2025,Prince Albert National Park,PVA/Bison samples/2012 Bison tooth collection,2011 or older,-,Teeth,3_PANP,//,//,//,//,//,//
+2025,Prince Albert National Park,PVA/Bison samples/2012 Bison tooth collection,2012,-,Teeth,4A_PANP,//,//,//,//,//,//
+2025,Prince Albert National Park,PVA/Bison samples/2012 Bison tooth collection,2012,-,Teeth,4B_PANP,//,//,//,//,187,187
+2025,Prince Albert National Park,PVA/Bison samples/2012 Bison tooth collection,2011 or older,-,Teeth,5_PANP,89,89,//,//,//,//
+2025,Prince Albert National Park,PVA/Bison samples/2012 Bison tooth collection,2012,-,Teeth,6_PANP,89,91,//,//,185,187
+2025,Prince Albert National Park,PVA/Bison samples/2012 Bison tooth collection,2010 or older,-,Teeth,8_PANP,//,//,//,//,//,//
+2025,Prince Albert National Park,PVA/Bison samples/2012 Bison tooth collection,2011 or older,-,Teeth,9_PANP,//,//,//,//,//,//
+2025,Prince Albert National Park,PVA/Bison samples/2012 Bison tooth collection,2012,-,Teeth,10A_PANP,//,//,//,//,//,//
+2025,Prince Albert National Park,PVA/Bison samples/2012 Bison tooth collection,2012,-,Teeth,10B_PANP,91,91,136,136,187,187
+2025,Prince Albert National Park,PVA/Bison samples/2012 Bison tooth collection,2011 or older,-,Teeth,11_PANP,91,91,//,//,185,185
+2025,Prince Albert National Park,PVA/Bison samples/2012 Bison tooth collection,2011 or older,-,Teeth,12_PANP,//,//,142,142,//,//
+2025,Prince Albert National Park,PVA/Bison samples/2012 Bison tooth collection,2011 or older,-,Teeth,13_PANP,//,//,//,//,//,//
+2025,Prince Albert National Park,PVA/Bison samples/2012 Bison tooth collection,2011 or older,-,Teeth,14_PANP,//,//,//,//,//,//
+2025,Prince Albert National Park,PVA/Bison samples/2012 Bison tooth collection,2011 or older,-,Teeth,15_PANP,//,//,//,//,//,//
+2025,Prince Albert National Park,PVA/Bison samples/2012 Bison tooth collection,2011 or older,-,Teeth,16_PANP,//,//,//,//,//,//
+2023,Rainbow Lake,Bison_samples_recieved_June21-22_Updated,,Wood Bison,DNA,rainbow lake 1,91,93,136,136,179,187
+2023,Ronald Lake,Bison samples freezer,2018,Wood Bison,serum,6345-207459,89,91,134,138,185,185
+2023,Ronald Lake,,,Wood Bison,Biopsy,RL21-04,89,91,134,138,185,185
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,2019,Wood Bison,serum,37497,89,91,136,136,185,187
+2023,Ronald Lake,Bison samples freezer,2018,Wood Bison,serum,6348-207498,89,91,136,136,185,187
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,2019,Wood Bison,serum,37490,89,89,134,138,185,191
+2023,Ronald Lake,Bison samples freezer,2018,Wood Bison,serum,6344-207494,89,89,134,138,185,191
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,12-19,89,89,136,136,185,187
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,12-19B,89,89,136,136,185,187
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,2014,Wood Bison,serum,35462,89,91,134,138,185,191
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,2014,Wood Bison,serum,35463,89,91,134,136,185,187
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,2014,Wood Bison,serum,35464,89,89,134,136,185,185
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,2014,Wood Bison,serum,35465,91,93,134,134,181,187
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,2014,Wood Bison,serum,35466,91,93,134,138,185,191
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,2019,Wood Bison,serum,37488,89,91,134,136,185,187
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,2019,Wood Bison,serum,37489,89,89,134,136,185,185
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,2019,Wood Bison,serum,37491,89,91,134,136,185,187
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,2019,Wood Bison,serum,37495,89,91,138,138,185,191
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,2019,Wood Bison,serum,37496,91,93,134,134,185,187
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,12-09,89,91,134,136,187,191
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,12-10,89,89,134,136,181,185
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,12-11,91,91,136,138,187,191
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,12-12,89,91,136,136,187,191
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,12-13,89,91,136,136,185,187
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,12-14,91,91,134,136,187,187
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,12-14B,89,91,134,136,175,187
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,12-15,89,89,136,136,191,191
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,12-16,89,89,136,136,187,187
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,12-17,89,89,134,136,187,187
+2023,Ronald Lake,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,12-17B,89,89,134,136,187,191
+2023,Ronald Lake,Bison samples freezer,,Wood Bison,DNA,12-18,89,91,134,136,187,187
+2023,Ronald Lake,Bison samples freezer,2018,Wood Bison,serum,6346-207496,91,93,134,134,181,187
+2023,Ronald Lake,Bison samples freezer,2018,Wood Bison,serum,6347-207497,89,91,134,134,187,187
+2023,Ronald Lake,Bison samples freezer,2018,Wood Bison,serum,6349-207499,89,89,136,136,185,191
+2023,Ronald Lake,Bison samples freezer,2018,Wood Bison,serum,6350-207500,89,91,134,136,185,187
+2023,Ronald Lake,Bison samples freezer,2018,Wood Bison,serum,6351-207501,89,89,136,138,185,185
+2023,Ronald Lake,Bison samples freezer_AB,2021,Wood Bison,Biopsy,RL21-01,89,89,134,136,185,185
+2023,Ronald Lake,Bison samples freezer_AB,2021,Wood Bison,Biopsy,RL21-02,89,91,134,138,185,191
+2023,Ronald Lake,Bison samples freezer_AB,2021,Wood Bison,Biopsy,RL21-03,89,91,136,138,185,187
+2023,Ronald Lake,Bison samples freezer_AB,2021,Wood Bison,Biopsy,RL21-05,89,91,134,134,185,185
+2023,Ronald Lake,Bison samples freezer_AB,2021,Wood Bison,Biopsy,RL21-06,89,91,134,136,187,191
+2023,Ronald Lake,Bison samples freezer_AB,2021,Wood Bison,Biopsy,RL21-07,89,89,136,138,185,191
+2023,Ronald Lake,Bison samples freezer_AB,2021,Wood Bison,Biopsy,RL21-09,89,89,134,136,187,191
+2023,Ronald Lake,Bison samples freezer_AB,2021,Wood Bison,Biopsy,RL21-10,89,89,136,138,181,185
+2023,Ronald Lake,Bison samples freezer_AB,2021,Wood Bison,Biopsy,RL21-11,89,89,136,136,185,187
+2023,Ronald Lake,Bison samples freezer_AB,2021,Wood Bison,Biopsy,RL21-12,89,89,136,136,185,191
+2023,Ronald Lake,Bison samples freezer_AB,2021,Wood Bison,Biopsy,RL21-13,91,93,134,136,181,191
+2023,Ronald Lake,Bison samples freezer_AB,2021,Wood Bison,Biopsy,RL21-14,89,91,136,136,187,191
+2023,Ronald Lake,Bison samples freezer_AB,2021,Wood Bison,Biopsy,RL21-15,89,89,136,136,187,191
+2023,Ronald Lake,Bison samples freezer_AB,2021,Wood Bison,Biopsy,RL21-17,89,91,134,136,185,187
+2023,Ronald Lake,Bison samples freezer_AB,2021,Wood Bison,Biopsy,RL21-20,91,91,134,136,181,185
+2023,Ronald Lake,Bison samples freezer_AB,2021,Wood Bison,Biopsy,RL21-25,89,89,134,136,185,185
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,1-273,89,91,136,136,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,30-273,89,91,136,136,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,5-273,89,91,136,136,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,6-273,89,91,136,136,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_5,89,91,136,136,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,13-273,91,91,142,142,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,8-273,91,91,142,142,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,2-273,91,91,136,142,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,25-273,91,91,136,142,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,52-47,91,91,142,142,185,185
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,53-47,91,91,142,142,185,185
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_51,91,91,142,142,185,185
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,31-270,89,89,136,136,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,39-270,89,89,136,136,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,37-270,89,89,136,136,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,34-270,91,91,136,136,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,46-270,91,91,136,136,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,48-270,91,91,136,136,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,38-270,89,91,142,142,185,185
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,41-270,89,91,142,142,185,185
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,14-273,91,91,136,136,185,185
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,28-273,91,91,136,136,185,185
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,16-272,91,91,136,136,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,18-272,91,91,136,136,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,21-272,91,91,136,136,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,17-272,91,91,136,136,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,20-272,91,91,136,136,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,19-272,91,91,136,136,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,27-273,91,91,136,142,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,29-273,91,91,136,142,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,12-273,91,91,136,142,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,32-270,91,91,136,136,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,35-270,91,91,136,136,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,40-270,91,91,136,136,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,51-270,91,91,136,136,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,49-270,91,91,136,136,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,11-272,91,91,138,142,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,3-273,91,91,138,142,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,4-273,91,91,138,142,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,7-273,91,91,138,142,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,3-268,91,91,136,136,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,81-268,91,91,136,136,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,82-268,91,91,136,136,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,8-268,91,91,136,136,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,84-268,91,91,136,136,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,85-268,91,91,136,136,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,54-47,91,91,136,136,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,59-47,91,91,136,136,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,60-47,91,91,136,136,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,61-47,91,91,136,136,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,1-268,91,91,136,136,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,56-47,91,91,136,136,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,80-268,91,91,136,136,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,83-268,91,91,136,136,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,33-270,91,91,136,136,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,58-47,89,91,142,142,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,47-270,89,91,142,142,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_28,89,91,142,142,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_33B,89,91,142,142,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,26-273,91,91,136,136,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,9-273,91,91,136,136,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,24-273,91,91,142,142,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_8,91,91,142,142,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_18,91,91,142,142,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,36-270,91,91,136,136,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_46,91,91,136,136,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_56,91,91,136,136,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_4,89,91,136,136,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_7,89,91,136,136,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_9,89,91,142,142,185,185
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_17,89,91,142,142,185,185
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_39,89,89,136,142,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_45,89,89,136,142,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_49,89,89,136,142,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_40,91,91,136,138,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_48,91,91,136,138,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_47,91,91,136,136,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_52,91,91,136,142,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_53,89,91,136,142,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_54,89,91,136,142,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_60,91,91,136,138,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_61,91,91,136,138,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_62,91,91,136,138,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_63,91,91,142,142,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_65,91,91,142,142,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,10-273,91,91,142,142,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,23-273,89,91,136,136,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,50-270,91,91,142,142,185,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,55-47,91,91,136,142,187,187
+2023,Sturgeon River,Bison_samples_received_June21-22_Updated,,Plains Bison,Fecal swab,57-47,91,91,136,142,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_1,91,91,142,142,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_3,89,91,136,136,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_6,89,91,142,142,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_10,89,91,136,142,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_11,89,91,136,142,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_12,89,91,136,138,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_13,91,91,142,142,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_14,91,91,136,142,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_15,91,91,136,136,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_16,89,91,136,138,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_20,91,91,136,142,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_21,91,91,136,142,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_22,91,91,136,136,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_24,91,91,136,142,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_27,89,91,142,142,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_30,91,91,138,142,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_31,89,89,142,142,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_32A,91,91,136,136,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_32B,89,91,136,136,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_33A,91,91,136,136,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_34,91,91,136,142,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_35,89,91,136,142,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_36,89,91,138,142,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_37,89,91,136,136,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_38,89,89,136,136,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_43,89,91,136,142,185,185
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_44,89,91,136,136,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_50,89,91,136,138,185,185
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_55,91,91,136,136,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_58,91,91,136,136,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_64,89,91,136,142,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_66,91,91,136,142,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,25_SturRiv_68,89,89,136,142,185,185
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,25_SturRiv_69,91,91,136,142,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,25_SturRiv_70,91,91,136,136,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,25_SturRiv_72,91,91,136,142,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue ,25_SturRiv_73,89,91,136,138,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,25_SturRiv_74,91,91,136,142,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,25_SturRiv_79,89,89,136,136,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,25_SturRiv_80,89,91,136,142,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,25_SturRiv_81,89,91,136,138,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,25_SturRiv_82,91,91,136,142,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,25_SturRiv_83,91,91,136,142,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,25_SturRiv_84,91,91,136,136,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,25_SturRiv_85,91,91,136,142,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,25_SturRiv_92,89,91,136,142,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,25_SturRiv_93,89,91,136,138,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,25_SturRiv_96,91,91,136,136,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,25_SturRiv_98,91,91,136,136,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,25_SturRiv_99,89,89,136,142,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,25_SturRiv_100,91,91,142,142,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,25_SturRiv_101,91,91,136,142,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue,25_SturRiv_104,91,91,142,142,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_2,89,91,//,//,185,185
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_19,//,//,//,//,//,//
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_23,//,//,//,//,//,//
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_25,91,91,//,//,//,//
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_26,89,89,//,//,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_29,//,//,//,//,//,//
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_41,89,91,138,138,187,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_42,89,89,//,//,185,187
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_57,91,91,136,136,//,//
+2025,Sturgeon River,Bison_2025_Genotypes_ClientCopy_July2025,,-,Fecal,25_SturRiv_59,91,91,//,//,//,//
+2023,Wabasca,Bison samples freezer,2020,Wood Bison,Fecal swab,150_190,91,91,136,138,181,187
+2023,Wabasca,Bison samples freezer,2020,Wood Bison,Hair,150_190,91,91,136,138,181,187
+2023,Wabasca,Bison samples freezer,2020,Wood Bison,Fecal swab,150_230,91,99,138,138,187,187
+2023,Wabasca,Bison samples freezer,2020,Wood Bison,Hair,150_230,91,99,138,138,187,187
+2025,Wabasca,Bison samples freezer,2024,-,Fecal,Wab24_07,91,99,138,138,187,187
+2024,Wabasca,Bison_2023_2024_ContractSamples,2023,-,Fecal,24Wab_004,91,99,138,138,187,187
+2024,Wabasca,Bison_2023_2024_ContractSamples,2023,-,Fecal,24Wab_005,91,99,138,138,187,187
+2023,Wabasca,Bison samples freezer,2020,Wood Bison,Hair,150_300,91,99,138,138,187,187
+2024,Wabasca,Bison_2023_2024_ContractSamples,2023,-,Fecal,24Wab_0011,91,99,138,138,187,187
+2025,Wabasca,Bison samples freezer,2024,-,Fecal,Wab24_04,91,99,138,138,187,187
+2025,Wabasca,Bison samples freezer,2024,-,Fecal,Wab24_09,91,99,138,138,187,187
+2025,Wabasca,Bison samples freezer,2024,-,Fecal,Biso24-007,91,99,138,138,187,187
+2024,Wabasca,Bison_2023_2024_ContractSamples,2023,-,Fecal,24Wab_002,91,91,136,138,181,187
+2024,Wabasca,Bison_2023_2024_ContractSamples,2023,-,Fecal,24Wab_006,91,91,136,138,181,187
+2024,Wabasca,Bison_2023_2024_ContractSamples,2023,-,Fecal,24Wab_007,91,91,136,138,181,187
+2025,Wabasca,Bison samples freezer,2024,-,Fecal,Wab24_08,91,91,136,138,181,187
+2025,Wabasca,Bison samples freezer,2024,-,Fecal,Wab24_02,91,91,136,138,181,187
+2025,Wabasca,Bison samples freezer,2024,-,Fecal,Wab24_012,91,91,136,138,181,187
+2024,Wabasca,Bison_2023_2024_ContractSamples,2023,-,Fecal,24Wab_003,91,91,138,138,187,187
+2024,Wabasca,Bison_2023_2024_ContractSamples,2023,-,Fecal,24Wab_008,91,91,138,138,187,187
+2024,Wabasca,Bison_2023_2024_ContractSamples,2023,-,Fecal,24Wab_009,91,91,138,138,187,187
+2024,Wabasca,Bison_2023_2024_ContractSamples,2023,-,Fecal,24Wab_0010,91,91,138,138,187,187
+2025,Wabasca,Bison samples freezer,2024,-,Fecal,Wab24_010,91,91,138,138,187,187
+2024,Wabasca,Bison_2023_2024_ContractSamples,2023,-,Fecal,24Wab_0012,91,91,138,138,187,187
+2025,Wabasca,Bison samples freezer,2024,-,Fecal,Wab24_01,91,93,138,138,187,187
+2025,Wabasca,Bison samples freezer,2024,-,Fecal,Wab24_03,91,93,138,138,187,187
+2024,Wabasca,Bison_2023_2024_ContractSamples,2023,-,Fecal,24Wab_001,91,91,136,138,181,187
+2025,Wabasca,Bison samples freezer,2024,-,Fecal,Wab24_06,91,91,136,138,181,187
+2025,Wabasca,Bison samples freezer,2024,-,Fecal,Wab24_05,91,93,138,138,187,187
+2025,Wabasca,Bison samples freezer,2024,-,Fecal,Wab24_011,91,93,138,138,187,187
+2023,Wabasca,Bison_samples_received_June21-22_Updated,2011,Wood Bison,DNA,11-04,91,99,138,138,181,187
+2023,Wabasca,Bison_samples_received_June21-22_Updated,2011,Wood Bison,DNA,11-05,91,99,138,138,187,187
+2023,Wabasca,Bison_samples_received_June21-22_Updated,2011,Wood Bison,DNA,11-06,91,91,138,138,187,187
+2023,Wabasca,Bison_samples_received_June21-22_Updated,2012,Wood Bison,DNA,12-01,91,99,138,138,187,187
+2023,Wabasca,Bison_samples_received_June21-22_Updated,2012,Wood Bison,DNA,12-02,91,91,138,138,187,187
+2023,Wabasca,Bison_samples_received_June21-22_Updated,2012,Wood Bison,DNA,12-03,89,99,138,138,181,187
+2023,Wabasca,Bison_samples_received_June21-22_Updated,2012,Wood Bison,DNA,12-05,91,91,138,138,187,187
+2023,Wabasca,Bison_samples_received_June21-22_Updated,2012,Wood Bison,DNA,12-06,91,91,138,138,187,187
+2023,Wabasca,Bison_samples_received_June21-22_Updated,2012,Wood Bison,DNA,12-07,99,99,138,138,187,187
+2023,Wabasca,Bison_samples_received_June21-22_Updated,2012,Wood Bison,DNA,12-08,93,99,136,138,181,187
+2023,Wabasca,David Johns email October 22 2025,2020,Wood Bison,Hair,150_250,91,99,138,138,187,187
+2024,Wabasca,Bison_2023_2024_ContractSamples,2023,-,Hair,24Wab_0013,//,//,//,//,//,//
+2025,Wabasca,,,-,Fecal,Biso24-009,//,//,138,138,//,//
+2025,Wabasca,2025,,-,Fecal,WabascaGhost1-2024,//,//,//,//,//,//
+2024,Waterton Lakes,Bison_2023_2024_ContractSamples,2023,-,Fecal,WLNP06,91,91,136,136,175,187
+2024,Waterton Lakes,Bison_2023_2024_ContractSamples,2023,-,Fecal,WLNP10,91,91,136,136,175,187
+2024,Waterton Lakes,Bison_2023_2024_ContractSamples,2023,-,Fecal,WLNP02,89,91,//,//,179,185
+2024,Waterton Lakes,Bison_2023_2024_ContractSamples,2023,-,Fecal,WLNP03,89,91,134,134,187,187
+2024,Waterton Lakes,Bison_2023_2024_ContractSamples,2023,-,Fecal,WLNP07,89,91,134,134,187,187
+2024,Waterton Lakes,Bison_2023_2024_ContractSamples,2023,-,Fecal,WLNP08,89,89,136,136,179,191
+2024,Waterton Lakes,Bison_2023_2024_ContractSamples,2023,-,Tissue,WLNP306,89,89,136,138,185,185
+2024,Waterton Lakes,Bison_2023_2024_ContractSamples,2023,-,Tissue,WLNP308,89,91,138,142,175,187
+2024,Waterton Lakes,Bison_2023_2024_ContractSamples,2023,-,Tissue,WLNP309,89,91,134,136,185,187
+2024,Waterton Lakes,Bison_2023_2024_ContractSamples,2023,-,Tissue,WLNP316,91,91,136,136,185,187
+2024,Waterton Lakes,Bison_2023_2024_ContractSamples,2023,-,Tissue,WLNP320,//,//,134,134,175,187
+2024,Waterton Lakes,Bison_2023_2024_ContractSamples,2023,-,Fecal,WLNP01,91,91,//,//,175,175
+2024,Waterton Lakes,Bison_2023_2024_ContractSamples,2023,-,Fecal,WLNP04,//,//,//,//,//,//
+2024,Waterton Lakes,Bison_2023_2024_ContractSamples,2023,-,Fecal,WLNP05,//,//,//,//,//,//
+2024,Waterton Lakes,Bison_2023_2024_ContractSamples,2023,-,Fecal,WLNP09,//,//,//,//,//,//
+2023,WBNP,bison samples freezer,2021,Wood Bison,Biopsy,BSN82,89,91,134,136,181,187
+2023,WBNP,bison samples freezer,2021,Wood Bison,Biopsy,BSN85,89,91,134,136,181,187
+2023,WBNP / Garden River,Bison samples WBNP - RB,2021,Wood Bison,Hair,40,89,89,138,138,187,191
+2023,WBNP / Garden River,Bison samples WBNP - RB,2021,Wood Bison,blood,40,89,89,138,138,187,191
+2023,WBNP / Sweetgrass,Bison samples WBNP - RB,2021,Wood Bison,blood,209,89,89,136,136,179,187
+2023,WBNP,Bison samples WBNP - RB,2021,Wood Bison,Hair,88209,89,89,136,136,179,187
+2023,WBNP / Sweetgrass,Bison samples WBNP - RB,2021,Wood Bison,blood,217,89,89,136,140,179,187
+2023,WBNP / Sweetgrass,Bison samples WBNP - RB,2021,Wood Bison,Hair,88217,89,89,136,140,179,187
+2023,WBNP / Nyarling,bison samples freezer,2021,Wood Bison,Biopsy,BSN80,89,91,136,138,179,179
+2023,WBNP/Nyarling,bison samples freezer,2021,Wood Bison,Biopsy,BSN92,89,91,136,138,179,179
+2024,WBNP,Bison_2023_2024_ContractSamples,2023,-,Fecal,WBNP962,89,91,//,//,179,179
+2023,WBNP,Bison samples WBNP - RB,,Wood Bison,blood,661,89,91,134,136,181,187
+2023,WBNP / Sweetgrass,Bison samples WBNP - RB,2021,Wood Bison,Hair,88210,89,91,134,136,181,187
+2023,WBNP,Bison samples WBNP - RB,,Wood Bison,blood,658,89,89,134,138,181,187
+2023,WBNP / Sweetgrass,Bison samples WBNP - RB,2021,Wood Bison,Hair,88215,89,89,134,138,181,187
+2023,WBNP / Slave River Lowlands,bison samples freezer,2021,Wood Bison,Biopsy,BSN73,89,89,136,138,179,181
+2023,WBNP / Slave River Lowlands,bison samples freezer,2021,Wood Bison,Biopsy,BSN74,89,89,136,138,179,181
+2023,WBNP,,,Wood Bison,Biopsy,BSN77,89,89,136,138,179,181
+2023,WBNP / Slave River Lowlands,bison samples freezer,2021,Wood Bison,Biopsy,BSN79,89,89,136,138,179,181
+2025,WBNP,,,-,Tissue - Ear,BSN-93,89,89,136,138,179,181
+2023,WBNP / Slave River Lowlands,bison samples freezer,2021,Wood Bison,Biopsy,BSN75,89,91,138,142,175,187
+2023,WBNP / Slave River Lowlands,bison samples freezer,2021,Wood Bison,Biopsy,BSN78,89,91,138,142,175,187
+2023,WBNP / Sweetgrass,Bison samples WBNP - RB,2021,Wood Bison,Hair,88212,89,89,134,136,181,191
+2023,WBNP,Bison samples WBNP - RB,,Wood Bison,blood,659602,89,89,134,136,181,191
+2024,WBNP,Bison_2023_2024_ContractSamples,2023,-,Fecal,WBNP-973-Fe,89,91,134,140,179,181
+2024,WBNP,Bison_2023_2024_ContractSamples,2023,-,Fecal,WBNP-979-Fe,89,91,134,140,179,181
+2024,WBNP,Bison_2023_2024_ContractSamples,2023,-,Fecal,WBNP-978-Fe,89,91,134,142,181,187
+2024,WBNP,Bison_2023_2024_ContractSamples,2023,-,Fecal,WBNP-980-Fe,89,91,134,142,181,187
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP153,89,89,134,136,181,187
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP166,89,89,134,136,181,187
+2023,WBNP/Hay Camp,all samples,2020,Wood Bison,Ear Tissue,BSN-60,89,89,134,136,181,187
+2024,WBNP / Hay Camp,all samples,2020,-,Tissue - Ear,BSN-68,89,89,134,136,181,187
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,,-,Hair,25WBNP_20BF2,89,91,136,138,175,179
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,,-,Hair,25WBNP_20BF3,89,91,136,138,175,179
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,,-,Hair,25WBNP_Hair4,91,91,134,138,179,179
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,,-,Hair,25WBNP_Hair5,91,91,134,138,179,179
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,,-,Hair,25WBNP_Hair6,89,91,136,136,179,181
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,,-,Hair,25WBNP_Hair6_dup,89,91,136,136,179,181
+2023,WBNP / Garden River,Bison samples WBNP - RB,2021,Wood Bison,Hair,20,89,91,136,136,179,179
+2023,WBNP / Garden River,Bison samples WBNP - RB,2021,Wood Bison,Hair,60,89,89,138,138,179,187
+2023,WBNP / Garden River,Bison samples WBNP - RB,2021,Wood Bison,Hair,80,89,89,134,134,179,181
+2023,WBNP / Garden River,Bison samples WBNP - RB,2021,Wood Bison,Hair,100,89,91,136,140,187,187
+2023,WBNP / Garden River,Bison samples WBNP - RB,2021,Wood Bison,Hair,120,89,89,132,138,175,181
+2023,WBNP / Garden River,Bison samples WBNP - RB,2021,Wood Bison,Hair,140,89,89,136,138,179,187
+2023,WBNP / Garden River,Bison samples WBNP - RB,2021,Wood Bison,Hair,160,89,93,134,136,179,179
+2023,WBNP / Garden River,Bison samples WBNP - RB,2021,Wood Bison,Hair,180,91,91,132,138,179,187
+2023,WBNP / Garden River,Bison samples WBNP - RB,2021,Wood Bison,Hair,200,89,89,134,138,179,185
+2023,WBNP / Garden River,Bison samples WBNP - RB,2021,Wood Bison,Hair,220,89,91,136,136,175,181
+2023,WBNP / Garden River,Bison samples WBNP - RB,2021,Wood Bison,Hair,240,89,89,136,138,175,187
+2023,WBNP / Garden River,Bison samples WBNP - RB,2021,Wood Bison,blood,260,89,93,136,136,179,187
+2023,WBNP / Garden River,Bison samples WBNP - RB,2021,Wood Bison,Hair,280,89,91,136,138,179,181
+2023,WBNP / Garden River,Bison samples WBNP - RB,2021,Wood Bison,Hair,300,91,91,136,140,187,187
+2023,WBNP / Garden River,Bison samples WBNP - RB,2021,Wood Bison,Hair,320,91,93,136,136,175,187
+2023,WBNP / Garden River,Bison samples WBNP - RB,2021,Wood Bison,Hair,340,89,93,134,138,187,187
+2023,WBNP / Garden River,Bison samples WBNP - RB,2021,Wood Bison,Hair,360,89,89,136,138,187,191
+2023,WBNP / Garden River,Bison samples WBNP - RB,2021,Wood Bison,Hair,380,89,91,136,138,179,185
+2023,WBNP / Sweetgrass,Bison samples WBNP - RB,2021,Wood Bison,Hair,88211,89,91,136,140,185,187
+2023,WBNP / Sweetgrass,Bison samples WBNP - RB,2021,Wood Bison,Hair,88213,89,89,134,138,185,187
+2023,WBNP / Sweetgrass,Bison samples WBNP - RB,2021,Wood Bison,Hair,88214,91,91,136,136,179,185
+2023,WBNP / Sweetgrass,Bison samples WBNP - RB,2021,Wood Bison,Hair,88216,91,91,134,138,175,179
+2023,WBNP / Sweetgrass,Bison samples WBNP - RB,2021,Wood Bison,Hair,88218,89,93,136,138,179,185
+2023,WBNP / Sweetgrass,Bison samples WBNP - RB,2021,Wood Bison,Hair,88219,89,91,134,138,179,181
+2023,WBNP / Sweetgrass,Bison samples WBNP - RB,2021,Wood Bison,Hair,88220,89,91,136,136,187,187
+2023,WBNP / Sweetgrass,Bison samples WBNP - RB,2021,Wood Bison,Hair,88221,89,89,134,134,175,187
+2023,WBNP / Sweetgrass,Bison samples WBNP - RB,2021,Wood Bison,Hair,88222,91,91,136,136,175,187
+2023,WBNP / Sweetgrass,Bison samples WBNP - RB,2021,Wood Bison,Hair,88223,89,93,132,136,179,187
+2023,WBNP / Sweetgrass,Bison samples WBNP - RB,2021,Wood Bison,Hair,88224,89,89,136,136,181,187
+2023,WBNP / Sweetgrass,Bison samples WBNP - RB,2021,Wood Bison,Hair,88225,89,89,136,136,181,181
+2023,WBNP / Sweetgrass,Bison samples WBNP - RB,2021,Wood Bison,Hair,88226,89,89,136,138,187,187
+2023,WBNP / Sweetgrass,Bison samples WBNP - RB,2021,Wood Bison,Hair,88227,89,89,136,136,181,181
+2023,WBNP / Sweetgrass,Bison samples WBNP - RB,2021,Wood Bison,Hair,88228,89,91,136,138,175,185
+2023,WBNP / Sweetgrass,Bison samples WBNP - RB,2021,Wood Bison,Hair,88251,89,89,136,138,181,187
+2024,WBNP / PAD,all samples,2016,-,Tissue - Ear,BSN-01,89,99,136,138,185,191
+2024,WBNP / PAD,all samples,2016,-,Tissue - Ear,BSN-02,91,99,134,138,179,185
+2024,WBNP / PAD,all samples,2016,-,Tissue - Ear,BSN-03,89,91,138,138,181,185
+2024,WBNP / Hay Camp,all samples,2017,-,Tissue - Ear,BSN-04,89,91,134,138,181,181
+2024,WBNP / Nyarling,all samples,2017,-,Tissue - Ear,BSN-05,89,91,138,142,181,187
+2024,WBNP / Hay Camp,all samples,2017,-,Tissue - Ear,BSN-07,89,89,136,136,179,181
+2024,WBNP / Nyarling,all samples,2016,-,Tissue - Ear,BSN-08,89,91,140,142,181,181
+2023,WBNP / Slave River Lowlands,bison samples freezer,2021,Wood Bison,Ear Tissue,BSN-102,89,91,138,138,179,187
+2023,WBNP / Slave River Lowlands,bison samples freezer,2021,Wood Bison,Ear Tissue,BSN-103,89,91,134,134,179,181
+2023,WBNP / Slave River Lowlands,bison samples freezer,2021,Wood Bison,Ear Tissue,BSN-104,89,89,134,138,181,181
+2023,WBNP / Slave River Lowlands,bison samples freezer,2021,Wood Bison,Ear Tissue,BSN-105,91,91,136,140,181,187
+2023,WBNP / Slave River Lowlands,bison samples freezer,2021,Wood Bison,Ear Tissue,BSN-106,89,89,136,140,181,187
+2023,WBNP / Nyarling,bison samples freezer,2021,Wood Bison,Ear Tissue,BSN-107 (Adult Male),89,91,136,142,179,187
+2023,WBNP / Hay Camp,bison samples freezer,2021,Wood Bison,Ear Tissue,BSN-107 (Yearling Female),89,89,138,138,179,187
+2023,WBNP / Nyarling,bison samples freezer,2021,Wood Bison,Ear Tissue,BSN-108,89,93,134,138,181,185
+2023,WBNP / Slave River Lowlands,bison samples freezer,2022,Wood Bison,Ear Tissue,BSN-112,89,99,138,138,175,181
+2023,WBNP / Slave River Lowlands,bison samples freezer,202,Wood Bison,Ear Tissue,BSN-113,89,89,138,142,175,179
+2023,WBNP / Slave River Lowlands,bison samples freezer,202,Wood Bison,Ear Tissue,BSN-114,89,91,134,138,175,187
+2023,WBNP / Slave River Lowlands,bison samples freezer,2022,Wood Bison,Ear Tissue,BSN-115,91,99,134,138,175,181
+2023,WBNP / Slave River Lowlands,bison samples freezer,2022,Wood Bison,Ear Tissue,BSN-116,91,91,136,142,181,187
+2023,WBNP / Nyarling,bison samples freezer,2022,Wood Bison,Ear Tissue,BSN-117,89,91,134,142,179,179
+2023,WBNP / Slave River Lowlands,bison samples freezer,2022,Wood Bison,Ear Tissue,BSN-118,89,89,134,134,179,185
+2023,WBNP / Slave River Lowlands,bison samples freezer,2022,Wood Bison,Ear Tissue,BSN-119,89,89,134,134,181,191
+2024,WBNP / PAD,all samples,2010,-,Tissue - Ear,BSN-25,89,91,134,136,181,181
+2024,WBNP / Nyarling,all samples,2017,-,Tissue - Ear,BSN-43,91,93,138,138,175,179
+2024,WBNP / Nyarling,all samples,2018,-,Tissue - Ear,BSN-46,89,91,134,138,175,181
+2024,WBNP / Slave River Lowlands,all samples,2018,-,Tissue - Ear,BSN-47,89,91,134,138,175,179
+2024,WBNP / Nyarling,all samples,2018,-,Tissue - Ear,BSN-51,91,91,138,138,181,185
+2024,WBNP / Nyarling,all samples,2019,-,Tissue - Ear,BSN-52,91,91,138,142,179,185
+2024,WBNP / Hay Camp,all samples,2020,-,Tissue - Ear,BSN-55,89,91,134,138,181,181
+2024,WBNP / Hay Camp,all samples,2020,-,Tissue - Ear,BSN-62,89,91,134,138,179,187
+2024,WBNP / Hay Camp,all samples,2020,-,Tissue - Ear,BSN-63,91,91,138,138,179,181
+2024,WBNP / Hay Camp,all samples,2020,-,Tissue - Ear,BSN-64,91,91,134,138,179,187
+2024,WBNP / Hay Camp,all samples,2020,-,Tissue - Ear,BSN-65,89,91,132,138,179,179
+2024,WBNP / Hay Camp,all samples,2020,-,Tissue - Ear,BSN-66,89,93,132,140,179,181
+2024,WBNP / Hay Camp,all samples,2020,-,Tissue - Ear,BSN-67,89,91,136,138,175,179
+2024,WBNP / Hay Camp,all samples,2020,-,Tissue - Ear,BSN-69,89,91,134,138,179,181
+2024,WBNP / Hay Camp,all samples,2020,-,Tissue - Ear,BSN-70,89,91,138,138,179,187
+2023,WBNP / Hay Camp,bison samples freezer,2021,Wood Bison,Biopsy,BSN71,89,91,134,138,185,187
+2023,WBNP / Nyarling,bison samples freezer,2021,Wood Bison,Biopsy,BSN72,89,91,134,138,179,187
+2023,WBNP / Slave River Lowlands,bison samples freezer,2021,Wood Bison,Biopsy,BSN76-1,89,89,134,134,179,181
+2023,WBNP / Slave River Lowlands,bison samples freezer,2021,Wood Bison,Biopsy,BSN76-2,89,91,138,142,175,187
+2023,WBNP / Hay Camp,bison samples freezer,2021,Wood Bison,Biopsy,BSN81,89,91,134,136,181,181
+2023,WBNP / Hay Camp,bison samples freezer,2021,Wood Bison,Biopsy,BSN83,89,91,134,134,187,191
+2023,WBNP / Hay Camp,bison samples freezer,2021,Wood Bison,Biopsy,BSN84,91,91,134,138,187,187
+2023,WBNP / Hay Camp,bison samples freezer,2021,Wood Bison,Biopsy,BSN86,89,91,138,140,179,187
+2023,WBNP / Hay Camp,bison samples freezer,2021,Wood Bison,Biopsy,BSN87,89,91,134,142,175,187
+2023,WBNP / Nyarling,bison samples freezer,2021,Wood Bison,Biopsy,BSN90,89,91,138,138,179,181
+2023,WBNP / Nyarling,bison samples freezer,2021,Wood Bison,Biopsy,BSN91,91,91,134,138,187,187
+2024,WBNP,,,-,Tissue - Ear,BSN-95,89,91,134,134,187,187
+2023,WBNP / Nyarling,Bison samples WBNP - RB,2021,Wood Bison,Biopsy,dart4-03,89,89,134,138,179,187
+2023,WBNP,,,Wood Bison,Ear Tissue,UKNWN (*NO SAMPLE ID*,89,91,134,138,181,187
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP152,89,91,136,136,175,179
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP170,89,89,134,140,179,185
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP188,89,91,134,138,181,187
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP189,89,89,138,138,179,187
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP210,89,91,136,138,179,181
+2024,WBNP,Bison_2023_2024_ContractSamples,2023,-,Fecal,WBNP963,89,89,134,138,179,185
+2024,WBNP,Bison_2023_2024_ContractSamples,2023,-,Fecal,WBNP964,91,93,134,138,185,187
+2024,WBNP,Bison_2023_2024_ContractSamples,2023,-,Fecal,WBNP-974-Fe,89,89,138,138,181,185
+2024,WBNP,Bison_2023_2024_ContractSamples,2023,-,Fecal,WBNP-975-Fe,89,91,136,142,185,187
+2024,WBNP,Bison_2023_2024_ContractSamples,2023,-,Fecal,WBNP-976-Fe,89,91,134,138,175,179
+2024,WBNP,Bison_2023_2024_ContractSamples,2023,-,Fecal,WBNP-977-Fe,89,91,138,138,175,181
+2024,WBNP,Bison_2023_2024_ContractSamples,2023,-,Fecal,WBNP-982-Fe,89,91,132,134,175,179
+2024,WBNP,Bison_2023_2024_ContractSamples,2023,-,Fecal,WBNP-983-Fe,89,91,134,138,179,187
+2024,WBNP,Bison_2023_2024_ContractSamples,2023,-,Fecal,WBNP-984-Fe,91,91,136,138,179,187
+2024,WBNP,Bison_2023_2024_ContractSamples,2023,-,Fecal,WPNB967,91,91,134,136,175,179
+2024,WBNP,Bison_2023_2024_ContractSamples,2023,-,Fecal,WPNB968,89,91,138,140,181,187
+2023,WBNP / Nyarling,Bison samples WBNP - RB,2021,Wood Bison,Biopsy,BSN97,91,93,138,138,181,185
+2023,WBNP / Nyarling,Bison samples WBNP - RB,2021,Wood Bison,Biopsy,BlueDart4,89,91,136,138,181,187
+2023,WBNP/Hay Camp,all samples,2018,Wood Bison,Ear Tissue,BSN-49,89,91,134,138,181,187
+2023,WBNP/Hay Camp,all samples,2018,Wood Bison,Ear Tissue,BSN-50,89,91,136,138,181,187
+2023,WBNP/Hay Camp,all samples,2020,Wood Bison,Ear Tissue,BSN-57,89,89,138,138,181,187
+2023,WBNP/Hay Camp,all samples,2020,Wood Bison,Ear Tissue,BSN-61,89,89,136,136,179,185
+2023,WBNP/Hay Camp,,,Wood Bison,Biopsy,BSN98,89,91,134,138,181,187
+2023,WBNP/Hay Camp,,,Wood Bison,Biopsy,BSN99,89,91,138,138,179,181
+2023,WBNP/Little Buffalo,all samples,2018,Wood Bison,Ear Tissue,BSN-47,89,91,134,138,175,179
+2023,WBNP/Little Buffalo,all samples,2018,Wood Bison,Ear Tissue,BSN-48,89,91,134,136,179,181
+2023,WBNP/Nyarling,all samples,2016,Wood Bison,Ear Tissue,BSN-08,91,91,136,140,181,187
+2023,WBNP/Nyarling,all samples,2017,Wood Bison,Ear Tissue,BSN-43,91,93,138,138,175,179
+2023,WBNP/Nyarling,all samples,2017,Wood Bison,Ear Tissue,BSN-44,89,91,134,140,179,185
+2023,WBNP/Nyarling,all samples,2020,Wood Bison,Ear Tissue,BSN-58,89,91,134,138,175,179
+2023,WBNP/Nyarling,all samples,2020,Wood Bison,Ear Tissue,BSN-59,91,91,134,138,181,187
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,2024,-,Hair,24WBNP_051,89,91,136,136,175,179
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,2024,-,Hair,24WBNP_054,89,91,136,136,175,179
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,2024,-,Hair,24WBNP_055,91,91,134,138,175,187
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,2024,-,Hair,24WBNP_058,89,91,136,136,181,187
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,2024,-,Hair,24WBNP_059,89,91,140,140,179,187
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,2024,-,Hair,24WBNP_060,91,93,134,134,181,187
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,2024,-,Hair,24WBNP_062,//,//,136,136,187,187
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,2024,-,Hair,24WBNP_064,89,89,134,138,179,185
+2025,WBNP/Little Buffalo,Bison_2025_Genotypes_ClientCopy_July2025,2023,-,Tissue - Ear,BSN-120,89,89,134,138,179,181
+2025,WBNP/Little Buffalo,Bison_2025_Genotypes_ClientCopy_July2025,2024,-,Tissue - Ear,BSN-121,89,91,134,138,181,187
+2025,WBNP/Little Buffalo,Bison_2025_Genotypes_ClientCopy_July2025,2024,-,Tissue - Ear,BSN-123,89,99,138,138,179,181
+2025,WBNP/Little Buffalo,Bison_2025_Genotypes_ClientCopy_July2025,2024,-,Tissue - Ear,BSN-125,89,91,138,138,179,185
+2025,WBNP/Little Buffalo,Bison_2025_Genotypes_ClientCopy_July2025,2024,-,Tissue - Ear,BSN-127,89,93,134,138,181,185
+2025,WBNP/Nyarling,Bison_2025_Genotypes_ClientCopy_July2025,2024,-,Tissue - Ear,BSN-129,89,89,134,142,181,181
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue - Ear,BSN-130,89,91,134,142,181,187
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue - Ear,BSN-131,89,89,134,138,179,181
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,,-,Tissue - Ear,BSN-132,89,89,134,134,181,181
+2025,WBNP/Little Buffalo,Bison_2025_Genotypes_ClientCopy_July2025,2024,-,Tissue - Ear,BSN-133,89,89,142,142,175,181
+2025,WBNP/Nyarling,Bison_2025_Genotypes_ClientCopy_July2025,2010,-,Tissue - Ear,BSN-33,91,91,138,138,185,187
+2025,WBNP/Nyarling,Bison_2025_Genotypes_ClientCopy_July2025,2009,-,Tissue - Ear,BSN-34,89,91,134,138,187,187
+2025,WBNP/Nyarling,Bison_2025_Genotypes_ClientCopy_July2025,2007,-,Tissue - Ear,BSN-35,89,89,138,138,175,179
+2025,WBNP/Little Buffalo,Bison_2025_Genotypes_ClientCopy_July2025,2009,-,Tissue - Ear,BSN-36,//,//,134,136,179,191
+2025,WBNP/Nyarling,Bison_2025_Genotypes_ClientCopy_July2025,2008,-,Tissue - Ear,BSN-37,89,91,136,142,187,187
+2025,WBNP/Nyarling,Bison_2025_Genotypes_ClientCopy_July2025,2008,-,Tissue - Ear,BSN-38,89,93,136,138,185,187
+2025,WBNP/Nyarling,all samples,2017,-,Tissue - Ear,BSN-42,89,91,136,138,181,185
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,2021,-,Tissue - Ear,BSN-94,89,89,138,142,179,181
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,,-,Hair,25WBNP_19BF1,89,91,136,140,181,187
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,,-,Hair,25WBNP_19BF2,91,91,134,134,185,187
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,,-,Hair,25WBNP_19BF4,91,91,134,138,179,185
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,,-,Hair,25WBNP_19BF5,89,89,136,138,181,187
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,,-,Hair,25WBNP_20BF1,89,89,134,136,179,179
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,,-,Hair,25WBNP_20BF8,89,89,134,138,185,185
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,,-,Hair,25WBNP_20BF9,89,91,134,138,181,181
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,,-,Hair,25WBNP_19BF3,89,89,136,136,179,181
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP157,91,93,136,138,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP159,//,//,//,//,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP161,//,//,//,//,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP162,89,89,136,138,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP163,//,//,//,//,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP165,89,91,134,136,179,187
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP169,91,91,//,//,179,179
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP172,//,//,//,//,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP175,//,//,134,134,179,179
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP178,//,//,//,//,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP179,//,//,//,//,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP181,//,//,//,//,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP185,//,//,//,//,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP187,//,//,//,//,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP190,89,89,134,136,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP191,//,//,136,136,185,187
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP194,//,//,138,140,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP195,//,//,//,//,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP198,//,//,//,//,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP200,//,//,//,//,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP202,89,89,//,//,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP203,//,//,//,//,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP204,//,//,//,//,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP205,//,//,//,//,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP208,//,//,//,//,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2022,-,Fecal,WBNP209,//,//,//,//,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2023,-,Fecal,WBNP-971-Fe,89,89,//,//,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2023,-,Fecal,WBNP-972-Fe,91,91,134,138,187,187
+2024,WBNP,Bison_2023_2024_ContractSamples,2023,-,Fecal,WBNP-981-Fe,89,89,//,//,179,187
+2024,WBNP,Bison_2023_2024_ContractSamples,2023,-,Fecal,WPNB965,//,//,//,//,//,//
+2024,WBNP,Bison_2023_2024_ContractSamples,2023,-,Fecal,WPNB966,89,91,//,//,181,187
+2024,WBNP,Bison_2023_2024_ContractSamples,2023,-,Fecal,WPNB969,91,91,//,//,179,179
+2024,WBNP,Bison_2023_2024_ContractSamples,2023,-,Fecal,WPNB970,//,//,//,//,//,//
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,2024,-,Hair,24WBNP_059UNK,//,//,//,//,//,//
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,2024,-,Fecal,24WBNP_061,//,//,128,128,//,//
+2025,WBNP,Bison_2025_Genotypes_ClientCopy_July2025,2024,-,Hair,24WBNP_CR-1_062,//,//,//,//,//,//
+2023,Wentzel,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,11-01,89,91,136,138,187,187
+2023,Wentzel,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,11-02,93,93,132,136,187,187
+2023,Wentzel,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,11-08,89,93,134,136,175,179
+2023,Wentzel,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,11-10,89,89,140,140,187,187
+2023,Wentzel,Bison_samples_received_June21-22_Updated,,Wood Bison,DNA,11-11,91,93,136,140,187,187

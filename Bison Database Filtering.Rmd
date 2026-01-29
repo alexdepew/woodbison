@@ -163,7 +163,7 @@ p <- ggplot(wb_fixed_ids, aes(x = COMPLETE)) +
   )
 
 ggsave(
-  filename = "wb_profile_completeness_distribution.png",
+  filename = "plots/wb_profile_completeness_distribution.png",
   plot = p,
   width = 100,      
   height = 70,
@@ -270,6 +270,27 @@ year_manipulation_added_ball <- year_manipulation %>%
 # Confirm 72 samples were changed
 sum(year_manipulation_added_ball$YEAR.ASSIGN == 2015, na.rm = TRUE)
 ```
+# Ball plains bison
+```{r}
+ball.EINPW.WBNP <- read.csv("goldgenotypes_greg_Parks.csv",
+                      sep = ",",
+                      header = T)
+
+ball.EINPP <- read.csv("plains bison einp.csv",
+                      sep = ",",
+                      header = T)
+
+ball.EINPP <- ball.EINPP %>% 
+  mutate(
+    ID_rework = gsub("-", "", ID)
+  ) %>% 
+  relocate(ID_rework, .after = ID)
+
+
+sum(year_manipulation_added_ball$SAMPLE.ID %in% ball.EINPP$ID_rework)
+```
+
+
 #### Sample Naming Schemes
 "W" and "WR" naming conventions used at EINP for both wood and plains bison indicate tagging year
 ```{r}
@@ -487,7 +508,7 @@ wb_cleaned_years <- wb_cleaned_samples %>%
 
 Write the cleaned product out to a csv
 ```{r}
-write.csv(wb_cleaned_years, "Cleaned_samples.06.01.2026", row.names = F)
+write.csv(wb_cleaned_years, "Cleaned_samples.06.01.2026.csv", row.names = F)
 ```
 
 

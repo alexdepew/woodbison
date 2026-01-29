@@ -432,9 +432,9 @@ temp1.order <- c("WBNPGR",
                  "WBNPNY",
                  "WBNPLB",
                  "WBNPHC",
-                 "MBS",
                  "EINPP",
-                 "EINPW")
+                 "EINPW",
+                 "MBS")
 
 temp2.order <- c("HZ",
                  "RL",
@@ -461,9 +461,17 @@ temp3.order <- c("CL",
                  "AISH")
 
 # Change order of rows and cols in matrices
-temp1.fst.mat <- as.matrix(temp1.fst)
-temp1.fst.mat.1 <- temp1.fst.mat[temp1.order, ]
-temp1.fst.mat.2 <- temp1.fst.mat[ ,temp1.order]
+library(reshape2)
+temp1.fst.mat <- as.matrix(temp1.fst)[temp1.order, temp1.order]
+temp1.fst.df <- temp1.fst.df[as.numeric(factor(temp1.fst.df$Site1, levels=temp1.order)) > 
+                             as.numeric(factor(temp1.fst.df$Site2, levels=temp1.order)), ]
+
+# 4. Enforce your specific order
+temp1.fst.df$Site1 <- factor(temp1.fst.df$Site1, levels = temp1.order)
+temp1.fst.df$Site2 <- factor(temp1.fst.df$Site2, levels = temp1.order)
+
+# 5. Handle negatives
+temp1.fst.df$Fst[temp1.fst.df$Fst < 0] <- 0
 
 temp2.fst.mat <- as.matrix(temp2.fst)
 temp2.fst.mat.1 <- temp2.fst.mat[temp2.order, ]
@@ -474,10 +482,9 @@ temp3.fst.mat.1 <- temp3.fst.mat[temp3.order, ]
 temp3.fst.mat.2 <- temp3.fst.mat[ ,temp3.order]
 
 # Df creation
+
 temp1.ind <- which(upper.tri(temp1.fst.mat.2), arr.ind = TRUE)
-temp1.fst.df <- data.frame(Site1 = dimnames(temp1.fst.mat.2)[[2]][temp1.ind[,2]],
-                           Site2 = dimnames(temp1.fst.mat.2)[[1]][temp1.ind[,1]],
-                           Fst = temp1.fst.mat.2[ temp1.ind ])
+temp1.fst.df <- melt(ordered_mat, varnames = c("Site1", "Site2"), value.name = "Fst")
 
 temp2.ind <- which(upper.tri(temp2.fst.mat.2), arr.ind = TRUE)
 temp2.fst.df <- data.frame(Site1 = dimnames(temp2.fst.mat.2)[[2]][temp2.ind[,2]],

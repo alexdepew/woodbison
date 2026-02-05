@@ -158,8 +158,17 @@ genind_to_structure(temp1.struct.gen, output = "structure/temp1.structure.txt")
 
 ```{r}
 library(pophelper)
-test <- readQStructure(files = "structure/temp1_out_f", indlabfromfile = T, readci = F)
-alignK(test)
-plotQ(test, exportpath=getwd())
+library(gridExtra)
+sfiles <- list.files(path = "C:/Users/adepe/OneDrive/Documents/R Working Directory/Bison_github/structure/results_f/", full.names = TRUE)
+
+slist <- readQ(files = sfiles)
+readQ(files = sfiles, filetype = "structure")
+
+sr1 <- summariseQ(tabulateQ(slist))
+
+p <- evannoMethodStructure(data = sr1, exportplot = F,
+                           returnplot = T, returndata = F,
+                           basesize = 12, linesize = 0.7)
+grid.arrange(p)
 ```
 

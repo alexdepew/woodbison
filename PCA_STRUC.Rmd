@@ -1,0 +1,165 @@
+---
+title: "PCA_STRUCT"
+author: "Alex Depew"
+date: "2026-02-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# File information
+This script is used to evaluate temporal patterns in population structure in all wood bison herds in Canada. 
+
+Files used described below:
+
+- `Cleaned_samples.06.01.2026.csv`
+   - Contains all samples for population genetic analyses, post-filtering
+   
+
+
+## Load Required Packages
+```{r}
+rm(list = ls())
+library(adegenet)
+library(graph4lg)
+library(poppr)
+library(hierfstat)
+```
+
+## Load Required Data
+```{r}
+bison.data <- read.csv("Cleaned_samples.06.01.2026.csv",
+                       check.names = F)
+```
+
+
+#### Convert data to Genind object
+```{r}
+# Make genind object
+bison.genind <- df2genind(X=bison.data[,c(19:ncol(bison.data))],
+                              sep = "/",
+                              ind.names = bison.data$Spreadsheet_ID,
+                              loc.names = NULL,
+                              pop = bison.data$HERD,
+                              NA.char = "NA",
+                              ploidy = 2,
+                              type = "codom",
+                              strata = NULL,
+                              hierarchy = NULL)
+
+# Attach collection year metadata
+idx <- match(indNames(bison.genind), bison.data$Spreadsheet_ID)
+stopifnot(!any(is.na(idx)))
+bison.genind@other$YEAR.ASSIGN <- bison.data$YEAR.ASSIGN[idx]
+
+# Remove loci with more than 20% missing data
+bison.genind <- missingno(bison.genind, type = "loci", cutoff = 0.20)
+```
+
+#### Subset data 
+Data is subset into three temporal groups. Temporal groups are: 1: pre-1999, 2: pre-2016, and 3: post-2016
+```{r}
+# Create datasets containing samples of interest for temporal comparisons
+temp1 <- bison.genind[bison.genind@other$YEAR.ASSIGN <=1999,]
+temp1.sum <- summary(temp1) # Create summary of genind object
+
+temp2 <- bison.genind[bison.genind@other$YEAR.ASSIGN >= 2000 & bison.genind@other$YEAR.ASSIGN <= 2015, ]
+temp2.sum <- summary(temp2)
+
+temp3 <- bison.genind[bison.genind@other$YEAR.ASSIGN >=2016,]
+temp3.sum <- summary(temp3)
+
+
+# Remove populations which do not contain significant sample sizes in temporal groups
+table(pop(temp1))
+table(pop(temp2)) # WBNP samples, ETH, NORD samples can be removed
+table(pop(temp3))
+
+# Remove herds from temporal group 2 and 3
+remove_herds <- c("WBNPPAD", "WBNPNY", "ETH", "NORD", "WENT")
+temp2 <- temp2[!pop(temp2) %in% remove_herds, ]
+temp2.sum <- summary(temp2) # Recalculate summary
+
+temp3 <- temp3[!pop(temp3) %in% "WBNP"]
+temp3.sum <- summary(temp3) # Recalculate summary
+```
+
+
+
+# Principal Coordinate Analysis (PCA)
+Visualize population structure without assumptions of HWE or LD, to identify clusters in the data. 
+
+### Temporal Group 1
+```{r}
+x.temp1 <- tab(temp1, freq = TRUE, NA.method = "mean")
+pca.temp1 <- dudi.pca(x.temp1, center = T, scale = F, scannf = F, nf = 2)
+
+
+s.class(pca.temp1$li, fac = pop(temp1), col = transp(funky(15)),
+        axesell = F, cstar = 0, cpoint = 3,
+        grid = F)
+
+# How much % variance do the axes represent?
+eig.perc.temp1 <- 100*pca.temp1$eig/sum(pca.temp1$eig)
+head(eig.perc.temp1)
+
+# Allele contributions to variance
+loadingplot(pca.temp1$c1^2)
+```
+### Temporal Group 2
+```{r}
+x.temp2 <- tab(temp2, freq = TRUE, NA.method = "mean")
+pca.temp2 <- dudi.pca(x.temp2, center = T, scale = F, scannf = F, nf = 2)
+
+
+s.class(pca.temp2$li, fac = pop(temp2), col = transp(funky(15)),
+        axesell = F, cstar = 0, cpoint = 3,
+        grid = F)
+
+# How much % variance do the axes represent?
+eig.perc.temp2 <- 100*pca.temp2$eig/sum(pca.temp2$eig)
+head(eig.perc.temp2)
+
+# Allele contributions to variance
+loadingplot(pca.temp2$c1^2)
+```
+### Temporal Group 3
+```{r}
+x.temp3 <- tab(temp3, freq = TRUE, NA.method = "mean")
+pca.temp3 <- dudi.pca(x.temp3, center = T, scale = F, scannf = F, nf = 2)
+
+
+s.class(pca.temp3$li, fac = pop(temp3), col = transp(funky(15)),
+        axesell = F, cstar = 0, cpoint = 3,
+        grid = F)
+
+# How much % variance do the axes represent?
+eig.perc.temp3 <- 100*pca.temp3$eig/sum(pca.temp3$eig)
+head(eig.perc.temp3)
+
+# Allele contributions to variance
+loadingplot(pca.temp3$c1^2)
+```
+# DACP
+
+# STRUCTURE Analyses
+```{r}
+# Populations need to be in unique integer format for input into STRUCTURE:
+temp1.struct.gen <- temp1
+pop(temp1.struct.gen) <- as.numeric(as.factor(pop(temp1.struct.gen)))
+
+
+# Format in STRUCTURE format
+library(graph4lg)
+genind_to_structure(temp1.struct.gen, output = "structure/temp1.structure.txt")
+```
+
+```{r}
+library(pophelper)
+test <- readQStructure(files = "structure/temp1_out_f", indlabfromfile = T, readci = F)
+alignK(test)
+plotQ(test, exportpath=getwd())
+```
+

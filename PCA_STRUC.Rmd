@@ -26,6 +26,7 @@ library(adegenet)
 library(graph4lg)
 library(poppr)
 library(hierfstat)
+library(pophelper)
 ```
 
 ## Load Required Data
@@ -150,16 +151,18 @@ loadingplot(pca.temp3$c1^2)
 temp1.struct.gen <- temp1
 pop(temp1.struct.gen) <- as.numeric(as.factor(pop(temp1.struct.gen)))
 
-
 # Format in STRUCTURE format
 library(graph4lg)
 genind_to_structure(temp1.struct.gen, output = "structure/temp1.structure.txt")
+
 ```
 
+
+# STRUCTURE VISUALIZATION
 ```{r}
 library(pophelper)
 library(gridExtra)
-sfiles <- list.files(path = "C:/Users/adepe/OneDrive/Documents/R Working Directory/Bison_github/structure/results_f/", full.names = TRUE)
+sfiles <- list.files(path = "C:/Users/User/Documents/R_WD/woodbison/structure/results_temp1_f/", full.names = TRUE)
 
 slist <- readQ(files = sfiles)
 readQ(files = sfiles, filetype = "structure")
@@ -170,5 +173,16 @@ p <- evannoMethodStructure(data = sr1, exportplot = F,
                            returnplot = T, returndata = F,
                            basesize = 12, linesize = 0.7)
 grid.arrange(p)
+
+# Plot
+qlist <- readQStructure(sfiles)
+qalign <- alignK(slist)
+
+plotQ(slist[1:80],
+      imgoutput = "join",
+      exportpath="./plots/structure_plots")
+
 ```
+
+
 

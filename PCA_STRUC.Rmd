@@ -151,6 +151,7 @@ loadingplot(pca.temp3$c1^2)
 temp1.struct.gen <- temp1
 pop(temp1.struct.gen) <- as.numeric(as.factor(pop(temp1.struct.gen)))
 summary(temp1.struct.gen)
+table(pop(temp1))
 
 temp2.struct.gen <- temp2
 pop(temp2.struct.gen) <- as.numeric(as.factor(pop(temp2.struct.gen)))
@@ -172,6 +173,8 @@ genind_to_structure(temp3.struct.gen, output = "structure/temp3.structure.txt")
 # STRUCTURE VISUALIZATION
 #### Temporal Group 1
 ```{r}
+table(pop(temp1.struct.gen))
+
 library(pophelper)
 library(gridExtra)
 sfiles <- list.files(path = "C:/Users/User/Documents/R_WD/woodbison/structure/results_temp1_f/", full.names = TRUE)
@@ -194,32 +197,19 @@ plotQ(slist[1:80],
       imgoutput = "join",
       exportpath="./plots/structure_plots")
 
-```
 
-#### Temporal Group 2
-```{r}
-library(pophelper)
-library(gridExtra)
-sfiles2 <- list.files(path = "C:/Users/User/Documents/R_WD/woodbison/structure/results_temp2_f/", full.names = TRUE)
+pop_order <- c(
+  "WBNPGR",
+  "WBNPPAD",
+  "WBNPNY",
+  "WBNPLB",
+  "WBNPHC",
+  "EINPP",
+  "EINPW",
+  "MBS"
+)
 
-slist2 <- readQ(files = sfiles2)
-readQ(files = sfiles2, filetype = "structure")
-
-sr2 <- summariseQ(tabulateQ(slist2))
-
-p2 <- evannoMethodStructure(data = sr2, exportplot = F,
-                           returnplot = T, returndata = F,
-                           basesize = 12, linesize = 0.7)
-grid.arrange(p2)
-
-# Plot
-qlist2 <- readQStructure(sfiles2)
-qalign2 <- alignK(slist2)
-
-plotQ(slist2[1:60],
-      imgoutput = "join",
-      exportpath="./plots/structure_plots")
-
-table(pop(temp2))
 
 ```
+
+

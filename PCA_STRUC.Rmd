@@ -87,6 +87,17 @@ temp3 <- temp3[!pop(temp3) %in% "WBNP"]
 temp3.sum <- summary(temp3) # Recalculate summary
 ```
 
+Remove Elk Island Plains for Structure Analyses
+```{r}
+temp1 <- temp1[temp1@pop != "EINPP"]
+temp1.sum <- summary(temp1)
+
+temp2 <- temp2[temp2@pop != "EINPP"]
+temp2.sum <- summary(temp2)
+
+temp3 <- temp3[temp3@pop != "EINPP"]
+temp3.sum <- summary(temp3)
+```
 
 
 # Principal Coordinate Analysis (PCA)

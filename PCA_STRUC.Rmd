@@ -27,6 +27,7 @@ library(graph4lg)
 library(poppr)
 library(hierfstat)
 library(pophelper)
+library(dplyr)
 ```
 
 ## Load Required Data
@@ -154,7 +155,6 @@ head(eig.perc.temp3)
 # Allele contributions to variance
 loadingplot(pca.temp3$c1^2)
 ```
-# DACP
 
 # STRUCTURE Analyses
 ```{r}
@@ -190,7 +190,8 @@ temp1.data <- bison.data %>%
   select(-ID) %>% 
   filter(YEAR.ASSIGN <= 1999) %>%
   rename(ID = Spreadsheet_ID) %>%     
-  mutate(ID = as.character(ID))  
+  mutate(ID = as.character(ID)) %>% 
+  filter(HERD != "EINPP")
 
 temp2.data <- bison.data %>% 
   select(-ID) %>% 
@@ -198,7 +199,8 @@ temp2.data <- bison.data %>%
            YEAR.ASSIGN <=2015) %>%
   filter(!HERD %in% remove_herds) %>%
   rename(ID = Spreadsheet_ID) %>% 
-  mutate(ID = as.character(ID))
+  mutate(ID = as.character(ID)) %>% 
+  filter(HERD != "EINPP")
 
   
 temp3.data <- temp2.data <- bison.data %>% 
@@ -206,7 +208,8 @@ temp3.data <- temp2.data <- bison.data %>%
   filter(YEAR.ASSIGN >=2016) %>%
   filter(HERD != "WBNP") %>% 
   rename(ID = Spreadsheet_ID) %>% 
-  mutate(ID = as.character(ID))
+  mutate(ID = as.character(ID)) %>% 
+  filter(HERD != "EINPP")
 
 ```
 
@@ -229,12 +232,13 @@ colours <- c(
 ```{r}
 library(tidyverse)
 library(pophelper)
+library(gridExtra)
 ```
 
 ### Temporal Group 1
 Load Data
 ```{r}
-sfiles_temp1 <- list.files("C:/Users/adepe/OneDrive/Documents/R Working Directory/Bison_github/structure/results_temp1_f/", full.names = TRUE)
+sfiles_temp1 <- list.files("C:/Users/User/Documents/R_WD/woodbison/structure/STRUCTURE_RESULTS/temp1/", full.names = TRUE)
 slist_temp1 <- readQ(files = sfiles_temp1, filetype = "structure")
 ```
 
@@ -247,9 +251,9 @@ p1 <- evannoMethodStructure(data = struct_sum_temp1, exportplot = F,
                            basesize = 12, linesize = 0.7)
 grid.arrange(p1)
 ```
+The methods described by Pritchard (2000) and Evanno (2006) both indicate the most likely number of populations is 3.
 
-
-Plotting
+### Plotting
 ```{r}
 ind_label_temp1 <- readQ(files = sfiles_temp1[1], indlabfrom = TRUE) %>% as.data.frame()
 ind_label_temp1 <- rownames_to_column(ind_label_temp1, "ID")
@@ -262,18 +266,19 @@ slist <- slist_temp1
 temp1_ind_order <- locations_temp1
 rownames(slist[[1]]) <- temp1_ind_order$ID
 if(length(unique(sapply(slist,nrow)))==1) slist <- lapply(slist,"rownames<-",temp1_ind_order$ID)
-lapply(slist, rownames)[1:80]
+lapply(slist, rownames)[1:70]
 
-slist_temp1 <- slist
-slist_align1 <- alignK(slist_temp1, "within")
+slist_temp1 <- slist 
+slist_align1 <- alignK(slist_temp1, "within") # Align replicate runs
+merged_temp1 <- mergeQ(slist_align1[21:30]) # Merge K = 3 runs
 
 loc_labels_temp1 <- locations_temp1$HERD %>% as.data.frame()
 colnames(loc_labels_temp1) <- "Region"
 
-herd_order_temp1 <- c("EINPW", "MBS", "WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD", "EINPP")
+herd_order_temp1 <- c("EINPW", "MBS", "WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD")
 
 
-plotQ(slist_align1[35], 
+plotQ(merged_temp1, 
             basesize = 10, 
             clustercol = colours, 
             grplab = loc_labels_temp1, 
@@ -296,6 +301,7 @@ plotQ(slist_align1[35],
             returndata = TRUE,
             height = 12,             
             width = 35,
+            outputfilename = "Temp1_K3",
             exportpath = "./plots/structure_plots/")
 
 ```
@@ -303,7 +309,7 @@ plotQ(slist_align1[35],
 ### Temporal Group 2
 Load Data
 ```{r}
-sfiles_temp2 <- list.files("C:/Users/adepe/OneDrive/Documents/R Working Directory/Bison_github/structure/results_temp2_f/", full.names = TRUE)
+sfiles_temp2 <- list.files("C:/Users/User/Documents/R_WD/woodbison/structure/STRUCTURE_RESULTS/temp2", full.names = TRUE)
 slist_temp2 <- readQ(files = sfiles_temp2, filetype = "structure")
 ```
 
@@ -330,7 +336,7 @@ slist <- slist_temp2
 temp2_ind_order <- locations_temp2
 rownames(slist[[1]]) <- temp2_ind_order$ID
 if(length(unique(sapply(slist,nrow)))==1) slist <- lapply(slist,"rownames<-",temp2_ind_order$ID)
-lapply(slist, rownames)[0:60]
+lapply(slist, rownames)[0:50]
 
 slist_temp2 <- slist
 slist_align2 <- alignK(slist_temp2, "within")
@@ -338,10 +344,10 @@ slist_align2 <- alignK(slist_temp2, "within")
 loc_labels_temp2 <- locations_temp2$HERD %>% as.data.frame()
 colnames(loc_labels_temp2) <- "Region"
 
-herd_order_temp2 <- c("EINPW", "HZ", "MBS", "RL", "WAB", "EINPP")
+herd_order_temp2 <- c("EINPW", "HZ", "MBS", "RL", "WAB")
 
 # Structure Plot
-plotQ(slist_align2[55], 
+plotQ(slist_align2[45], 
             basesize = 10, 
             clustercol = colours, 
             grplab = loc_labels_temp2, 
@@ -370,7 +376,7 @@ plotQ(slist_align2[55],
 ### Temporal Group 3
 Load Data
 ```{r}
-sfiles_temp3 <- list.files("C:/Users/adepe/OneDrive/Documents/R Working Directory/Bison_github/structure/results_temp3_f/", full.names = TRUE)
+sfiles_temp3 <- list.files("C:/Users/User/Documents/R_WD/woodbison/structure/STRUCTURE_RESULTS/temp3/", full.names = TRUE)
 slist_temp3 <- readQ(files = sfiles_temp3, filetype = "structure")
 ```
 
@@ -398,7 +404,7 @@ slist <- slist_temp3
 temp3_ind_order <- locations_temp3
 rownames(slist[[1]]) <- temp3_ind_order$ID
 if(length(unique(sapply(slist,nrow)))==1) slist <- lapply(slist,"rownames<-",temp3_ind_order$ID)
-lapply(slist, rownames)[0:160]
+lapply(slist, rownames)[0:150]
 
 slist_temp3 <- slist
 slist_align3 <- alignK(slist_temp3, "within")
@@ -408,11 +414,11 @@ colnames(loc_labels_temp3) <- "Region"
 
 herd_order_temp3 <- c("AISH", "CL", "EINPW", "ETH", "HZ", "NAH", 
                       "NORD", "RL", "WAB", "WBNPGR", "WBNPHC", "WBNPLB", 
-                      "WBNPNY", "WBNPPAD", "WENT", "EINPP")
+                      "WBNPNY", "WBNPPAD", "WENT")
 
 
 # Structure Plot
-plotQ(slist_align3[45], 
+plotQ(slist_align3[15], 
             basesize = 10, 
             clustercol = colours, 
             grplab = loc_labels_temp3, 

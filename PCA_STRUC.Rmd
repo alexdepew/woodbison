@@ -103,58 +103,92 @@ temp3.sum <- summary(temp3)
 
 # Principal Coordinate Analysis (PCA)
 Visualize population structure without assumptions of HWE or LD, to identify clusters in the data. 
+```{r}
+custom_palette <- c(
+  "#E31A1C", "#1F78B4", "#33A02C", "#FF7F00", "#6A3D9A", 
+  "#B15928", "#A6CEE3", "#B2DF8A", "#FB9A99", "#FDBF6F", 
+  "#CAB2D6", "#FFFF99", "#000000", "#8DD3C7", "#BEBADA"  
+)
+```
+
 
 ### Temporal Group 1
 ```{r}
 x.temp1 <- tab(temp1, freq = TRUE, NA.method = "mean")
 pca.temp1 <- dudi.pca(x.temp1, center = T, scale = F, scannf = F, nf = 2)
 
-
-s.class(pca.temp1$li, fac = pop(temp1), col = transp(funky(15)),
-        axesell = F, cstar = 0, cpoint = 3,
-        grid = F)
-
-# How much % variance do the axes represent?
+# Axes % Variance
 eig.perc.temp1 <- 100*pca.temp1$eig/sum(pca.temp1$eig)
-head(eig.perc.temp1)
+
+# Plot
+pdf(file = "./plots/pca_temp1.pdf", width = 10, height = 10)
+
+s.class(pca.temp1$li, fac = pop(temp1), col = transp(custom_palette, 0.75),
+        axesell = F, cstar = 0, cpoint = 3,
+        grid = F,
+        sub = paste0("PC1: ", round(eig.perc.temp1[1], 1), "% | PC2: ", round(eig.perc.temp1[2], 1), "%"),)
+
+add.scatter.eig(pca.temp1$eig[1:20], 3, 1, 2, ratio = 0.15, "bottomright")
+dev.off()
+
+
 
 # Allele contributions to variance
 loadingplot(pca.temp1$c1^2)
 ```
+
+
+
 ### Temporal Group 2
 ```{r}
 x.temp2 <- tab(temp2, freq = TRUE, NA.method = "mean")
 pca.temp2 <- dudi.pca(x.temp2, center = T, scale = F, scannf = F, nf = 2)
 
-
-s.class(pca.temp2$li, fac = pop(temp2), col = transp(funky(15)),
-        axesell = F, cstar = 0, cpoint = 3,
-        grid = F)
-
-# How much % variance do the axes represent?
+# Axes % Variance
 eig.perc.temp2 <- 100*pca.temp2$eig/sum(pca.temp2$eig)
-head(eig.perc.temp2)
+
+# Plot
+pdf(file = "./plots/pca_temp2.pdf", width = 10, height = 10)
+
+s.class(pca.temp2$li, fac = pop(temp2), col = transp(custom_palette, 0.75),
+        axesell = F, cstar = 0, cpoint = 3,
+        grid = F,
+        sub = paste0("PC1: ", round(eig.perc.temp2[1], 1), "% | PC2: ", round(eig.perc.temp2[2], 1), "%"),)
+
+add.scatter.eig(pca.temp2$eig[1:20], 3, 1, 2, ratio = 0.15, "bottomright")
+dev.off()
+
 
 # Allele contributions to variance
 loadingplot(pca.temp2$c1^2)
+
 ```
+
 ### Temporal Group 3
 ```{r}
 x.temp3 <- tab(temp3, freq = TRUE, NA.method = "mean")
 pca.temp3 <- dudi.pca(x.temp3, center = T, scale = F, scannf = F, nf = 2)
 
-
-s.class(pca.temp3$li, fac = pop(temp3), col = transp(funky(15)),
-        axesell = F, cstar = 0, cpoint = 3,
-        grid = F)
-
-# How much % variance do the axes represent?
+# Axes % Variance
 eig.perc.temp3 <- 100*pca.temp3$eig/sum(pca.temp3$eig)
-head(eig.perc.temp3)
+
+# Plot
+pdf(file = "./plots/pca_temp3.pdf", width = 10, height = 10)
+
+s.class(pca.temp3$li, fac = pop(temp3), col = transp(custom_palette, 0.75),
+        axesell = F, cstar = 0, cpoint = 3,
+        grid = F,
+        sub = paste0("PC1: ", round(eig.perc.temp3[1], 1), "% | PC2: ", round(eig.perc.temp3[2], 1), "%"),)
+
+add.scatter.eig(pca.temp3$eig[1:20], 3, 1, 2, ratio = 0.15, "bottomright")
+dev.off()
+
+
 
 # Allele contributions to variance
 loadingplot(pca.temp3$c1^2)
 ```
+
 
 # STRUCTURE Analyses
 ```{r}
@@ -238,7 +272,7 @@ library(gridExtra)
 ### Temporal Group 1
 Load Data
 ```{r}
-sfiles_temp1 <- list.files("C:/Users/User/Documents/R_WD/woodbison/structure/STRUCTURE_RESULTS/temp1/", full.names = TRUE)
+sfiles_temp1 <- list.files("C:/Users/adepe/OneDrive/Documents/R Working Directory/Bison_github/structure/STRUCTURE_RESULTS/temp1/", full.names = TRUE)
 slist_temp1 <- readQ(files = sfiles_temp1, filetype = "structure")
 ```
 
@@ -254,7 +288,7 @@ grid.arrange(p1)
 The methods described by Pritchard (2000) and Evanno (2006) both indicate the most likely number of populations is 3.
 
 ### Plotting
-```{r}
+```{r, results='hide'}
 ind_label_temp1 <- readQ(files = sfiles_temp1[1], indlabfrom = TRUE) %>% as.data.frame()
 ind_label_temp1 <- rownames_to_column(ind_label_temp1, "ID")
 
@@ -309,7 +343,7 @@ plotQ(merged_temp1,
 ### Temporal Group 2
 Load Data
 ```{r}
-sfiles_temp2 <- list.files("C:/Users/User/Documents/R_WD/woodbison/structure/STRUCTURE_RESULTS/temp2", full.names = TRUE)
+sfiles_temp2 <- list.files("C:/Users/adepe/OneDrive/Documents/R Working Directory/Bison_github/structure/STRUCTURE_RESULTS/temp2", full.names = TRUE)
 slist_temp2 <- readQ(files = sfiles_temp2, filetype = "structure")
 ```
 
@@ -340,6 +374,8 @@ lapply(slist, rownames)[0:50]
 
 slist_temp2 <- slist
 slist_align2 <- alignK(slist_temp2, "within")
+merged_temp2 <- mergeQ(slist_align2[11:20]) # Merge K = 2 runs
+
 
 loc_labels_temp2 <- locations_temp2$HERD %>% as.data.frame()
 colnames(loc_labels_temp2) <- "Region"
@@ -347,8 +383,8 @@ colnames(loc_labels_temp2) <- "Region"
 herd_order_temp2 <- c("EINPW", "HZ", "MBS", "RL", "WAB")
 
 # Structure Plot
-plotQ(slist_align2[45], 
-            basesize = 10, 
+plotQ(merged_temp2, 
+            basesize = 10,
             clustercol = colours, 
             grplab = loc_labels_temp2, 
             subsetgrp = herd_order_temp2, 
@@ -370,6 +406,7 @@ plotQ(slist_align2[45],
             returndata = TRUE,
             height = 12,             
             width = 35,
+            outputfilename = "Temp2_K2",
             exportpath = "./plots/structure_plots/")
 ```
 

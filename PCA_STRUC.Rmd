@@ -105,10 +105,17 @@ temp3.sum <- summary(temp3)
 Visualize population structure without assumptions of HWE or LD, to identify clusters in the data. 
 ```{r}
 custom_palette <- c(
-  "#E31A1C", "#1F78B4", "#33A02C", "#FF7F00", "#6A3D9A", 
-  "#B15928", "#A6CEE3", "#B2DF8A", "#FB9A99", "#FDBF6F", 
-  "#CAB2D6", "#FFFF99", "#000000", "#8DD3C7", "#BEBADA"  
-)
+  "#E31A1C", "#1F78B4", "#FFFF99", "#33A02C", "#FF7F00", 
+  "#6A3D9A", "#B15928", "#A6CEE3", "#B2DF8A", "#FB9A99", 
+  "#FDBF6F", "#CAB2D6", "#000000", "#8DD3C7", "#BEBADA",
+  "#2F4F4F", "#FF1493")
+
+all_herds <- c(
+  "AISH", "CL", "EINPP", "EINPW", "ETH", "HZ", "MBS", "NAH", "NORD", 
+  "RL", "WAB", "WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD", "WENT")
+
+herd_col_set <- setNames(custom_palette, all_herds)
+
 ```
 
 
@@ -122,8 +129,9 @@ eig.perc.temp1 <- 100*pca.temp1$eig/sum(pca.temp1$eig)
 
 # Plot
 pdf(file = "./plots/pca_temp1.pdf", width = 10, height = 10)
+cols_temp1 <- herd_col_set[levels(pop(temp1))]
 
-s.class(pca.temp1$li, fac = pop(temp1), col = transp(custom_palette, 0.75),
+s.class(pca.temp1$li, fac = pop(temp1), col = transp(cols_temp1, 0.75),
         axesell = F, cstar = 0, cpoint = 3,
         grid = F,
         sub = paste0("PC1: ", round(eig.perc.temp1[1], 1), "% | PC2: ", round(eig.perc.temp1[2], 1), "%"),)
@@ -149,8 +157,9 @@ eig.perc.temp2 <- 100*pca.temp2$eig/sum(pca.temp2$eig)
 
 # Plot
 pdf(file = "./plots/pca_temp2.pdf", width = 10, height = 10)
+cols_temp2 <- herd_col_set[levels(pop(temp2))] # Map colours to herd
 
-s.class(pca.temp2$li, fac = pop(temp2), col = transp(custom_palette, 0.75),
+s.class(pca.temp2$li, fac = pop(temp2), col = transp(cols_temp2, 0.75),
         axesell = F, cstar = 0, cpoint = 3,
         grid = F,
         sub = paste0("PC1: ", round(eig.perc.temp2[1], 1), "% | PC2: ", round(eig.perc.temp2[2], 1), "%"),)
@@ -174,8 +183,10 @@ eig.perc.temp3 <- 100*pca.temp3$eig/sum(pca.temp3$eig)
 
 # Plot
 pdf(file = "./plots/pca_temp3.pdf", width = 10, height = 10)
+cols_temp3 <- herd_col_set[levels(pop(temp3))]
 
-s.class(pca.temp3$li, fac = pop(temp3), col = transp(custom_palette, 0.75),
+
+s.class(pca.temp3$li, fac = pop(temp3), col = transp(cols_temp3, 0.75),
         axesell = F, cstar = 0, cpoint = 3,
         grid = F,
         sub = paste0("PC1: ", round(eig.perc.temp3[1], 1), "% | PC2: ", round(eig.perc.temp3[2], 1), "%"),)
@@ -272,7 +283,7 @@ library(gridExtra)
 ### Temporal Group 1
 Load Data
 ```{r}
-sfiles_temp1 <- list.files("C:/Users/adepe/OneDrive/Documents/R Working Directory/Bison_github/structure/STRUCTURE_RESULTS/temp1/", full.names = TRUE)
+sfiles_temp1 <- list.files("./structure/STRUCTURE_RESULTS/temp1/", full.names = TRUE)
 slist_temp1 <- readQ(files = sfiles_temp1, filetype = "structure")
 ```
 
@@ -283,6 +294,7 @@ struct_sum_temp1 <- summariseQ(tabulateQ(slist_temp1))
 p1 <- evannoMethodStructure(data = struct_sum_temp1, exportplot = F,
                            returnplot = T, returndata = F,
                            basesize = 12, linesize = 0.7)
+
 grid.arrange(p1)
 ```
 The methods described by Pritchard (2000) and Evanno (2006) both indicate the most likely number of populations is 3.
@@ -343,7 +355,7 @@ plotQ(merged_temp1,
 ### Temporal Group 2
 Load Data
 ```{r}
-sfiles_temp2 <- list.files("C:/Users/adepe/OneDrive/Documents/R Working Directory/Bison_github/structure/STRUCTURE_RESULTS/temp2", full.names = TRUE)
+sfiles_temp2 <- list.files("./structure/STRUCTURE_RESULTS/temp2", full.names = TRUE)
 slist_temp2 <- readQ(files = sfiles_temp2, filetype = "structure")
 ```
 
@@ -374,7 +386,7 @@ lapply(slist, rownames)[0:50]
 
 slist_temp2 <- slist
 slist_align2 <- alignK(slist_temp2, "within")
-merged_temp2 <- mergeQ(slist_align2[11:20]) # Merge K = 2 runs
+merged_temp2 <- mergeQ(slist_align2[41:50]) # Merge K = 2 runs
 
 
 loc_labels_temp2 <- locations_temp2$HERD %>% as.data.frame()
@@ -383,7 +395,7 @@ colnames(loc_labels_temp2) <- "Region"
 herd_order_temp2 <- c("EINPW", "HZ", "MBS", "RL", "WAB")
 
 # Structure Plot
-plotQ(merged_temp2, 
+plotQ(slist_align2[45], 
             basesize = 10,
             clustercol = colours, 
             grplab = loc_labels_temp2, 
@@ -406,14 +418,14 @@ plotQ(merged_temp2,
             returndata = TRUE,
             height = 12,             
             width = 35,
-            outputfilename = "Temp2_K2",
+            outputfilename = "Temp2_K5",
             exportpath = "./plots/structure_plots/")
 ```
 
 ### Temporal Group 3
 Load Data
 ```{r}
-sfiles_temp3 <- list.files("C:/Users/User/Documents/R_WD/woodbison/structure/STRUCTURE_RESULTS/temp3/", full.names = TRUE)
+sfiles_temp3 <- list.files("./structure/STRUCTURE_RESULTS/temp3/", full.names = TRUE)
 slist_temp3 <- readQ(files = sfiles_temp3, filetype = "structure")
 ```
 
@@ -422,9 +434,11 @@ Optimal K clusters
 ```{r}
 struct_sum_temp3 <- summariseQ(tabulateQ(slist_temp3))
 
-p3 <- evannoMethodStructure(data = struct_sum_temp3, exportplot = F,
+p3 <- evannoMethodStructure(data = struct_sum_temp3, 
+                            exportplot = F,
                            returnplot = T, returndata = F,
-                           basesize = 12, linesize = 0.7)
+                           basesize = 12, linesize = 0.7,
+                          )
 grid.arrange(p3)
 ```
 
@@ -455,7 +469,7 @@ herd_order_temp3 <- c("AISH", "CL", "EINPW", "ETH", "HZ", "NAH",
 
 
 # Structure Plot
-plotQ(slist_align3[15], 
+plotQ(slist_align3[75], 
             basesize = 10, 
             clustercol = colours, 
             grplab = loc_labels_temp3, 
@@ -478,5 +492,6 @@ plotQ(slist_align3[15],
             returndata = TRUE,
             height = 12,             
             width = 35,
+      
             exportpath = "./plots/structure_plots/")
 ```

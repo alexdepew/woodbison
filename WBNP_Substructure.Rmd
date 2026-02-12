@@ -1,0 +1,326 @@
+---
+title: "WBNP_PCA_STRUCT"
+author: "Alex Depew"
+date: "2026-02-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# File information
+This script is used to evaluate population substructure in WBNP. 
+
+Files used described below:
+
+- `Cleaned_samples.06.01.2026.csv`
+   - Contains all samples for population genetic analyses, post-filtering
+
+## Load Required Packages
+```{r}
+rm(list = ls())
+library(adegenet)
+library(graph4lg)
+library(poppr)
+library(hierfstat)
+library(pophelper)
+library(dplyr)
+```
+
+## Load Required Data
+```{r}
+bison.data <- read.csv("Cleaned_samples.06.01.2026.csv",
+                       check.names = F)
+```
+
+
+#### Convert data to Genind object
+```{r}
+# Make genind object
+bison.genind <- df2genind(X=bison.data[,c(19:ncol(bison.data))],
+                              sep = "/",
+                              ind.names = bison.data$Spreadsheet_ID,
+                              loc.names = NULL,
+                              pop = bison.data$HERD,
+                              NA.char = "NA",
+                              ploidy = 2,
+                              type = "codom",
+                              strata = NULL,
+                              hierarchy = NULL)
+
+# Attach collection year metadata
+idx <- match(indNames(bison.genind), bison.data$Spreadsheet_ID)
+stopifnot(!any(is.na(idx)))
+bison.genind@other$YEAR.ASSIGN <- bison.data$YEAR.ASSIGN[idx]
+
+# Remove loci with more than 20% missing data
+bison.genind <- missingno(bison.genind, type = "loci", cutoff = 0.20)
+```
+
+#### Subset Data
+Two temporal groups of data exist for WBNP - those collected prior to 1999 and samples collected post-2016
+```{r}
+subherds <- c("WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD")
+W1 <- bison.genind[bison.genind@pop %in% subherds &
+                     bison.genind@other$YEAR.ASSIGN <= 1999]
+
+W2 <- bison.genind[bison.genind@pop %in% subherds &
+                     bison.genind@other$YEAR.ASSIGN >= 2016]
+```
+
+## PCA
+
+```{r}
+custom_palette <- c(
+  "#E31A1C", "#1F78B4", "#33A02C", "#FF7F00", "#6A3D9A", 
+  "#B15928", "#A6CEE3", "#B2DF8A", "#FB9A99", "#FDBF6F", 
+  "#CAB2D6", "#FFFF99", "#000000", "#8DD3C7", "#BEBADA"  
+)
+```
+
+```{r}
+x.W1 <- tab(W1, freq = TRUE, NA.method = "mean")
+pca.W1 <- dudi.pca(x.W1, center = T, scale = F, scannf = F, nf = 2)
+
+# Axes % Variance
+eig.perc.W1 <- 100*pca.W1$eig/sum(pca.W1$eig)
+
+# Plot
+pdf(file = "./plots/pca_W1.pdf", width = 10, height = 10)
+
+s.class(pca.W1$li, fac = pop(W1), col = transp(custom_palette, 0.75),
+        axesell = F, cstar = 0, cpoint = 3,
+        grid = F,
+        sub = paste0("PC1: ", round(eig.perc.W1[1], 1), "% | PC2: ", round(eig.perc.W1[2], 1), "%"),)
+
+add.scatter.eig(pca.W1$eig[1:20], 3, 1, 2, ratio = 0.15, "bottomright")
+dev.off()
+
+
+
+# Allele contributions to variance
+loadingplot(pca.W1$c1^2)
+```
+
+```{r}
+x.W2 <- tab(W2, freq = TRUE, NA.method = "mean")
+pca.W2 <- dudi.pca(x.W2, center = T, scale = F, scannf = F, nf = 2)
+
+# Axes % Variance
+eig.perc.W2 <- 100*pca.W2$eig/sum(pca.W2$eig)
+
+# Plot
+pdf(file = "./plots/pca_W2.pdf", width = 10, height = 10)
+
+s.class(pca.W2$li, fac = pop(W2), col = transp(custom_palette, 0.75),
+        axesell = F, cstar = 0, cpoint = 3,
+        grid = F,
+        sub = paste0("PC1: ", round(eig.perc.W2[1], 1), "% | PC2: ", round(eig.perc.W2[2], 1), "%"),)
+
+add.scatter.eig(pca.W2$eig[1:20], 3, 1, 2, ratio = 0.15, "bottomright")
+dev.off()
+
+
+
+# Allele contributions to variance
+loadingplot(pca.W2$c1^2)
+```
+## STRUCTURE 
+
+#### Select Colour Palette for STRUCTURE Plotting
+```{r}
+colours <- c(
+  "#E41A1C", 
+  "#377EB8", 
+  "#4DAF4A", 
+  "#FF7F00", 
+  "#984EA3", 
+  "#FFFF33", 
+  "#A65628", 
+  "#F781BF", 
+  "#1B9E77", "#D95F02", "#7570B3", "#E7298A", "#666666"
+)
+```
+
+# STRUCTURE Analyses
+```{r}
+# Populations need to be in unique integer format for input into STRUCTURE:
+W1.struct.gen <- W1
+pop(W1.struct.gen) <- as.numeric(as.factor(pop(W1.struct.gen)))
+summary(W1.struct.gen)
+
+W2.struct.gen <- W2
+pop(W2.struct.gen) <- as.numeric(as.factor(pop(W2.struct.gen)))
+summary(W2.struct.gen)
+
+
+# Format in STRUCTURE format
+library(graph4lg)
+genind_to_structure(W1.struct.gen, output = "structure/W1.structure.txt")
+genind_to_structure(W2.struct.gen, output = "structure/W2.structure.txt")
+```
+
+## Subset csv
+The data csv file can be subset to match the samples included in each STRUCTURE run. This will be used to match the sample ID's for plotting on the STRUCTURE plot.
+```{r}
+W1.data <- bison.data %>%
+  select(-ID) %>% 
+  filter(YEAR.ASSIGN <= 1999) %>%
+  rename(ID = Spreadsheet_ID) %>%     
+  mutate(ID = as.character(ID)) %>% 
+  filter(HERD %in% subherds)
+
+W2.data <- temp2.data <- bison.data %>% 
+  select(-ID) %>%
+  filter(YEAR.ASSIGN >=2016) %>%
+  rename(ID = Spreadsheet_ID) %>% 
+  mutate(ID = as.character(ID)) %>% 
+  filter(HERD %in% subherds)
+
+```
+
+
+### Temporal Group 1
+Load Data
+```{r}
+sfiles_W1 <- list.files("./structure/STRUCT_W/W1", full.names = TRUE)
+slist_W1 <- readQ(files = sfiles_W1, filetype = "structure")
+```
+
+Optimal K clusters
+```{r}
+library(gridExtra)
+struct_sum_W1 <- summariseQ(tabulateQ(slist_W1))
+
+p1 <- evannoMethodStructure(data = struct_sum_W1, exportplot = F,
+                           returnplot = T, returndata = F,
+                           basesize = 12, linesize = 0.7)
+grid.arrange(p1)
+```
+### Plotting
+```{r, results='hide'}
+library(tidyverse)
+ind_label_W1 <- readQ(files = sfiles_W1[1], indlabfrom = TRUE) %>% as.data.frame()
+ind_label_W1 <- rownames_to_column(ind_label_W1, "ID")
+
+locations_W1 <- left_join(ind_label_W1, W1.data, by = "ID")
+
+# 
+slist <- slist_W1
+
+W1_ind_order <- locations_W1
+rownames(slist[[1]]) <- W1_ind_order$ID
+if(length(unique(sapply(slist,nrow)))==1) slist <- lapply(slist,"rownames<-",W1_ind_order$ID)
+lapply(slist, rownames)[1:50]
+
+slist_W1 <- slist 
+slist_align1 <- alignK(slist_W1, "within") # Align replicate runs
+merged_W1 <- mergeQ(slist_W1[1:10]) # Merge K = 2 runs
+
+loc_labels_W1 <- locations_W1$HERD %>% as.data.frame()
+colnames(loc_labels_W1) <- "Region"
+
+herd_order_W1 <- c("WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD")
+
+
+plotQ(slist_align1[c(5,15,25,35,45)], 
+      imgoutput = "join",
+            basesize = 10, 
+            clustercol = colours, 
+            grplab = loc_labels_W1, 
+            subsetgrp = herd_order_W1, 
+            ordergrp = TRUE,
+            showindlab = TRUE, 
+            indlabsize = 4,        
+            indlabangle = 90,
+            indlabheight = 0,       
+            grplabsize = 3, 
+            grplabangle = 0,
+            grplabpos = 0.65,
+            grplabheight = 0.2,      
+            grplabspacer = 0.1,
+            linesize = 1,          
+            pointsize = 4, 
+            divcol = "white",
+            divsize = 1, 
+            useindlab = TRUE, 
+            returndata = TRUE,
+            height = 12,             
+            width = 35,
+            outputfilename = "W1_K2",
+            exportpath = "./plots/structure_plots/")
+
+```
+
+### Temporal Group 2
+Load Data
+```{r}
+sfiles_W2 <- list.files("./structure/STRUCT_W/W2", full.names = TRUE)
+slist_W2 <- readQ(files = sfiles_W2, filetype = "structure")
+```
+
+Optimal K clusters
+```{r}
+library(gridExtra)
+struct_sum_W2 <- summariseQ(tabulateQ(slist_W2))
+
+p2 <- evannoMethodStructure(data = struct_sum_W2, exportplot = F,
+                           returnplot = T, returndata = F,
+                           basesize = 12, linesize = 0.7)
+grid.arrange(p2)
+```
+### Plotting
+```{r, results='hide'}
+library(tidyverse)
+ind_label_W2 <- readQ(files = sfiles_W2[1], indlabfrom = TRUE) %>% as.data.frame()
+ind_label_W2 <- rownames_to_column(ind_label_W2, "ID")
+
+locations_W2 <- left_join(ind_label_W2, W2.data, by = "ID")
+
+# 
+slist <- slist_W2
+
+W2_ind_order <- locations_W2
+rownames(slist[[1]]) <- W2_ind_order$ID
+if(length(unique(sapply(slist,nrow)))==1) slist <- lapply(slist,"rownames<-",W2_ind_order$ID)
+lapply(slist, rownames)[1:50]
+
+slist_W2 <- slist 
+slist_align2 <- alignK(slist_W2, "within") # Align replicate runs
+merged_W2 <- mergeQ(slist_W2[11:20]) # Merge K = 2 runs
+
+loc_labels_W2 <- locations_W2$HERD %>% as.data.frame()
+colnames(loc_labels_W2) <- "Region"
+
+herd_order_W2 <- c("WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD")
+
+
+plotQ(slist_align2[c(5,15,25,35,45)], 
+      imgoutput = "join",
+            basesize = 10, 
+            clustercol = colours, 
+            grplab = loc_labels_W2, 
+            subsetgrp = herd_order_W2, 
+            ordergrp = TRUE,
+            showindlab = TRUE, 
+            indlabsize = 4,        
+            indlabangle = 90,
+            indlabheight = 0,       
+            grplabsize = 3, 
+            grplabangle = 0,
+            grplabpos = 0.65,
+            grplabheight = 0.2,      
+            grplabspacer = 0.1,
+            linesize = 1,          
+            pointsize = 4, 
+            divcol = "white",
+            divsize = 1, 
+            useindlab = TRUE, 
+            returndata = TRUE,
+            height = 12,             
+            width = 35,
+            outputfilename = "W2_K2",
+            exportpath = "./plots/structure_plots/")
+
+```

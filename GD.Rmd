@@ -1,0 +1,257 @@
+---
+title: "Genetic Diversity"
+author: "Alex Depew"
+date: "2026-02-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# File information
+This script is used to create descriptive statistic tables for population genetic analyses of all wood bison herds in Canada. 
+
+## Load Required Packages
+```{r}
+rm(list = ls())
+library(PopGenReport)
+library(adegenet)
+library(hierfstat)
+library(strataG)
+library(tidyverse)
+library(poppr)
+```
+
+## Load Required Data
+```{r}
+bison.data <- read.csv("Cleaned_samples.06.01.2026.csv",
+                       check.names = F)
+```
+
+Merge WBNP Subherds
+```{r}
+bison.data <- bison.data %>% 
+  filter(HERD != "WBNP") %>% 
+  mutate(HERD.2 = if_else(grepl("^WBNP|WENT", HERD), "WBNP", HERD)) %>% 
+  relocate(HERD.2, .after = HERD)
+```
+
+#### Convert data to Genind object
+```{r}
+# Make genind object
+bison.genind <- df2genind(X=bison.data[,c(20:ncol(bison.data))],
+                              sep = "/",
+                              ind.names = bison.data$Spreadsheet_ID,
+                              loc.names = NULL,
+                              pop = bison.data$HERD.2,
+                              NA.char = "NA",
+                              ploidy = 2,
+                              type = "codom",
+                              strata = NULL,
+                              hierarchy = NULL)
+
+# Attach collection year metadata
+idx <- match(indNames(bison.genind), bison.data$Spreadsheet_ID)
+stopifnot(!any(is.na(idx)))
+bison.genind@other$YEAR.ASSIGN <- bison.data$YEAR.ASSIGN[idx]
+
+# Remove loci with more than 20% missing data
+bison.genind <- missingno(bison.genind, type = "loci", cutoff = 0.20)
+```
+
+
+#### Subset data 
+Data is subset into three temporal groups. Temporal groups are: 1: pre-1999, 2: pre-2016, and 3: post-2016
+```{r}
+# Create datasets containing samples of interest for temporal comparisons
+temp1 <- bison.genind[bison.genind@other$YEAR.ASSIGN <=1999,]
+temp1.sum <- summary(temp1) # Create summary of genind object
+
+temp2 <- bison.genind[bison.genind@other$YEAR.ASSIGN >= 2000 & bison.genind@other$YEAR.ASSIGN <= 2015, ]
+temp2.sum <- summary(temp2)
+
+temp3 <- bison.genind[bison.genind@other$YEAR.ASSIGN >=2016,]
+temp3.sum <- summary(temp3)
+
+
+# Remove populations which do not contain significant sample sizes in temporal groups
+table(pop(temp1))
+table(pop(temp2)) # WBNP samples, ETH, NORD samples can be removed
+table(pop(temp3))
+
+# Remove herds from temporal group 2 
+remove_herds <- c("WBNP", "ETH", "NORD", "WENT")
+temp2 <- temp2[pop = setdiff(popNames(temp2), remove_herds), drop = TRUE]
+temp2.sum <- summary(temp2) # Recalculate summary
+temp2.sum
+```
+# Descriptive Statistics 
+Functions requiring the package *strataG* require inputs to be in "gtypes" objects. Programs such as HP-RARE require data to be in GENEPOP file format. 
+```{r}
+# Convert genind to gtypes
+temp1.g <- genind2gtypes(temp1)
+temp2.g <- genind2gtypes(temp2)
+temp3.g <- genind2gtypes(temp3)
+
+# Convert genind to genepop
+library(graph4lg)
+genind_to_genepop(temp1, output = "genepop_files/temp1.genepop.txt")
+genind_to_genepop(temp2, output = "genepop_files/temp2.genepop.txt")
+genind_to_genepop(temp3, output = "genepop_files/temp3.genepop.txt")
+
+# Hierfstat summary format
+temp1.stats <- basic.stats(temp1, diploid = TRUE, digits = 3)
+temp2.stats <- basic.stats(temp2, diploid = TRUE, digits = 3)
+temp3.stats <- basic.stats(temp3, diploid = TRUE, digits = 3)
+```
+
+## Temporal Group 1
+```{r}
+# Number of samples per population
+temp1.N = temp1.sum$n.by.pop
+temp1.N
+
+# Heterozygosity
+temp1.Ho <- round(colMeans(temp1.stats$Ho), 2) # Observed (Ho)
+# HO SD
+temp1.Ho.sd <- round(apply(temp1.stats$Ho, 2, sd, na.rm = TRUE), 2) # SD Ho
+
+temp1.He <- round(colMeans(temp1.stats$Hs), 2) # Expected (He)
+# HE SD
+temp1.He.sd <- round(apply(temp1.stats$Hs, 2, sd, na.rm = TRUE), 2) # SD Ho
+
+
+# Allelic Richness
+temp1.Ar <- allelic.richness(temp1, min.n = NULL, diploid = TRUE)
+temp1.Ar.mean <- round(colMeans(temp1.Ar$Ar), 2)
+# AR SD
+temp1.Ar.sd <- round(apply(temp1.Ar$Ar, 2, sd, na.rm = TRUE), 2)
+
+# FIS
+temp1.Fis <- round(colMeans(temp1.stats$Fis, na.rm = TRUE), 2)
+
+# Create Table
+descr.df1 <- enframe(temp1.N, name = "Population", value = "N") %>%
+  mutate(
+        HE = paste(temp1.He[Population], "±", temp1.He.sd[Population]), # Combine SD with ±
+        HO = paste(temp1.Ho[Population], "±", temp1.Ho.sd[Population]), # Combine SD with ±
+        AR = paste(temp1.Ar.mean[Population], "±", temp1.Ar.sd[Population]), # Combine with ±
+        FIS = temp1.Fis
+        )
+
+print(descr.df1)
+```
+## Temporal Group 2
+```{r}
+# Number of samples per population
+temp2.N = temp2.sum$n.by.pop
+temp2.N
+
+# Heterozygosity
+temp2.Ho <- round(colMeans(temp2.stats$Ho), 2) # Observed (Ho)
+# HO SD
+temp2.Ho.sd <- round(apply(temp2.stats$Ho, 2, sd, na.rm = TRUE), 2) # SD Ho
+
+temp2.He <- round(colMeans(temp2.stats$Hs), 2) # Expected (He)
+# HE SD
+temp2.He.sd <- round(apply(temp2.stats$Hs, 2, sd, na.rm = TRUE), 2) # SD Ho
+
+
+# Allelic Richness
+temp2.Ar <- allelic.richness(temp2, min.n = NULL, diploid = TRUE)
+temp2.Ar.mean <- round(colMeans(temp2.Ar$Ar), 2)
+# AR SD
+temp2.Ar.sd <- round(apply(temp2.Ar$Ar, 2, sd, na.rm = TRUE), 2)
+
+# FIS
+temp2.Fis <- round(colMeans(temp2.stats$Fis, na.rm = TRUE), 2)
+
+# Create Table
+descr.df2 <- enframe(temp2.N, name = "Population", value = "N") %>%
+  mutate(
+        HE = paste(temp2.He[Population], "±", temp2.He.sd[Population]), # Combine SD with ±
+        HO = paste(temp2.Ho[Population], "±", temp2.Ho.sd[Population]), # Combine SD with ±
+        AR = paste(temp2.Ar.mean[Population], "±", temp2.Ar.sd[Population]), # Combine with ±
+        FIS = temp2.Fis
+        )
+
+print(descr.df2)
+```
+
+## Temporal Group 3
+```{r}
+# Number of samples per population
+temp3.N = temp3.sum$n.by.pop
+temp3.N
+
+# Heterozygosity
+temp3.Ho <- round(colMeans(temp3.stats$Ho), 2) # Observed (Ho)
+# HO SD
+temp3.Ho.sd <- round(apply(temp3.stats$Ho, 2, sd, na.rm = TRUE), 2) # SD Ho
+
+temp3.He <- round(colMeans(temp3.stats$Hs), 2) # Expected (He)
+# HE SD
+temp3.He.sd <- round(apply(temp3.stats$Hs, 2, sd, na.rm = TRUE), 2) # SD Ho
+
+
+# Allelic Richness
+temp3.Ar <- allelic.richness(temp3, min.n = NULL, diploid = TRUE)
+temp3.Ar.mean <- round(colMeans(temp3.Ar$Ar), 2)
+# AR SD
+temp3.Ar.sd <- round(apply(temp3.Ar$Ar, 2, sd, na.rm = TRUE), 2)
+
+# FIS
+temp3.Fis <- round(colMeans(temp3.stats$Fis, na.rm = TRUE), 2)
+
+# Create Table
+descr.df3 <- enframe(temp3.N, name = "Population", value = "N") %>%
+  mutate(
+        HE = paste(temp3.He[Population], "±", temp3.He.sd[Population]), # Combine SD with ±
+        HO = paste(temp3.Ho[Population], "±", temp3.Ho.sd[Population]), # Combine SD with ±
+        AR = paste(temp3.Ar.mean[Population], "±", temp3.Ar.sd[Population]), # Combine with ±
+        FIS = temp3.Fis
+        )
+
+print(descr.df3)
+```
+
+Join Tables (Wide)
+```{r}
+full.descr.wide <- descr.df1 %>% 
+  full_join(descr.df2, by = "Population") %>% 
+  full_join(descr.df3, by = "Population") %>% 
+  
+  # Relocate columns for merging in excel
+  relocate(c("N.y", "N"), .after = "N.x") %>% # Number of samples
+  relocate(c("HE.y", "HE"), .after = "HE.x") %>% 
+  relocate(c("HO.y", "HO"), .after = "HO.x") %>%
+  relocate(c("AR.y", "AR"), .after = "AR.x") %>% 
+  relocate(c("FIS.y", "FIS"), .after = "FIS.x") %>% 
+  arrange(Population == "EINPP", Population)
+
+# Export to csv
+write.table(full.descr.wide, "./tables/Temporal_GD_Table_wide.csv", 
+            sep = ",",
+            fileEncoding = "UTF-8", 
+            row.names = FALSE)
+```
+
+Join Tables (Long)
+```{r}
+df1_v <- descr.df1 %>% mutate(Period = "T1")
+df2_v <- descr.df2 %>% mutate(Period = "T2")
+df3_v <- descr.df3 %>% mutate(Period = "T3")
+
+full.descr.long <- bind_rows(df1_v, df2_v, df3_v) %>% 
+  arrange(Population == "EINPP", Population) %>% 
+  relocate(Period, .after = Population)
+
+# Write to csv
+write.table(full.descr.long, "./tables/Temporal_GD_Table_long.csv", 
+            sep = ",",
+            fileEncoding = "UTF-8", 
+            row.names = FALSE)
+```
+

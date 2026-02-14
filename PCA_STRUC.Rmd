@@ -17,8 +17,6 @@ Files used described below:
 - `Cleaned_samples.06.01.2026.csv`
    - Contains all samples for population genetic analyses, post-filtering
    
-
-
 ## Load Required Packages
 ```{r}
 rm(list = ls())
@@ -260,17 +258,22 @@ temp3.data <- temp2.data <- bison.data %>%
 
 #### Select Colour Palette for STRUCTURE Plotting
 ```{r}
-colours <- c(
-  "#E41A1C", 
-  "#377EB8", 
-  "#4DAF4A", 
-  "#FF7F00", 
-  "#984EA3", 
-  "#FFFF33", 
-  "#A65628", 
-  "#F781BF", 
-  "#1B9E77", "#D95F02", "#7570B3", "#E7298A", "#666666"
-)
+clist <- list(
+"shiny"=c("#1D72F5","#DF0101","#77CE61", "#FF9326","#A945FF","#0089B2","#FDF060","#FFA6B2","#BFF217","#60D5FD","#CC1577","#F2B950","#7FB21D","#EC496F","#326397","#B26314","#027368","#A4A4A4","#610B5E"),
+"strong"=c("#11A4C8","#63C2C5","#1D4F9F","#0C516D","#2A2771","#396D35","#80C342","#725DA8","#B62025","#ED2224","#ED1943","#ED3995","#7E277C","#F7EC16","#F8941E","#8C2A1C","#808080"),
+"oceanfive"=c("#00A0B0", "#6A4A3C", "#CC333F", "#EB6841", "#EDC951"),
+"keeled"=c("#48B098", "#91CB62", "#FFEE3B", "#FB9013", "#FF3C28"),
+"vintage"=c("#400F13", "#027368", "#A3BF3F", "#F2B950", "#D93A2B"),
+"muted"=c("#46BDDD","#82DDCE","#F5F06A","#F5CC6A","#F57E6A"),
+"teal"=c("#CFF09E","#A8DBA8","#79BD9A","#3B8686","#0B486B"),
+"merry"=c("#5BC0EB","#FDE74C","#9BC53D","#E55934","#FA7921"),
+"funky"=c("#A6CEE3", "#3F8EAA", "#79C360", "#E52829", "#FDB762","#ED8F47","#9471B4"),
+"retro"=c("#01948E","#A9C4E2","#E23560","#01A7B3","#FDA963","#323665","#EC687D"),
+"cb_paired"=c("#A6CEE3","#1F78B4","#B2DF8A","#33A02C","#FB9A99","#E31A1C","#FDBF6F","#FF7F00","#CAB2D6","#6A3D9A","#FFFF99","#B15928"),
+"cb_set3"=c("#8DD3C7","#FFFFB3","#BEBADA","#FB8072","#80B1D3","#FDB462","#B3DE69","#FCCDE5","#D9D9D9","#BC80BD","#CCEBC5","#FFED6F"),
+"morris"=c("#4D94CC","#34648A","#8B658A","#9ACD32","#CC95CC","#9ACD32","#8B3A39","#CD6601","#CC5C5B","#8A4500"),
+"wong"=c("#000000","#E69F00","#56B4E9","#009E73","#F0E442","#006699","#D55E00","#CC79A7"),
+"krzywinski"=c("#006E82","#8214A0","#005AC8","#00A0FA","#FA78FA","#14D2DC","#AA0A3C","#FA7850","#0AB45A","#F0F032","#A0FA82","#FAE6BE"))
 ```
 
 
@@ -291,9 +294,12 @@ Optimal K clusters
 ```{r}
 struct_sum_temp1 <- summariseQ(tabulateQ(slist_temp1))
 
-p1 <- evannoMethodStructure(data = struct_sum_temp1, exportplot = F,
+p1 <- evannoMethodStructure(data = struct_sum_temp1, exportplot = T,
                            returnplot = T, returndata = F,
-                           basesize = 12, linesize = 0.7)
+                           basesize = 12, linesize = 0.7,
+                           height = 25, width = 25, units = "cm",
+                           outputfilename = "evannoMethodStructure_Temp1",
+                           exportpath = "./plots/structure_plots/") 
 
 grid.arrange(p1)
 ```
@@ -316,7 +322,9 @@ lapply(slist, rownames)[1:70]
 
 slist_temp1 <- slist 
 slist_align1 <- alignK(slist_temp1, "within") # Align replicate runs
-merged_temp1 <- mergeQ(slist_align1[21:30]) # Merge K = 3 runs
+slist_align1 <- slist_align1[11:70]
+class(slist_align1) <- "qlist"
+merged_temp1 <- mergeQ(slist_align1)
 
 loc_labels_temp1 <- locations_temp1$HERD %>% as.data.frame()
 colnames(loc_labels_temp1) <- "Region"
@@ -325,6 +333,7 @@ herd_order_temp1 <- c("EINPW", "MBS", "WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "W
 
 
 plotQ(merged_temp1, 
+      imgoutput = "join",
             basesize = 10, 
             clustercol = colours, 
             grplab = loc_labels_temp1, 
@@ -334,8 +343,8 @@ plotQ(merged_temp1,
             indlabsize = 4,        
             indlabangle = 90,
             indlabheight = 0,       
-            grplabsize = 3, 
-            grplabangle = 0,
+            grplabsize = 5, 
+            grplabangle = 45,
             grplabpos = 0.65,
             grplabheight = 0.2,      
             grplabspacer = 0.1,
@@ -351,6 +360,45 @@ plotQ(merged_temp1,
             exportpath = "./plots/structure_plots/")
 
 ```
+
+```{r}
+# Print summary of runs (Evanno method plot is based on these values)
+summariseQ(tabulateQ(slist_temp1))
+
+# Align and merge across K
+m_k3 <- mergeQ(alignK(slist_temp1[21:30])) # This aggregates all 10 replicates of K = 3
+
+# Structure Plot
+plotQ(,
+      imgoutput = "join",
+            basesize = 10, 
+            clustercol = clist$shiny, 
+            grplab = loc_labels_temp1, 
+            subsetgrp = herd_order_temp1, 
+            ordergrp = TRUE,
+            showindlab = TRUE, 
+            indlabsize = 4,        
+            indlabangle = 90,
+            indlabheight = 0,       
+            grplabsize = 5, 
+            grplabangle = 45,
+            grplabpos = 0.65,
+            grplabheight = 0.2,      
+            grplabspacer = 0.1,
+            linesize = 1,          
+            pointsize = 4, 
+            splabsize = 17,
+            divcol = "white",
+            divsize = 1, 
+            useindlab = TRUE, 
+            returndata = TRUE,
+            height = 12,             
+            width = 35,
+            outputfilename = "Temp1",
+            exportpath = "./plots/structure_plots/")
+
+```
+
 
 ### Temporal Group 2
 Load Data
@@ -425,7 +473,7 @@ plotQ(slist_align2[45],
 ### Temporal Group 3
 Load Data
 ```{r}
-sfiles_temp3 <- list.files("./structure/STRUCTURE_RESULTS/temp3/", full.names = TRUE)
+sfiles_temp3 <- list.files("./structure/results_temp3_f/", full.names = TRUE)
 slist_temp3 <- readQ(files = sfiles_temp3, filetype = "structure")
 ```
 
@@ -459,6 +507,7 @@ lapply(slist, rownames)[0:150]
 
 slist_temp3 <- slist
 slist_align3 <- alignK(slist_temp3, "within")
+merged_temp3 <- mergeQ(slist_align3)
 
 loc_labels_temp3 <- locations_temp3$HERD %>% as.data.frame()
 colnames(loc_labels_temp3) <- "Region"
@@ -492,6 +541,5 @@ plotQ(slist_align3[75],
             returndata = TRUE,
             height = 12,             
             width = 35,
-      
             exportpath = "./plots/structure_plots/")
 ```

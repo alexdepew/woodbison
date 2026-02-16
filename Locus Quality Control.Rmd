@@ -22,18 +22,15 @@ rm(list = ls())
 library(adegenet)
 library(PopGenReport)
 library(poppr)
-library(genepop)
 library(pegas)
 library(strataG)
 library(tidyverse)
 library(graph4lg)
-library(mmod)
-library(hierfstat)
 ```
 
 ## Load Required Data
 ```{r}
-bison.data <- read.csv("Cleaned_samples.06.01.2026",
+bison.data <- read.csv("./Cleaned_samples.16.02.2026.csv",
                        check.names = F)
 ```
 
@@ -84,33 +81,49 @@ All loci are polymorphic, as "TRUE" is returned by the *isPoly* function. The su
 # Data Subsetting
 Subsequent genotype quality control measures must be completed within temporal groups, within herds, as to not induce the Wahlund effect. By evaluating deviations from Hardy-Weinberg Equilibrium (HWE), Linkage Disequilibrium (LD), and the presence of null alleles at this granular level, it is possible to distinguish between localized biological variation and systematic technical errors that persist across the entire population.
 
+Data is subset into three temporal groups. Temporal groups are: 1: pre-1999, 2: pre-2016, and 3: post-2016
 ```{r}
-# Subset Data into three temporal groups
-pre1999 <- bison.genind[bison.genind@other$YEAR.ASSIGN <= 1999 &
-                          bison.genind@pop %in% c("EINPP", "EINPW", "MBS",
-                                                "WBNPGR", "WBNPHC", 
-                                                "WBNPLB", "WBNPNY","WBNPPAD"), ]
+# Create datasets containing samples of interest for temporal comparisons
+temp1 <- bison.genind[bison.genind@other$YEAR.ASSIGN <=1999,]
+temp1.sum <- summary(temp1) # Create summary of genind object
 
-pre2016 <- bison.genind[bison.genind@other$YEAR.ASSIGN %in% 2000:2016 &
-                          bison.genind@pop %in% c("HZ", "MBS", "RL", "WAB", "WENT", "EINPW", "EINPP")] # Don't include small sample sizes from ETH, CL, NAH, NORD, AISH, and any WBNP which were collected between the Wilson 1999 and Ball 2016 publications
+temp2 <- bison.genind[bison.genind@other$YEAR.ASSIGN >= 2000 & bison.genind@other$YEAR.ASSIGN <= 2015, ]
+temp2.sum <- summary(temp2)
+
+temp3 <- bison.genind[bison.genind@other$YEAR.ASSIGN >=2016,]
+temp3.sum <- summary(temp3)
 
 
-post2016 <- bison.genind[bison.genind@other$YEAR.ASSIGN > 2016 &
-                           bison.genind@pop != "WBNP", ]
+# Remove populations which do not contain significant sample sizes in temporal groups
+table(pop(temp1))
+table(pop(temp2)) # WBNP samples, ETH, NORD samples can be removed
+table(pop(temp3))
+
+# Remove herds from temporal group 2 
+remove_herds2 <- c("WBNP", "ETH", "NORD", "WENT", "WBNPNY", "WBNPPAD")
+temp2 <- temp2[!temp2@pop %in% remove_herds2]
+temp2.sum <- summary(temp2) # Recalculate summary
+temp2.sum
+table(pop(temp2))
+
+# Remove Wentzel from temporal group 3
+remove_herds3 <- c("WENT", "WBNP")
+temp3 <- temp3[!temp3@pop %in% remove_herds3]
+table(pop(temp3))
 ```
 
 ## Test for HWE deviations
 Because of the variance in, and small sample sizes seen in some herds, a Markov Chain Monte Carlo exact test can be used to evaluate deviations from HWE.
 ```{r}
 # In order to use the genepop's MCMC method of deterimining HWE deviations, the strataG implementation can be used. the bison "genind" objects must be reformatted as "gtypes" objects
-pre1999.g <- genind2gtypes(pre1999)
-pre2016.g <- genind2gtypes(pre2016)
-post2016.g <- genind2gtypes(post2016)
+temp1.g <- genind2gtypes(temp1)
+temp2.g <- genind2gtypes(temp2)
+temp3.g <- genind2gtypes(temp3)
 
 # Further, HWE deviations and linkage disequilibrium are tested within each population. Deviations or LD which occur across populations (at the same locus/loci) may indicate technical errors, adaptation, or linkage
-pop_list_pre1999 <- strataSplit(pre1999.g)
-pop_list_pre2016 <- strataSplit(pre2016.g)
-pop_list_post2016 <- strataSplit(post2016.g)
+pop_list_temp1 <- strataSplit(temp1.g)
+pop_list_temp2 <- strataSplit(temp2.g)
+pop_list_temp3 <- strataSplit(temp3.g)
 ```
 
 ### Test for HWE
@@ -118,8 +131,8 @@ Test for hardy weinberg equilibrium intra-population
 ```{r}
 # Apply HWE test from genepop. The strataG wrapper formats this back into R nicely for subsequent manipulation
 
-# Pre-1999 ----
-hwe_results_list_1999 <- lapply(pop_list_pre1999, function(pop) {
+# Temp1 ----
+hwe_results_list_temp1 <- lapply(pop_list_temp1, function(pop) {
   hweTest(
     pop, 
     use.genepop = T,     
@@ -131,24 +144,20 @@ hwe_results_list_1999 <- lapply(pop_list_pre1999, function(pop) {
   )
 })
 
-HWE.df.1999 <- as.data.frame(hwe_results_list_1999) %>% 
-  rownames_to_column("Locus") %>% 
-  rowwise() %>%
-  mutate(num_dev_raw = sum(c_across(-Locus) < 0.05, na.rm = TRUE)) %>% 
-  ungroup()
+HWE.temp1 <- as.data.frame(hwe_results_list_temp1) %>% # Make results as df
+  rownames_to_column("Locus") %>%  
+  pivot_longer(
+    cols = -c(Locus), 
+    names_to = "Population",       
+    values_to = "HWE_p_value"      
+  ) %>% 
+  # p-value correction by Population
+  group_by(Population) %>% 
+  mutate(p.adj_herd = p.adjust(HWE_p_value, method = "BH")) %>% 
+  ungroup() 
 
-# Apply corrected p-values (Benjamini-Hochberg)
-HWE.df.pre1999.sig <- HWE.df.1999 %>%  
-  select(-num_dev_raw) %>%
-  mutate(across(-Locus, ~ p.adjust(.x, method = "BH"))) %>% 
-  rowwise() %>%
-  mutate(num_dev_corr = sum(c_across(-Locus) < 0.05, na.rm = TRUE)) %>% 
-  ungroup()
-
-HWE.df.pre1999.sig
-
-# Pre-2016 ----
-hwe_results_list_pre2016 <- lapply(pop_list_pre2016, function(pop) {
+# Temp2 ----
+hwe_results_list_temp2 <- lapply(pop_list_temp2, function(pop) {
   hweTest(
     pop, 
     use.genepop = T,     
@@ -160,24 +169,21 @@ hwe_results_list_pre2016 <- lapply(pop_list_pre2016, function(pop) {
   )
 })
 
-HWE.df.pre2016 <- as.data.frame(hwe_results_list_pre2016) %>% 
-  rownames_to_column("Locus") %>% 
-  rowwise() %>%
-  mutate(num_dev_raw = sum(c_across(-Locus) < 0.05, na.rm = TRUE)) %>% 
-  ungroup()
+HWE.temp2 <- as.data.frame(hwe_results_list_temp2) %>% # Make results as df
+  rownames_to_column("Locus") %>%  
+  pivot_longer(
+    cols = -c(Locus), 
+    names_to = "Population",       
+    values_to = "HWE_p_value"      
+  ) %>% 
+  # p-value correction by Population
+  group_by(Population) %>% 
+  mutate(p.adj_herd = p.adjust(HWE_p_value, method = "BH")) %>% 
+  ungroup() 
 
-# Apply corrected p-values (Benjamini-Hochberg)
-HWE.df.pre2016.sig <- HWE.df.pre2016 %>%  
-  select(-num_dev_raw) %>%
-  mutate(across(-Locus, ~ p.adjust(.x, method = "BH"))) %>% 
-  rowwise() %>%
-  mutate(num_dev_corr = sum(c_across(-Locus) < 0.05, na.rm = TRUE)) %>% 
-  ungroup()
 
-HWE.df.pre2016.sig
-
-# Post-2016 ----
-hwe_results_list_post2016 <- lapply(pop_list_post2016, function(pop) {
+# Temp3 ----
+hwe_results_list_temp3 <- lapply(pop_list_temp3, function(pop) {
   hweTest(
     pop, 
     use.genepop = T,     
@@ -189,28 +195,62 @@ hwe_results_list_post2016 <- lapply(pop_list_post2016, function(pop) {
   )
 })
 
-HWE.df.post2016 <- as.data.frame(hwe_results_list_post2016) %>% 
-  rownames_to_column("Locus") %>% 
-  rowwise() %>%
-  mutate(num_dev_raw = sum(c_across(-Locus) < 0.05, na.rm = TRUE)) %>% 
-  ungroup()
-
-# Apply corrected p-values (Benjamini-Hochberg)
-HWE.df.post2016.sig <- HWE.df.post2016 %>%  
-  select(-num_dev_raw) %>%
-  mutate(across(-Locus, ~ p.adjust(.x, method = "BH"))) %>% 
-  rowwise() %>%
-  mutate(num_dev_corr = sum(c_across(-Locus) < 0.05, na.rm = TRUE)) %>% 
-  ungroup()
-
-HWE.df.post2016.sig
+HWE.temp3 <- as.data.frame(hwe_results_list_temp3) %>% # Make results as df
+  rownames_to_column("Locus") %>%  
+  pivot_longer(
+    cols = -c(Locus), 
+    names_to = "Population",       
+    values_to = "HWE_p_value"      
+  ) %>% 
+  # p-value correction by Population
+  group_by(Population) %>% 
+  mutate(p.adj_herd = p.adjust(HWE_p_value, method = "BH")) %>% 
+  ungroup() 
 ```
+
+### Summarize HWE Deviations
+```{r}
+# Temp1 ----
+temp1.HWE.sum <- HWE.temp1 %>%
+  group_by(Population) %>%
+  summarise(
+    HWE_Deviations = sum(p.adj_herd <= 0.05, na.rm = TRUE),
+  ) %>%
+  arrange(desc(HWE_Deviations)) # Sort with most deviations at the top
+
+# View the summary table
+View(temp1.HWE.sum)
+
+# Temp2 ----
+temp2.HWE.sum <- HWE.temp2 %>%
+  group_by(Population) %>%
+  summarise(
+    HWE_Deviations = sum(p.adj_herd <= 0.05, na.rm = TRUE),
+  ) %>%
+  arrange(desc(HWE_Deviations)) # Sort with most deviations at the top
+
+# View the summary table
+View(temp2.HWE.sum)
+
+# Temp3 ----
+temp3.HWE.sum <- HWE.temp3 %>%
+  group_by(Population) %>%
+  summarise(
+    HWE_Deviations = sum(p.adj_herd <= 0.05, na.rm = TRUE),
+  ) %>%
+  arrange(desc(HWE_Deviations)) # Sort with most deviations at the top
+
+# View the summary table
+View(temp3.HWE.sum)
+
+```
+
 
 ## Test for Linkage Disequilibrium
-Pairwise test for LD using genepop through *strataG*. If LD is present in loci across the majority of herds, it may indicate physical linkage as opposed to local variation.
+Pairwise test for LD using Genepop through *strataG*. If LD is present in loci across the majority of herds, it may indicate physical linkage as opposed to local variation.
 ```{r}
-# Pre-1999 ----
-LD_results_pre1999 <- lapply(pop_list_pre1999, function(pop) {
+# Temp1 ----
+LD_results_temp1 <- lapply(pop_list_temp1, function(pop) {
   LDgenepop(
   pop,
   dememorization = 10000,
@@ -220,19 +260,23 @@ LD_results_pre1999 <- lapply(pop_list_pre1999, function(pop) {
   )
 })
 
-LD.df.pre1999 <- bind_rows(LD_results_pre1999, .id = "Population") # Put into dataframe format
+LD.df.temp1 <- bind_rows(LD_results_temp1, .id = "Population") # Put into dataframe format
 
-LD.df.pre1999 <- LD.df.pre1999 %>%
+LD.df.temp1 <- LD.df.temp1 %>%
   group_by(Population) %>%  # Separate by populations
   mutate(p.adj_herd = p.adjust(p.value, method = "BH")) %>% # Perform BH correction within each population
   ungroup()
 
 # Dataframe of significant pairwise values
-LD.pre1999.sig <- LD.df.pre1999 %>% 
-  filter(p.adj_herd <= 0.05)
+LD.temp1.sig <- LD.df.temp1 %>% 
+  filter(p.adj_herd <= 0.05 & 
+           !is.na(Locus.2))
 
-# Pre-2016 ----
-LD_results_pre2016 <- lapply(pop_list_pre2016, function(pop) {
+write.csv(LD.temp1.sig, "./tables/temp1LD.csv", row.names = F)
+
+
+# Temp2 ----
+LD_results_temp2 <- lapply(pop_list_temp2, function(pop) {
   LDgenepop(
   pop,
   dememorization = 10000,
@@ -242,19 +286,23 @@ LD_results_pre2016 <- lapply(pop_list_pre2016, function(pop) {
   )
 })
 
-LD.df.pre2016 <- bind_rows(LD_results_pre2016, .id = "Population") # Put into dataframe format
+LD.df.temp2 <- bind_rows(LD_results_temp2, .id = "Population") # Put into dataframe format
 
-LD.df.pre2016 <- LD.df.pre2016 %>%
+LD.df.temp2 <- LD.df.temp2 %>%
   group_by(Population) %>%  # Separate by populations
   mutate(p.adj_herd = p.adjust(p.value, method = "BH")) %>% # Perform BH correction within each population
   ungroup()
 
 # Dataframe of significant pairwise values
-LD.pre2016.sig <- LD.df.pre2016 %>% 
-  filter(p.adj_herd <= 0.05)
+LD.temp2.sig <- LD.df.temp2 %>% 
+  filter(p.adj_herd <= 0.05 & 
+           !is.na(Locus.2))
 
-# Post-2016 ----
-LD_results_post2016 <- lapply(pop_list_post2016, function(pop) {
+write.csv(LD.temp2.sig, "./tables/temp2LD.csv", row.names = F)
+
+
+# Temp3 ----
+LD_results_temp3 <- lapply(pop_list_temp3, function(pop) {
   LDgenepop(
   pop,
   dememorization = 10000,
@@ -264,76 +312,84 @@ LD_results_post2016 <- lapply(pop_list_post2016, function(pop) {
   )
 })
 
-LD.df.post2016 <- bind_rows(LD_results_post2016, .id = "Population") # Put into dataframe format
+LD.df.temp3 <- bind_rows(LD_results_temp3, .id = "Population") # Put into dataframe format
 
-LD.df.post2016 <- LD.df.post2016 %>%
+LD.df.temp3 <- LD.df.temp3 %>%
   group_by(Population) %>%  # Separate by populations
   mutate(p.adj_herd = p.adjust(p.value, method = "BH")) %>% # Perform BH correction within each population
-  ungroup()
+  ungroup() 
 
 # Dataframe of significant pairwise values
-LD.post2016.sig <- LD.df.post2016 %>% 
-  filter(p.adj_herd <= 0.05)
+LD.temp3.sig <- LD.df.temp3 %>% 
+  filter(p.adj_herd <= 0.05 & 
+           !is.na(Locus.2))
+
+write.csv(LD.temp3.sig, "./tables/temp3LD.csv", row.names = F)
 ```
-The dataframes containing only significant pairwise comparisons following the Benjamini-Hochberg correction return significant p-values in populations which are represented by relatively small sample sizes (n = 5, 8, and 4). Instead of indicating true linkage disequilibrium, the lack of allele data likely inflates the variance in allele frequency estimates, increasing the probability of detecting spurious non-random locus associations due to sampling effects. Significance for non-random association was detected in EINPP and/or EINPW in all temporal groups, yet the loci purported to have significant association were isolated to either EINPP or EINPW (potential local variation/fixation), and were not concordant across temporal groups. 
+The dataframes containing only significant pairwise comparisons following the Benjamini-Hochberg correction return significant p-values in populations which are represented by relatively small sample sizes (n = 8). Instead of indicating true linkage disequilibrium, the lack of intra-population allele data likely inflates the variance in allele frequency estimates, increasing the probability of detecting spurious non-random locus associations due to sampling effects. Significance for non-random association was detected in EINPP and/or EINPW in all temporal groups, yet the loci purported to have significant association were isolated to either EINPP or EINPW (potential local variation/fixation), and were not concordant across temporal groups. 
 
 
 ## Test for null alleles and allelic dropout
 To test for null alleles and allelic dropout, a combination of diagnostic and correction methods can be used. Microchecker is an external program which can test for the presence of null alleles using heterozygote deficiency methods as described by Chakraborty (1994) and Brookfield (1996). It also assess the presence of short allele dominance by comparing the proportion of short to long repeats. In order to use this program, datasets must be reformatted into genepop format using the package *graph4lg*.
 ```{r}
-genind_to_genepop(pre1999,
-                  output = "genepop_files/pre1999.genepop.txt")
+genind_to_genepop(temp1,
+                  output = "genepop_files/temp1.genepop.txt")
 
-genind_to_genepop(pre2016,
-                  output = "genepop_files/pre2016.genepop.txt")
+genind_to_genepop(temp2,
+                  output = "genepop_files/temp2.genepop.txt")
 
-genind_to_genepop(post2016,
-                  output = "genepop_files/post2016.genepop.txt")
+genind_to_genepop(temp3,
+                  output = "genepop_files/temp3.genepop.txt")
 ```
 
 ### Obtain null allele frequency
 As the percentage of missing data is small, the Brookfield method may be employed to estimate null allele frequency.
 ```{r}
-# Separate populations from the pre1999 temporal group
-pre1999.pops <- seppop(pre1999)
+# Locus Labels
+loc_lab <- c(
+  "BMS1117", "TGLA53", "BMC4214", "BM1225", "BM47", 
+  "BMS1315", "IL4", "BM2113", "BMS1716", "BM1706", 
+  "BMS1675", "BMS1857", "BMS1001", "BMS601", "BM720", 
+  "ILSTS102", "BMS1074", "BMS1172", "BMS2258", "BM757", 
+  "SPS115", "BMS527", "BM2830", "INRA194", "BMS941", 
+  "INRA037", "BM4107", "TGLA122", "HUJ246", "BMS528", 
+  "BM4440", "TGLA44", "BMS510", "BMS1355", "BM1824", 
+  "BMS812", "BMS2639", "BMS410", "AGLA232", "BM17132", 
+  "BM711", "INRA133", "RM372", "BM4311", "BMS1747", 
+  "BL1036", "BM1862", "BMS1862", "URB011"
+)
 
-# Run null detection using Brookfield method 
-nulls.pre1999 <- lapply(pre1999.pops, null.all)
+# Match locus to numeric labels in null file
+loc_match <- tibble(
+  Locus = 1:49, 
+  Locus_Name = loc_lab
+)
 
-nulls.pre1999
+Pop_lab <- c("EINPP", "EINPW", "MBS", "WBNPGR", "WBNPHC", 
+             "WBNPLB", "WBNPNY", "WBNPPAD")
+# Match population to numeric labels in null file
+pop_match <- tibble(
+  Pop = 1:8,
+  Pop_Name = Pop_lab
+)
 
+temp1.nulls <- read.table("./genepop_files/FreeNA_out/temp1.Null_freq.txt",
+                          col.names = c("Locus", "Pop", "Null_Freq"))
 
-null_table <- sapply(nulls.pre1999, function(x) x$null.allele.freq$frequencies[, "Brookfield1"])
-
-# 2. Transpose so Populations are rows and Loci are columns
-null_table <- t(null_table)
-
-# 3. Convert to a data frame for easier viewing/exporting
-null_df <- as.data.frame(null_table)
-
-# View the result
-print(null_df)
+temp1.nulls <- left_join(temp1.nulls, loc_match, by = "Locus") %>% 
+  select(-Locus) %>% 
+  left_join(pop_match, temp1.nulls, by = "Pop") %>% 
+  select(-Pop) %>% 
+  relocate(Null_Freq, .after = Pop_Name) %>% 
+  relocate(Locus_Name, .after = Pop_Name)
 ```
-
-
 
 ## Test for allelic dropout
 ```{r}
-# Genind to structure format
-genind_to_structure(pre1999,
-                    "pre1999.structure.txt")
-
-# The structure output needs to be whitespace-delimited, not tab delimited
-x <- read.table("pre1999.structure.txt",
-                header = FALSE, 
-                skip =1)
-colnames(x)[3:ncol(x)] <- locNames(pre1999)
-
-# Write fixed strucutre format file
-write.table(x, "pre1999.structure.txt", sep = " ", quote = FALSE, 
-            row.names = FALSE,  # This removes the row numbers
-            col.names = TRUE)
-
+# Microdrop requires STRUCTURE input files
+genind_to_structure(temp1,
+                    output = "./structure/temp1.structure.txt")
 
 ```
+
 

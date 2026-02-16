@@ -146,7 +146,7 @@ temp3.Gst.mat <- pairwise_Gst_Hedrick(temp3,
 
 round(temp3.Gst.mat, 3)
 
-
+?mmod
 ```
 
 

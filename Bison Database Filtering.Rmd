@@ -142,35 +142,7 @@ which(duplicated(dup_fix$INDIVIDUAL))
 ```
 #### Profile Coverage Filtering
 As per Zimmerman et al. 2025, remove samples containing missing data at more than 4 loci (ie. >= 46 loci, or 92%). Filtering to include "usuable" high-amplification samples at this step allow for accurate duplicate filtering by genotypes in later steps.
-## Plot
 
-```{r}
-summary(wb_fixed_ids$COMPLETE)
-```
-
-
-```{r}
-p <- ggplot(wb_fixed_ids, aes(x = COMPLETE)) +
-  geom_bar(fill = "grey40", width = 1.5) +
-  labs(
-    x = "% Profile Amplified",
-    y = "Number of Samples"
-  ) +
-  theme_bw(base_size = 12) +
-  theme(
-
-    axis.title = element_text(size = 10)
-  )
-
-ggsave(
-  filename = "plots/wb_profile_completeness_distribution.png",
-  plot = p,
-  width = 100,      
-  height = 70,
-  units = "mm",
-  dpi = 600
-)
-```
 
 ```{r Profile Coverage Stringency}
 wb_qual <- wb_fixed_ids %>% 
@@ -211,7 +183,7 @@ Almost 1/3 (318) of samples do not have year collection metadata. A file contain
 A list of samples used in the Ball et al. 2016 publication was provided for insight into collection year
 ```{r}
 # Import list of genotypes used in Ball 2016 - 
-ball_samples <- read.table("GWilson_goldgenotypes_AB sample info list.txt",
+ball_samples <- read.table("./ball_samples/GWilson_goldgenotypes_AB sample info list.txt",
                            sep = "\t", header = T)
 
 ball_samples <- ball_samples %>% 
@@ -270,26 +242,6 @@ year_manipulation_added_ball <- year_manipulation %>%
 # Confirm 72 samples were changed
 sum(year_manipulation_added_ball$YEAR.ASSIGN == 2015, na.rm = TRUE)
 ```
-# Ball plains bison
-```{r}
-ball.EINPW.WBNP <- read.csv("goldgenotypes_greg_Parks.csv",
-                      sep = ",",
-                      header = T)
-
-ball.EINPP <- read.csv("plains bison einp.csv",
-                      sep = ",",
-                      header = T)
-
-ball.EINPP <- ball.EINPP %>% 
-  mutate(
-    ID_rework = gsub("-", "", ID)
-  ) %>% 
-  relocate(ID_rework, .after = ID)
-
-
-sum(year_manipulation_added_ball$SAMPLE.ID %in% ball.EINPP$ID_rework)
-```
-
 
 #### Sample Naming Schemes
 "W" and "WR" naming conventions used at EINP for both wood and plains bison indicate tagging year
@@ -354,29 +306,7 @@ year_manipulation_added_IDpatterns <- year_manipulation_added_GW %>%
       SAMPLE.ID == "85029" ~ 1985,
       TRUE ~ YEAR.ASSIGN
     ),
-    
-    # Add years from Ball et al. 2016
-    YEAR.ASSIGN = ifelse(
-      is.na(YEAR.ASSIGN) &
-      HERD == "EINPW" &
-      between(
-        as.numeric(str_extract(SAMPLE.ID, "\\d+")),
-        88, 149
-      ),
-      2015,
-      YEAR.ASSIGN
-    ),
-    # Add years from Wilson 1999
-    YEAR.ASSIGN = ifelse(
-      is.na(YEAR.ASSIGN) &
-      HERD == "EINPP" &
-      between(
-        as.numeric(str_extract(SAMPLE.ID, "\\d+")),
-        414, 478
-      ),
-      2015,
-      YEAR.ASSIGN
-    ),
+# Removed Plains and wood bison from 2015 due to lack of inferable metadata
     YEAR.ASSIGN = ifelse(
       is.na(YEAR.ASSIGN) &
       grepl("^Mackenzie Bison Sanctuary", SAMPLE.ID),
@@ -459,7 +389,7 @@ Determine genotype duplicates with an 80% profile concordance or greater
 dupGenotypes(bison.gtype, num.shared = 0.8)
 ```
 
-We can see that strataG called 16 samples which share over 80% profile similarity - ie. 8 pairs of profiles
+We can see that strataG called 20 samples which share over 80% profile similarity - ie. 10 pairs of profiles
 ```{r}
 # Isolate samples identified as potential duplicates
 dup_check <- wb_years_added[wb_years_added$Spreadsheet_ID %in% c("1080", "892",
@@ -508,7 +438,7 @@ wb_cleaned_years <- wb_cleaned_samples %>%
 
 Write the cleaned product out to a csv
 ```{r}
-write.csv(wb_cleaned_years, "Cleaned_samples.06.01.2026.csv", row.names = F)
+write.csv(wb_cleaned_years, "Cleaned_samples.16.02.2026.csv", row.names = F)
 ```
 
 

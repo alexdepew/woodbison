@@ -316,14 +316,18 @@ plotQ(m2_k2,
 # Admixture (Plains)
 Tested with EINPP, EINPW, and WBNP subherds
 ```{r}
+library(tidyverse)
 # Create Structure files for testing admixture
 admix_herds <- c("EINPP", "EINPW", "WBNPLB", "WBNPNY", "WBNPHC", "WBNPGR", "WBNPPAD")
 
 admix_W1 <- bison.genind[bison.genind@pop %in% admix_herds &
                            bison.genind@other$YEAR.ASSIGN <= 1999]
+pop(admix_W1) <- as.numeric(as.factor(pop(admix_W1)))
 
 admix_W2 <- bison.genind[bison.genind@pop %in% admix_herds &
                            bison.genind@other$YEAR.ASSIGN >= 2016]
+pop(admix_W2) <- as.numeric(as.factor(pop(admix_W2)))
+
 
 # Write to STRUCTURE format
 genind_to_structure(admix_W1,
@@ -331,4 +335,248 @@ genind_to_structure(admix_W1,
 
 genind_to_structure(admix_W2,
                     output = "./structure/admix_W2.txt")
+
+# Create Datasets subset from bison.data
+T1.data <- bison.data %>%
+  select(-ID) %>% 
+  filter(YEAR.ASSIGN <= 1999) %>%
+  rename(ID = Spreadsheet_ID) %>%     
+  mutate(ID = as.character(ID)) %>% 
+  filter(HERD %in% admix_herds)
+
+T2.data <- bison.data %>% 
+  select(-ID) %>%
+  filter(YEAR.ASSIGN >=2016) %>%
+  rename(ID = Spreadsheet_ID) %>% 
+  mutate(ID = as.character(ID)) %>% 
+  filter(HERD %in% admix_herds)
 ```
+
+
+
+
+
+
+
+### Read Files
+```{r}
+sfiles_T1 <- list.files("./structure/STRUCT_W_ADMIX/T1", full.names = TRUE)
+slist_T1 <- readQ(sfiles_T1, filetype = "structure")
+```
+
+### Find optimal K clusters
+```{r}
+struct_sum_T1 <- summariseQ(tabulateQ(slist_T1))
+
+p_ad1 <- evannoMethodStructure(data = struct_sum_T1, exportplot = T,
+                           returnplot = T, returndata = F,
+                           basesize = 12, linesize = 0.7,
+                           height = 25, width = 25, units = "cm",
+                           outputfilename = "evannoMethodStructure_T1",
+                           exportpath = "./plots/structure_plots/")
+grid.arrange(p_ad1)
+```
+Ln(K) indicates optimal K clusters at 3, whereas deltaK indicating at 2 (likely high level structure ie. plains and wood)
+
+```{r}
+# Print summary of runs (Evanno method plot is based on these values)
+summariseQ(tabulateQ(slist_T1))
+
+# Individual 
+ind_label_T1 <- readQ(files = sfiles_T1[1], indlabfrom = TRUE) %>% as.data.frame()
+ind_label_T1 <- rownames_to_column(ind_label_T1, "ID")
+
+locations_T1 <- left_join(ind_label_T1, T1.data, by = "ID")
+
+loc_labels_T1 <- locations_T1$HERD %>% as.data.frame()
+colnames(loc_labels_T1) <- "Region"
+
+herd_order_T1 <- c("EINPP", "EINPW", "WBNPLB", "WBNPNY", "WBNPHC", "WBNPGR", "WBNPPAD") # In theory - northern herds should have more introgression
+
+# Align and merge across K
+mad1_k3 <- mergeQ(alignK(slist_T1[21:30])) # This aggregates all 10 replicates of K = 3
+
+# Structure Plot
+plotQ(mad1_k3,
+            basesize = 10, 
+            clustercol = clist$shiny, 
+            grplab = loc_labels_T1, 
+            subsetgrp = herd_order_T1, 
+            ordergrp = TRUE,
+            showindlab = TRUE, 
+            indlabsize = 4,        
+            indlabangle = 90,
+            indlabheight = 0,       
+            grplabsize = 5, 
+            grplabangle = 45,
+            grplabpos = 0.65,
+            grplabheight = 0.2,      
+            grplabspacer = 0.1,
+            linesize = 1,          
+            pointsize = 4, 
+            splabsize = 17,
+            divcol = "white",
+            divsize = 1, 
+            useindlab = TRUE, 
+            returndata = TRUE,
+            height = 12,             
+            width = 35,
+            outputfilename = "T1_K3",
+            exportpath = "./plots/structure_plots/")
+```
+
+### Read Files
+```{r}
+sfiles_T2 <- list.files("./structure/STRUCT_W_ADMIX/T2", full.names = TRUE)
+slist_T2 <- readQ(sfiles_T2, filetype = "structure")
+```
+
+### Find optimal K clusters
+```{r}
+struct_sum_T2 <- summariseQ(tabulateQ(slist_T2))
+
+p_ad2 <- evannoMethodStructure(data = struct_sum_T2, exportplot = T,
+                           returnplot = T, returndata = F,
+                           basesize = 12, linesize = 0.7,
+                           height = 25, width = 25, units = "cm",
+                           outputfilename = "evannoMethodStructure_T2",
+                           exportpath = "./plots/structure_plots/")
+grid.arrange(p_ad2)
+```
+
+```{r}
+# Print summary of runs (Evanno method plot is based on these values)
+summariseQ(tabulateQ(slist_T2))
+
+# Individual 
+ind_label_T2 <- readQ(files = sfiles_T2[1], indlabfrom = TRUE) %>% as.data.frame()
+ind_label_T2 <- rownames_to_column(ind_label_T2, "ID")
+
+locations_T2 <- left_join(ind_label_T2, T2.data, by = "ID")
+
+loc_labels_T2 <- locations_T2$HERD %>% as.data.frame()
+colnames(loc_labels_T2) <- "Region"
+
+herd_order_T2 <- c("EINPP", "EINPW", "WBNPLB", "WBNPNY", "WBNPHC", "WBNPGR", "WBNPPAD") # In theory - northern herds should have more introgression
+
+# Align and merge across K
+mad2_k3 <- mergeQ(alignK(slist_T2[21:30])) # This aggregates all 10 replicates of K = 4
+
+# Structure Plot
+k3 <- plotQ(mad2_k3,
+            basesize = 10, 
+            clustercol = clist$shiny, 
+            grplab = loc_labels_T2, 
+            subsetgrp = herd_order_T2, 
+            ordergrp = TRUE,
+            showindlab = TRUE, 
+            indlabsize = 4,        
+            indlabangle = 90,
+            indlabheight = 0,       
+            grplabsize = 5, 
+            grplabangle = 45,
+            grplabpos = 0.65,
+            grplabheight = 0.2,      
+            grplabspacer = 0.1,
+            linesize = 1,          
+            pointsize = 4, 
+            splabsize = 17,
+            divcol = "white",
+            divsize = 1, 
+            useindlab = TRUE, 
+            returndata = TRUE,
+            height = 12,             
+            width = 35,
+            outputfilename = "T2_K3",
+            exportpath = "./plots/structure_plots/")
+
+# Align and merge across K
+mad2_k4 <- mergeQ(alignK(slist_T2[31:40])) # This aggregates all 10 replicates of K = 4
+
+k4 <- plotQ(mad2_k4,
+            basesize = 10, 
+            clustercol = clist$shiny, 
+            grplab = loc_labels_T2, 
+            subsetgrp = herd_order_T2, 
+            ordergrp = TRUE,
+            showindlab = TRUE, 
+            indlabsize = 4,        
+            indlabangle = 90,
+            indlabheight = 0,       
+            grplabsize = 5, 
+            grplabangle = 45,
+            grplabpos = 0.65,
+            grplabheight = 0.2,      
+            grplabspacer = 0.1,
+            linesize = 1,          
+            pointsize = 4, 
+            splabsize = 17,
+            divcol = "white",
+            divsize = 1, 
+            useindlab = TRUE, 
+            returndata = TRUE,
+            height = 12,             
+            width = 35,
+            outputfilename = "T2_K4",
+            exportpath = "./plots/structure_plots/")
+
+```
+
+```{r}
+# Subset Genind
+T1 <- bison.genind[bison.genind@pop %in% admix_herds &
+                     bison.genind@other$YEAR.ASSIGN <= 1999]
+
+x.T1 <- tab(T1, freq = TRUE, NA.method = "mean")
+pca.T1 <- dudi.pca(x.T1, center = T, scale = F, scannf = F, nf = 2)
+
+# Axes % Variance
+eig.perc.T1 <- 100*pca.T1$eig/sum(pca.T1$eig)
+
+# Plot
+png(filename = "./plots/pca_T1.png", width = 30, height = 30, units = "cm", res = 300)
+
+s.class(pca.T1$li, fac = pop(T1), col = transp(clist$shiny, 0.75),
+        axesell = F, cstar = 0, cpoint = 3,
+        grid = F,
+        sub = paste0("PC1: ", round(eig.perc.T1[1], 1), "% | PC2: ", round(eig.perc.T1[2], 1), "%"),)
+
+add.scatter.eig(pca.T1$eig[1:20], 3, 1, 2, ratio = 0.15, "bottomright")
+dev.off()
+
+
+
+# Allele contributions to variance
+loadingplot(pca.T1$c1^2)
+```
+
+```{r}
+# Subset Genind
+T2 <- bison.genind[bison.genind@pop %in% admix_herds &
+                     bison.genind@other$YEAR.ASSIGN >= 2016]
+
+x.T2 <- tab(T2, freq = TRUE, NA.method = "mean")
+pca.T2 <- dudi.pca(x.T2, center = T, scale = F, scannf = F, nf = 2)
+
+# Axes % Variance
+eig.perc.T2 <- 100*pca.T2$eig/sum(pca.T2$eig)
+
+# Plot
+png(filename = "./plots/pca_T2.png", width = 30, height = 30, units = "cm", res = 300)
+
+s.class(pca.T2$li, fac = pop(T2), col = transp(clist$shiny, 0.75),
+        axesell = F, cstar = 0, cpoint = 3,
+        grid = F,
+        sub = paste0("PC1: ", round(eig.perc.T2[1], 1), "% | PC2: ", round(eig.perc.T2[2], 1), "%"),)
+
+add.scatter.eig(pca.T2$eig[1:20], 3, 1, 2, ratio = 0.15, "bottomright")
+dev.off()
+
+
+
+# Allele contributions to variance
+loadingplot(pca.T2$c1^2)
+```
+
+
+

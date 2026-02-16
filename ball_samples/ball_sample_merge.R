@@ -4,7 +4,7 @@ library(tidyverse)
 # Load data
 gold_genotypes <- read.csv("ball_samples/goldgenotypes_greg_Parks.csv")
 einp <- read.csv("ball_samples/plains bison einp.csv")
-gold_genotypes_list <- read.table("GWilson_goldgenotypes_AB sample info list.txt",
+gold_genotypes_list <- read.table("ball_samples/GWilson_goldgenotypes_AB sample info list.txt",
                                                   sep = "\t", header = T)
 einp <- einp %>%
   mutate(across(bm2830:bovfsh, ~ gsub("\035", "", .x)))

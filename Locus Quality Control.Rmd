@@ -385,11 +385,62 @@ temp1.nulls <- left_join(temp1.nulls, loc_match, by = "Locus") %>%
 ```
 
 ## Test for allelic dropout
+Microdrop requires structure input files, yet the structure input files do not work unless they are delimited with EXACTLY one space. To note: you must delete the "POP" and "IND" column headers in a text editor, as the input requires N-2 columns names (loci names).
 ```{r}
-# Microdrop requires STRUCTURE input files
-genind_to_structure(temp1,
+# Microdrop requires STRUCTURE input files but they need to be space delimited
+# Temp1 ----
+temp1.str <- temp1
+pop(temp1.str) <- as.numeric(as.factor(pop(temp1.str)))
+
+genind_to_structure(temp1.str,
                     output = "./structure/temp1.structure.txt")
 
+temp1.microdrop <- read.table("./structure/temp1.structure.txt",
+                         skip = 1,
+                         col.names = c("IND", "POP", loc_lab))
+
+write.table(temp1.microdrop, "./microdrop/temp1.microdrop.txt", sep= " ",
+            row.names = F)
+
+# Read data file
+temp1.drop <- read.table("./microdrop/temp1_MLE_Rates_loc",
+                         sep = "\t", header = TRUE)
+
+# Temp2 ----
+temp2.str <- temp2
+pop(temp2.str) <- as.numeric(as.factor(pop(temp2.str)))
+
+genind_to_structure(temp2.str,
+                    output = "./structure/temp2.structure.txt")
+
+temp2.microdrop <- read.table("./structure/temp2.structure.txt",
+                         skip = 1,
+                         col.names = c("IND", "POP", loc_lab))
+
+write.table(temp2.microdrop, "./microdrop/temp2.microdrop.txt", sep= " ",
+            row.names = F)
+
+# Read data file
+temp2.drop <- read.table("./microdrop/temp2_MLE_Rates_loc",
+                         sep = "\t", header = TRUE)
+
+# Temp3 ----
+temp3.str <- temp3
+pop(temp3.str) <- as.numeric(as.factor(pop(temp3.str)))
+
+genind_to_structure(temp3.str,
+                    output = "./structure/temp3.structure.txt")
+
+temp3.microdrop <- read.table("./structure/temp3.structure.txt",
+                         skip = 1,
+                         col.names = c("IND", "POP", loc_lab))
+
+write.table(temp3.microdrop, "./microdrop/temp3.microdrop.txt", sep= " ",
+            row.names = F)
+
+# Read data file
+temp3.drop <- read.table("./microdrop/temp3_MLE_Rates_loc",
+                         sep = "\t", header = TRUE)
 ```
 
 

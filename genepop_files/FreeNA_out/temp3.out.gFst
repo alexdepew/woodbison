@@ -63,3 +63,9 @@ Locus   Fst not using ENA     Fst using ENA
  47      0.050128             0.050303
  48      0.089795             0.089587
  49      0.110848             0.110726
+
+Bootstrap resampling over loci
+95% Confidence Interval
+Fst not using ENA     Fst using ENA
+ 0.078004             0.077051
+ 0.095168             0.094238

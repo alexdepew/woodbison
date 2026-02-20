@@ -56,9 +56,6 @@ cd ../temp3
 wget https://raw.githubusercontent.com/alexdepew/woodbison/refs/heads/main/structure/create_strauto_slurm_scripts.py # python script to make parameter files
 chmod u+x create_strauto_slurm_scripts.py
 
-wget https://github.com/alexdepew/woodbison/blob/main/structure/strauto_1.tar.gz # Strauto
-tar -xvzf strauto_1.tar.gz
-
 wget https://raw.githubusercontent.com/dentearl/structureHarvester/refs/heads/master/harvesterCore.py # Harvestercore
 wget https://raw.githubusercontent.com/dentearl/structureHarvester/refs/heads/master/structureHarvester.py # Structure harvesterCore
 

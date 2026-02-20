@@ -1,0 +1,162 @@
+---
+title: "Sample Map"
+author: "Alex Depew"
+date: "2026-02-19"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Load Packages
+```{r}
+library(tidyverse)
+library(sf)
+library(ggsflabel)
+```
+ 
+Code: 
+ 
+## Create map of samples
+ 
+### Load shapefiles
+```{r}
+can <- 
+  read_sf("./shapefiles/lpr_000b21a_e/")
+ 
+woodbisonpop <- 
+  read_sf("./shapefiles/WoodBisonPop/")
+```
+ 
+### Set up map elements
+#### Subset of Canadian Provinces
+```{r}
+can_subset <- 
+  subset(can, PRENAME == "Alberta" | PRENAME == "Manitoba" | 
+           PRENAME == "Northwest Territories" | PRENAME == "Saskatchewan" | 
+           PRENAME == "British Columbia" | PRENAME == "Yukon")
+```
+ 
+ 
+### Extract General Latitude and Longitude for Herds
+```{r, warning = FALSE}
+herd_centroids <- 
+  st_centroid(woodbisonpop) %>% 
+  mutate(latlong = st_transform(geometry, 4326))
+ 
+herd_centroids <-
+  data.frame(herd = herd_centroids$POPULATION,
+             status = as.character(herd_centroids$STATUS),
+             latlong = as.character(herd_centroids$latlong)) %>% 
+  mutate(latlong = gsub("c\\(", "", latlong),
+         latlong = gsub("\\)", "", latlong)) %>% 
+  separate(latlong, into = c("long", "lat"),
+           sep = ", ")
+
+herd_centroids <- st_centroid(woodbisonpop)
+
+# 2. Add a 'label' column (since your ggplot calls for 'label')
+# We will use the 'POPULATION' column as the label
+herd_centroids <- herd_centroids %>%
+  # Change labels
+    mutate(POPULATION = case_when(
+    # "Old Name from Shapefile" ~ "New Name for Map"
+    POPULATION == "Aishihik Herd" ~ "AISH",
+    POPULATION == "Chitek Lake Herd"    ~ "CL",
+    POPULATION == "Delta"   ~ "WBNPPAD",
+    POPULATION == "Elk Island National Park"   ~ "EINPW",
+    POPULATION == "Etthithun Lake Herd"   ~ "ETH",
+    POPULATION == "Garden River"   ~ "WBNPGR",
+    POPULATION == "Hay-Zama Lakes Herd"   ~ "HZ",
+    POPULATION == "Hay Camp"   ~ "WBNPHC",
+    POPULATION == "Nahanni Population"   ~ "NAH",
+    POPULATION == "Nordquist Herd"   ~ "NORD",
+    POPULATION == "Nyarling"   ~ "WBNPNY",
+    POPULATION == "Slave River Lowlands"   ~ "WBNPLB",
+    POPULATION == "Wabesca"   ~ "WAB",
+    POPULATION == "Ronald Lake"   ~ "RL",
+    POPULATION == "Wentzel"   ~ "WENT",
+    POPULATION == "Mack Bison CH-Range 2012_04"   ~ "MBS",
+    # This last line catches anything you didn't rename and makes it Title Case
+    TRUE ~ str_to_title(gsub("_", " ", POPULATION))
+  ))
+
+```
+### Sample Sizes
+```{r}
+t1 <- analysis.gen[analysis.gen@other$YEAR.ASSIGN <=1999]
+table(t1@pop)
+
+t2 <- analysis.gen[analysis.gen@other$YEAR.ASSIGN %in% 2000:2015]
+table(t2@pop)
+
+t3 <- analysis.gen[analysis.gen@other$YEAR.ASSIGN >=2016]
+table(t3@pop)
+
+sample_counts <- data.frame(
+    POPULATION = analysis.gen@pop,
+    YEAR = analysis.gen@other$YEAR.ASSIGN
+  ) %>%
+  mutate(`Collection Year`= case_when(
+    YEAR <= 1999 ~ "Pre-2000",
+    YEAR >= 2000 & YEAR <= 2015 ~ "2000-2015",
+    YEAR >= 2016 ~ "Post-2016"
+  )) %>%
+  # 3. Count samples per Herd per Era
+  count(POPULATION, `Collection Year`, name = "n")
+
+
+map_data <- herd_centroids %>%
+  left_join(sample_counts, by = "POPULATION") %>% 
+  filter(POPULATION != "WENT")
+```
+
+
+### Sample Map
+```{r}
+
+map_data <- herd_centroids %>%
+  st_transform(st_crs(can_subset)) %>% # THIS IS THE KEY STEP
+  left_join(sample_counts, by = "POPULATION") %>% 
+  filter(POPULATION != "WENT")
+
+
+facet_names <- c(
+  "Pre-2000"   = "1986 - 1999",
+  "2000-2015"  = "2000 - 2015",
+  "Post-2016"  = "2016 - 2025"
+)
+
+# Now calculate the bbox from the correctly projected data
+bbox <- sf::st_bbox(map_data)
+
+# Run this BEFORE your ggplot code
+map_data$`Collection Year` <- factor(map_data$`Collection Year`, 
+                                     levels = c("Pre-2000", "2000-2015", "Post-2016"))
+ggplot() +
+  geom_sf(data = can_subset, fill = "gray95", color = "white") +
+  geom_sf(data = woodbisonpop, fill = "gray80", alpha = 0.2) +
+  geom_sf(data = map_data, aes(size = n, color = `Collection Year`), alpha = 0.7) +
+  geom_sf_text_repel(data = map_data, aes(label = POPULATION), 
+                     size = 3, max.overlaps = Inf) +
+  # Fixed the closing parenthesis here:
+  facet_wrap(~`Collection Year`, labeller = as_labeller(facet_names)) + 
+  scale_size_continuous(range = c(0.5, 4)) +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        axis.title.x = element_blank(), # Removes the 'X'
+        axis.title.y = element_blank(), # Removes the 'Y'
+        strip.text = element_text(face = "bold")) + # Optional: makes custom labels bold
+  # Added a small buffer (expand = TRUE helps, but manual limits are safer)
+  coord_sf(xlim = c(bbox["xmin"] - 1, bbox["xmax"] + 1), 
+           ylim = c(bbox["ymin"] - 1, bbox["ymax"] + 1), 
+           expand = TRUE)
+```
+ 
+
+
+
+
+ 
+ 

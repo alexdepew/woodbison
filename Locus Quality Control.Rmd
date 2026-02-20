@@ -100,14 +100,14 @@ table(pop(temp2)) # WBNP samples, ETH, NORD samples can be removed
 table(pop(temp3))
 
 # Remove herds from temporal group 2 
-remove_herds2 <- c("WBNP", "ETH", "NORD", "WENT", "WBNPNY", "WBNPPAD")
+remove_herds2 <- c("WBNP", "ETH", "NORD", "WBNPNY", "WBNPPAD")
 temp2 <- temp2[!temp2@pop %in% remove_herds2]
 temp2.sum <- summary(temp2) # Recalculate summary
 temp2.sum
 table(pop(temp2))
 
 # Remove Wentzel from temporal group 3
-remove_herds3 <- c("WENT", "WBNP")
+remove_herds3 <- "WBNP"
 temp3 <- temp3[!temp3@pop %in% remove_herds3]
 table(pop(temp3))
 ```
@@ -343,7 +343,9 @@ genind_to_genepop(temp3,
 ```
 
 ### Obtain null allele frequency
-As the percentage of missing data is small, the Brookfield method may be employed to estimate null allele frequency.
+Micro-checker can be used as a diagnostic tool for assessing the presence of null alleles in the data. The methods are based on heterozygosity deficiency methods.
+
+#### FreeNA Results
 ```{r}
 # Locus Labels
 loc_lab <- c(
@@ -361,31 +363,259 @@ loc_lab <- c(
 
 # Match locus to numeric labels in null file
 loc_match <- tibble(
-  Locus = 1:49, 
-  Locus_Name = loc_lab
+  Locus_ID = 1:49, 
+  Locus = loc_lab
 )
 
-Pop_lab <- c("EINPP", "EINPW", "MBS", "WBNPGR", "WBNPHC", 
+# Temp1 ----
+temp1_pops_lab <- c("EINPP", "EINPW", "MBS", "WBNPGR", "WBNPHC", 
              "WBNPLB", "WBNPNY", "WBNPPAD")
+
 # Match population to numeric labels in null file
-pop_match <- tibble(
+temp1_pop_match <- tibble(
   Pop = 1:8,
-  Pop_Name = Pop_lab
+  Population = temp1_pops_lab
 )
 
-temp1.nulls <- read.table("./genepop_files/FreeNA_out/temp1.Null_freq.txt",
-                          col.names = c("Locus", "Pop", "Null_Freq"))
+temp1.FreeNA.nulls <- read.table("./genepop_files/FreeNA_out/temp1.Null_freq.txt",
+                          col.names = c("Locus_ID", "Pop", "FreeNA"))
 
-temp1.nulls <- left_join(temp1.nulls, loc_match, by = "Locus") %>% 
-  select(-Locus) %>% 
-  left_join(pop_match, temp1.nulls, by = "Pop") %>% 
+temp1.FreeNA.nulls <- left_join(temp1.FreeNA.nulls, loc_match, by = "Locus_ID") %>% 
+  select(-Locus_ID) %>% 
+  left_join(temp1_pop_match, temp1.FreeNA.nulls, by = "Pop") %>% 
   select(-Pop) %>% 
-  relocate(Null_Freq, .after = Pop_Name) %>% 
-  relocate(Locus_Name, .after = Pop_Name)
+  relocate(FreeNA, .after = Population) %>% 
+  relocate(Locus, .after = Population)
+
+# Temp2 ----
+temp2_pops_lab <- c("HZ", "MBS", "RL", "WAB", "WENT")
+
+# Match population to numeric labels in null file
+temp2_pop_match <- tibble(
+  Pop = 1:5,
+  Population = temp2_pops_lab
+)
+
+temp2.FreeNA.nulls <- read.table("./genepop_files/FreeNA_out/temp2.Null_freq.txt",
+                          col.names = c("Locus_ID", "Pop", "FreeNA"))
+
+temp2.FreeNA.nulls <- left_join(temp2.FreeNA.nulls, loc_match, by = "Locus_ID") %>% 
+  select(-Locus_ID) %>% 
+  left_join(temp2_pop_match, temp2.FreeNA.nulls, by = "Pop") %>% 
+  select(-Pop) %>% 
+  relocate(FreeNA, .after = Population) %>% 
+  relocate(Locus, .after = Population)
+
+# Temp3 ----
+temp3_pops_lab <- c("AISH", "CL", "EINPP",
+                    "EINPW", "ETH", "HZ",
+                    "NAH", "NORD", "RL",
+                    "WAB", "WBNPPGR", "WBNPHC",
+                    "WBNPLB", "WBNPNY", "WBNPPAD", "WENT")
+
+# Match population to numeric labels in null file
+temp3_pop_match <- tibble(
+  Pop = 1:16,
+  Population = temp3_pops_lab
+)
+
+temp3.FreeNA.nulls <- read.table("./genepop_files/FreeNA_out/temp3.Null_freq.txt",
+                          col.names = c("Locus_ID", "Pop", "FreeNA"))
+
+temp3.FreeNA.nulls <- left_join(temp3.FreeNA.nulls, loc_match, by = "Locus_ID") %>% 
+  select(-Locus_ID) %>% 
+  left_join(temp3_pop_match, temp3.FreeNA.nulls, by = "Pop") %>% 
+  select(-Pop) %>% 
+  relocate(FreeNA, .after = Population) %>% 
+  relocate(Locus, .after = Population)
+```
+
+#### Identify Significant Null Alleles
+```{r}
+# First, remove populations with sample sizes, as they are more likely to show heterozygote deficiencies and skew null allele calling
+table(pop(temp1))
+table(pop(temp2)) # WENT
+table(pop(temp3)) # NAH, WAB, WENT
+
+# Create significant dataframes of called nulls but remove the small population sizes
+null.sig.1 <- temp1.FreeNA.nulls %>% 
+  filter(FreeNA >=0.10)
+
+null.sig.2 <- temp2.FreeNA.nulls %>% 
+  filter(!Population == "WENT",
+         FreeNA >= 0.10)
+
+null.sig.3 <- temp3.FreeNA.nulls %>% 
+  filter(!Population %in% c("NAH", "WAB", "WENT"), 
+         FreeNA >= 0.10)
+
+# Merge to see list across time 
+n1 <- null.sig.1 %>% select(Population, Locus, T1 = FreeNA)
+n2 <- null.sig.2 %>% select(Population, Locus, T2 = FreeNA)
+n3 <- null.sig.3 %>% select(Population, Locus, T3 = FreeNA)
+
+compiled_patterns <- n1 %>%
+  full_join(n2, by = c("Population", "Locus")) %>%
+  full_join(n3, by = c("Population", "Locus")) %>%
+  # Replace any 0 with NA across all Timepoint columns
+  mutate(across(starts_with("T"), ~na_if(., 0))) %>%
+  # Calculate how many time points were NOT NA (actual occurrences)
+  mutate(Prevalence = rowSums(!is.na(across(starts_with("T"))))) %>%
+  arrange(desc(Prevalence), Population, Locus)
+
+table(compiled_patterns$Locus)
+```
+
+
+
+
+#### Microchecker Results
+```{r}
+# Column headers of microchecker output
+microchecker_names  <- c("Population", "Locus", "Null_Present", "Oosterhout", "Chakraborty", "Brookfield_1", "Brookfield_2")
+
+# Temp1 ----
+
+# Load Files
+temp1_files <- list.files(path = "./microchecker/temp1/", 
+                    pattern = "\\.nulls\\.txt$", 
+                    full.names = TRUE)
+
+# Process all files from Microchecker
+temp1_microchecker_nulls <- temp1_files %>%
+  set_names(basename(.)) %>%
+  map_df(~ read.table(.x, 
+                      header = FALSE, 
+                      skip = 2, # Skip first two lines of the microchecker output 
+                      nrows = 49, # Read the informative rows (per locus data)
+                      fill = TRUE, 
+                      strip.white = TRUE), # Trims white spaces
+         .id = "Population") %>% # File name into column "Population"
+  set_names(microchecker_names) %>% # Since colnames were skipped, add back in
+  mutate(
+    Population = str_replace(Population, "\\.t1\\.nulls\\.txt$", ""), # Remove text string for later left_join
+    Locus = str_trim(Locus) # Ensure no blank spaces after loci names
+  )
+
+# Temp2 ----
+
+# Load Files
+temp2_files <- list.files(path = "./microchecker/temp2/", 
+                    pattern = "\\.nulls\\.txt$", 
+                    full.names = TRUE)
+
+# Process all files from Microchecker
+temp2_microchecker_nulls <- temp2_files %>%
+  set_names(basename(.)) %>%
+  map_df(~ read.table(.x, 
+                      header = FALSE, 
+                      skip = 2, # Skip first two lines of the microchecker output 
+                      nrows = 49, # Read the informative rows (per locus data)
+                      fill = TRUE, 
+                      strip.white = TRUE), # Trims white spaces
+         .id = "Population") %>% # File name into column "Population"
+  set_names(microchecker_names) %>% # Since colnames were skipped, add back in
+  mutate(
+    Population = str_replace(Population, "\\.t2\\.nulls\\.txt$", ""), # Remove text string for later left_join
+    Locus = str_trim(Locus) # Ensure no blank spaces after loci names
+  )
+
+# Temp3 ----
+
+# Load Files
+temp3_files <- list.files(path = "./microchecker/temp3/", 
+                    pattern = "\\.nulls\\.txt$", 
+                    full.names = TRUE)
+
+# Process all files from Microchecker
+temp3_microchecker_nulls <- temp3_files %>%
+  set_names(basename(.)) %>%
+  map_df(~ read.table(.x, 
+                      header = FALSE, 
+                      skip = 2, # Skip first two lines of the microchecker output 
+                      nrows = 49, # Read the informative rows (per locus data)
+                      fill = TRUE, 
+                      strip.white = TRUE), # Trims white spaces
+         .id = "Population") %>% # File name into column "Population"
+  set_names(microchecker_names) %>% # Since colnames were skipped, add back in
+  mutate(
+    Population = str_replace(Population, "\\.t3\\.nulls\\.txt$", ""), # Remove text string for later left_join
+    Locus = str_trim(Locus) # Ensure no blank spaces after loci names
+  )
+
+```
+
+#### Merge MicroChecker and FreeNA Results
+```{r}
+temp1.nulls <- left_join(temp1_microchecker_nulls, temp1.FreeNA.nulls,
+                              by = c("Population", "Locus")) 
+
+temp2.nulls <- left_join(temp2_microchecker_nulls, temp2.FreeNA.nulls,
+                              by = c("Population", "Locus")) 
+
+temp3.nulls <- left_join(temp3_microchecker_nulls, temp3.FreeNA.nulls,
+                              by = c("Population", "Locus")) 
+```
+
+
+```{r}
+temp1.sigs <- temp1.FreeNA.nulls %>% 
+  filter(FreeNA >= 0.10)
+
+
+
+tg1 <- data.frame(Locus = names(temp1.sigs), Freq = as.numeric(temp1.sigs), Group = "TG1")
+tg2 <- data.frame(Locus = names(temp2.sigs), Freq = as.numeric(temp2.sigs), Group = "TG2")
+tg3 <- data.frame(Locus = names(temp3.sigs), Freq = as.numeric(temp3.sigs), Group = "TG3")
+
+tg3
+# Bind 
+FreeNA.sig <- bind_rows(tg1,tg2,tg3)
+
+
+
+compiled_view <- FreeNA.sig %>%
+  # Spread the Groups into their own columns
+  pivot_wider(names_from = Group, values_from = Freq, values_fill = 0) %>%
+  # Add a total column to see "Repeat Offenders"
+  mutate(Total_Prevalence = rowSums(across(where(is.numeric)))) %>%
+  # Sort by the most problematic loci
+  arrange(desc(Total_Prevalence))
+
+compiled_view
+```
+
+```{r}
+ML_nulls <- read.table("./microchecker/temp1.ML.txt",
+           header = TRUE)
+
+temp1.ML <- data.frame(t(ML_nulls))
+colnames(temp1.ML) <- temp1.ML[1, ]
+
+
+temp1.ML <- temp1.ML %>% 
+  rename_with(~ str_remove(., "_.*")) %>% 
+  slice(-1) %>% 
+  rownames_to_column("Locus")
+
+
+temp1.ML
+
+
+# Temp1 sig ML
+temp1.sig.ML <- temp1.ML %>%
+  pivot_longer(
+    cols = -Locus,         # Everything EXCEPT Sample_ID
+    names_to = "Population",   # What to call the old column headers
+    values_to = "P_Value"      # What to call the actual numbers
+  ) %>% 
+  # p-value correction
+  mutate(P_Adjust = p.adjust(P_Value, method = "BH")) %>% 
+  filter(P_Adjust <=0.05)
 ```
 
 ## Test for allelic dropout
-Microdrop requires structure input files, yet the structure input files do not work unless they are delimited with EXACTLY one space. To note: you must delete the "POP" and "IND" column headers in a text editor, as the input requires N-2 columns names (loci names).
+Microdrop requires structure input files, yet the structure input files do not work unless they are delimited with EXACTLY one space. Note: you must delete the "POP" and "IND" column headers in nano text editor prior to running the program, as the input requires N-2 column names (colnames = locnames = 49).
 ```{r}
 # Microdrop requires STRUCTURE input files but they need to be space delimited
 # Temp1 ----
@@ -442,5 +672,38 @@ write.table(temp3.microdrop, "./microdrop/temp3.microdrop.txt", sep= " ",
 temp3.drop <- read.table("./microdrop/temp3_MLE_Rates_loc",
                          sep = "\t", header = TRUE)
 ```
+
+# Format final dataset for use in analyses
+Removal of herds with insufficient sample sizes for analyses, remove loci which have demonstrated high levels of missing data, and which have a propensity for null alleles. 
+```{r}
+# Remove loci called for null alleles
+analysis.gen <- bison.genind[, loc = !locNames(bison.genind) == "BMS601"] # Remove locus
+analysis.gen # Ensure loci were removed (now 47)
+
+# Remove populations with insufficient sample sizes (Temp2)
+temp2_remove <- (pop(analysis.gen) %in% c("WBNP", "ETH", "NORD", "WBNPNY", "WBNPPAD")) & (analysis.gen@other$YEAR.ASSIGN %in% 2000:2015) # Isolate samples for removal
+
+analysis.gen <- analysis.gen[!temp2_remove, ] # Remove
+
+# Remove populations with insufficient sample sizes (Temp3)
+temp3_remove <- (pop(analysis.gen) == "WBNP") & (analysis.gen@other$YEAR.ASSIGN >= 2016)
+
+analysis.gen <- analysis.gen[!temp3_remove, ] # Remove
+
+# Print out final dataset
+analysis.gen
+
+# Create filtered dataset for working with in subsequent analyses
+analysis.data <- bison.data %>% 
+  select(-BMS601, -BM4028) %>% # Remove locus with nulls (BMS601) and missing data (BM4028)
+    filter(!(HERD %in% c("WBNP", "ETH", "NORD", "WBNPNY", "WBNPPAD") & # Insufficient sample sizes
+           YEAR.ASSIGN %in% 2000:2015)) %>% 
+    filter(!(HERD == "WBNP" & YEAR.ASSIGN >= 2016)) # No subherd designation
+
+# Write out to csv
+write.csv(analysis.data, "Cleaned_locus_data_20.02.2026.csv", row.names = F)
+```
+
+
 
 

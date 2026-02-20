@@ -30,7 +30,7 @@ library(dplyr)
 
 ## Load Required Data
 ```{r}
-bison.data <- read.csv("Cleaned_samples.06.01.2026.csv",
+bison.data <- read.csv("Cleaned_samples.16.02.2026.csv",
                        check.names = F)
 ```
 
@@ -360,6 +360,9 @@ plotQ(merged_temp1,
             exportpath = "./plots/structure_plots/")
 
 ```
+
+
+
 
 ```{r}
 # Print summary of runs (Evanno method plot is based on these values)

@@ -90,10 +90,26 @@ temp3.sum <- summary(temp3)
 Visualize population structure without assumptions of HWE or LD, to identify clusters in the data. 
 ```{r}
 custom_palette <- c(
-  "#E31A1C", "#1F78B4", "#FFFF99", "#33A02C", "#FF7F00", 
-  "#6A3D9A", "#B15928", "#A6CEE3", "#B2DF8A", "#FB9A99", 
-  "#FDBF6F", "#CAB2D6", "#000000", "#8DD3C7", "#BEBADA",
-  "#2F4F4F", "#FF1493")
+  "#E31A1C", # AISH - Bold Red
+  "#6A3D9A", # CL - Deep Purple
+  "#FF7F00", # EINPP - Bright Orange
+  "#A6CEE3", # EINPW - Sky Blue
+  "#B15928", # ETH - Burnt Sienna
+  "#FB9A99", # HZ - Soft Pink
+  "#FDBF6F", # MBS - Light Orange
+  "#CAB2D6", # NAH - Lavender
+  "#FFFF99", # NORD - Pale Yellow
+  "#1F78B4", # RL - Steel Blue
+  "#E377C2", # WAB - Magenta
+  # --- WBNP SUB-HERD BOLD SET (Replaced Lime) ---
+  "#006400", # WBNPGR (Garden River) - Dark Forest Green
+  "#FFD700", # WBNPHC (Hay Camp) - Bold Gold (High Visibility)
+  "#00CED1", # WBNPLB (Little Buffalo) - Dark Turquoise
+  "#FF4500", # WBNPNY (Nyarrowu) - Vermillion (Red-Orange)
+  "#4169E1", # WBNPPAD (Delta) - Royal Blue
+  # ----------------------------------------------
+  "#333333"  # WENT - Graphite
+)
 
 all_herds <- c(
   "AISH", "CL", "EINPP", "EINPW", "ETH", "HZ", "MBS", "NAH", "NORD", 
@@ -184,6 +200,198 @@ dev.off()
 # Allele contributions to variance
 loadingplot(pca.temp3$c1^2)
 ```
+### Stack Plots
+```{r}
+pdf(file = "./plots/wb_pca_stacked.pdf", width = 30, height = 10) # Increase height for 3 plots
+
+# Set up  grid 3 rows, 1 column
+par(mfrow = c(1, 3)) 
+
+# Plot 1
+s.class(pca.temp1$li, fac = pop(temp1), col = transp(cols_temp1, 0.75),
+        axesell = F, cstar = 0, cpoint = 3, grid = F, clabel = 2, csub = 4,
+        sub = paste0("PC1: ", round(eig.perc.temp1[1], 1), "% | PC2: ", round(eig.perc.temp1[2], 1), "%")
+)
+mtext("a)", side = 3, adj = 0.01, line = 1, cex = 2, font = 2)
+
+
+# Plot 2
+s.class(pca.temp2$li, fac = pop(temp2), col = transp(cols_temp2, 0.75),
+        axesell = F, cstar = 0, cpoint = 3, grid = F, clabel = 2, csub = 4,
+        sub = paste0("PC1: ", round(eig.perc.temp2[1], 1), "% | PC2: ", round(eig.perc.temp2[2], 1), "%")
+)
+mtext("b)", side = 3, adj = 0.01, line = 1, cex = 2, font = 2)
+
+
+# Plot 3
+s.class(pca.temp3$li, fac = pop(temp3), col = transp(cols_temp3, 0.75),
+        axesell = F, cstar = 0, cpoint = 3, grid = F, clabel = 2, csub = 4,
+        sub = paste0("PC1: ", round(eig.perc.temp3[1], 1), "% | PC2: ", round(eig.perc.temp3[2], 1), "%")
+)
+mtext("c)", side = 3, adj = 0.01, line = 1, cex = 2, font = 2)
+
+dev.off()
+```
+# Subset GENIND
+```{r}
+# WBNP-ONLY samples
+wbnp1 <- bison.genind[bison.genind@pop %in% c("WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD", "WENT") & 
+                        bison.genind@other$YEAR.ASSIGN <= 1999]
+
+
+wbnp2 <- bison.genind[bison.genind@pop %in% c("WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD", "WENT") & 
+                        bison.genind@other$YEAR.ASSIGN >= 2016]
+
+
+admix1 <- bison.genind[bison.genind@pop %in% c("EINPP", "EINPW", "WBNPGR", 
+                                               "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD", "WENT") & 
+                      bison.genind@other$YEAR.ASSIGN <= 1999]
+
+
+admix2 <- bison.genind[bison.genind@pop %in% c("EINPP", "EINPW", "WBNPGR", 
+                                               "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD", "WENT") & 
+                      bison.genind@other$YEAR.ASSIGN >= 2016]
+
+```
+
+
+## WBNP PCAs
+```{r}
+## WBNP 1 ----
+x.wbnp1 <- tab(wbnp1, freq = TRUE, NA.method = "mean")
+pca.wbnp1 <- dudi.pca(x.wbnp1, center = T, scale = F, scannf = F, nf = 2)
+
+# Axes % Variance
+eig.perc.wbnp1 <- 100*pca.wbnp1$eig/sum(pca.wbnp1$eig)
+
+# Plot
+pdf(file = "./plots/pca_wbnp1.pdf", width = 10, height = 10)
+cols_wbnp1 <- herd_col_set[levels(pop(wbnp1))] # Map colours to herd
+
+s.class(pca.wbnp1$li, fac = pop(wbnp1), col = transp(cols_wbnp1, 0.75),
+        axesell = F, cstar = 0, cpoint = 3,
+        grid = F,
+        sub = paste0("PC1: ", round(eig.perc.wbnp1[1], 1), "% | PC2: ", round(eig.perc.wbnp1[2], 1), "%"),)
+
+add.scatter.eig(pca.wbnp1$eig[1:20], 3, 1, 2, ratio = 0.15, "bottomright")
+dev.off()
+
+
+# Allele contributions to variance
+loadingplot(pca.wbnp1$c1^2)
+
+## WBNP 2 ----
+
+x.wbnp2 <- tab(wbnp2, freq = TRUE, NA.method = "mean")
+pca.wbnp2 <- dudi.pca(x.wbnp2, center = T, scale = F, scannf = F, nf = 2)
+
+# Axes % Variance
+eig.perc.wbnp2 <- 100*pca.wbnp2$eig/sum(pca.wbnp2$eig)
+
+# Plot
+pdf(file = "./plots/pca_wbnp2.pdf", width = 10, height = 10)
+cols_wbnp2 <- herd_col_set[levels(pop(wbnp2))] # Map colours to herd
+
+s.class(pca.wbnp2$li, fac = pop(wbnp2), col = transp(cols_wbnp2, 0.75),
+        axesell = F, cstar = 0, cpoint = 3,
+        grid = F,
+        sub = paste0("PC1: ", round(eig.perc.wbnp2[1], 1), "% | PC2: ", round(eig.perc.wbnp2[2], 1), "%"),)
+
+add.scatter.eig(pca.wbnp2$eig[1:20], 3, 1, 2, ratio = 0.15, "bottomright")
+dev.off()
+
+
+# Allele contributions to variance
+loadingplot(pca.wbnp2$c1^2)
+
+
+## Admix 1 ----
+
+x.admix1 <- tab(admix1, freq = TRUE, NA.method = "mean")
+pca.admix1 <- dudi.pca(x.admix1, center = T, scale = F, scannf = F, nf = 2)
+
+pca.admix1$li[,1] <- pca.admix1$li[,1] * -1  # Flip PC1 (Left-Right)
+
+
+# Axes % Variance
+eig.perc.admix1 <- 100*pca.admix1$eig/sum(pca.admix1$eig)
+
+# Plot
+pdf(file = "./plots/pca_admix1.pdf", width = 10, height = 10)
+cols_admix1 <- herd_col_set[levels(pop(admix1))] # Map colours to herd
+
+s.class(pca.admix1$li, fac = pop(admix1), col = transp(cols_admix1, 0.75),
+        axesell = F, cstar = 0, cpoint = 3,
+        grid = F,
+        sub = paste0("PC1: ", round(eig.perc.admix1[1], 1), "% | PC2: ", round(eig.perc.admix1[2], 1), "%"),)
+
+add.scatter.eig(pca.admix1$eig[1:20], 3, 1, 2, ratio = 0.15, "bottomright")
+dev.off()
+
+
+# Allele contributions to variance
+loadingplot(pca.admix1$c1^2)
+
+## Admix 2 ----
+
+x.admix2 <- tab(admix2, freq = TRUE, NA.method = "mean")
+pca.admix2 <- dudi.pca(x.admix2, center = T, scale = F, scannf = F, nf = 2)
+
+
+
+# Axes % Variance
+eig.perc.admix2 <- 100*pca.admix2$eig/sum(pca.admix2$eig)
+
+# Plot
+pdf(file = "./plots/pca_admix2.pdf", width = 10, height = 10)
+cols_admix2 <- herd_col_set[levels(pop(admix2))] # Map colours to herd
+
+s.class(pca.admix2$li, fac = pop(admix2), col = transp(cols_admix2, 0.75),
+        axesell = F, cstar = 0, cpoint = 3,
+        grid = F,
+        sub = paste0("PC1: ", round(eig.perc.admix2[1], 1), "% | PC2: ", round(eig.perc.admix2[2], 1), "%"),)
+
+add.scatter.eig(pca.admix2$eig[1:20], 3, 1, 2, ratio = 0.15, "bottomright")
+dev.off()
+
+# Allele contributions to variance
+loadingplot(pca.admix2$c1^2)
+```
+
+
+#### Stack WBNP PCA Plots
+```{r}
+pdf(file = "./plots/wbnp_pca_stacked.pdf", width = 15, height = 15) 
+
+# Set up  grid 3 rows, 1 column
+par(mfrow = c(2, 2)) 
+
+# Plot 1
+s.class(pca.wbnp1$li, fac = pop(wbnp1), col = transp(cols_wbnp1, 0.75),
+        axesell = F, cstar = 0, cpoint = 2, grid = F, csub = 2,
+        sub = paste0("PC1: ", round(eig.perc.wbnp1[1], 1), "% | PC2: ", round(eig.perc.wbnp1[2], 1), "%"))
+mtext("a)", side = 3, adj = 0.01, line = 1, cex = 2, font = 2)
+
+# Plot 2
+s.class(pca.wbnp2$li, fac = pop(wbnp2), col = transp(cols_wbnp2, 0.75),
+        axesell = F, cstar = 0, cpoint = 2, grid = F, csub = 2,
+        sub = paste0("PC1: ", round(eig.perc.wbnp2[1], 1), "% | PC2: ", round(eig.perc.wbnp2[2], 1), "%"))
+mtext("b)", side = 3, adj = 0.01, line = 1, cex = 2, font = 2)
+
+# Plot 3
+s.class(pca.admix1$li, fac = pop(admix1), col = transp(cols_admix1, 0.75),
+        axesell = F, cstar = 0, cpoint = 2, grid = F, csub = 2,
+        sub = paste0("PC1: ", round(eig.perc.admix1[1], 1), "% | PC2: ", round(eig.perc.admix1[2], 1), "%"))
+mtext("c)", side = 3, adj = 0.01, line = 1, cex = 2, font = 2)
+
+# Plot 4
+s.class(pca.admix2$li, fac = pop(admix2), col = transp(cols_admix2, 0.75),
+        axesell = F, cstar = 0, cpoint = 2, grid = F, csub = 2,
+        sub = paste0("PC1: ", round(eig.perc.admix2[1], 1), "% | PC2: ", round(eig.perc.admix2[2], 1), "%"))
+mtext("d)", side = 3, adj = 0.01, line = 1, cex = 2, font = 2)
+
+dev.off()
+```
 
 
 # STRUCTURE Analyses
@@ -208,6 +416,30 @@ library(graph4lg)
 genind_to_structure(temp1.struct.gen, output = "structure/temp1.structure.txt")
 genind_to_structure(temp2.struct.gen, output = "structure/temp2.structure.txt")
 genind_to_structure(temp3.struct.gen, output = "structure/temp3.structure.txt")
+
+# WBNP-ONLY samples
+wbnp1.struct.gen <- wbnp1
+pop(wbnp1.struct.gen) <- as.numeric(as.factor(pop(wbnp1.struct.gen)))
+summary(wbnp1.struct.gen)
+
+wbnp2.struct.gen <- wbnp2
+pop(wbnp2.struct.gen) <- as.numeric(as.factor(pop(wbnp2.struct.gen)))
+summary(wbnp2.struct.gen)
+
+genind_to_structure(wbnp1.struct.gen, output = "structure/wbnp1.structure.txt")
+genind_to_structure(wbnp2.struct.gen, output = "structure/wbnp2.structure.txt")
+
+# WBNP with EINPW and EINPP
+admix1.struct.gen <- admix1
+pop(admix1.struct.gen) <- as.numeric(as.factor(pop(admix1.struct.gen)))
+summary(admix1.struct.gen)
+
+admix2.struct.gen <- admix2
+pop(admix2.struct.gen) <- as.numeric(as.factor(pop(admix2.struct.gen)))
+summary(admix2.struct.gen)
+
+genind_to_structure(admix1.struct.gen, output = "structure/admix1.structure.txt")
+genind_to_structure(admix2.struct.gen, output = "structure/admix2.structure.txt")
 ```
 
 
@@ -216,24 +448,23 @@ genind_to_structure(temp3.struct.gen, output = "structure/temp3.structure.txt")
 ## Subset csv
 The data csv file can be subset to match the samples included in each STRUCTURE run. This will be used to match the sample ID's for plotting on the STRUCTURE plot.
 ```{r}
-temp1.data <- bison.data %>%
+temp1.data <- cleaned.data %>%
   select(-ID) %>% 
   filter(YEAR.ASSIGN <= 1999) %>%
   rename(ID = Spreadsheet_ID) %>%     
   mutate(ID = as.character(ID)) %>% 
   filter(HERD != "EINPP")
 
-temp2.data <- bison.data %>% 
+temp2.data <- cleaned.data %>% 
   select(-ID) %>% 
   filter(YEAR.ASSIGN >=2000 &
            YEAR.ASSIGN <=2015) %>%
-  filter(!HERD %in% remove_herds) %>%
   rename(ID = Spreadsheet_ID) %>% 
   mutate(ID = as.character(ID)) %>% 
   filter(HERD != "EINPP")
 
   
-temp3.data <- temp2.data <- bison.data %>% 
+temp3.data <- cleaned.data %>% 
   select(-ID) %>%
   filter(YEAR.ASSIGN >=2016) %>%
   filter(HERD != "WBNP") %>% 
@@ -241,263 +472,1076 @@ temp3.data <- temp2.data <- bison.data %>%
   mutate(ID = as.character(ID)) %>% 
   filter(HERD != "EINPP")
 
+wbnp1.data <- cleaned.data %>% 
+  select(-ID) %>% 
+  filter(YEAR.ASSIGN <= 1999) %>% 
+  filter(HERD %in% c("WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD")) %>% 
+  rename(ID = Spreadsheet_ID) %>% 
+  mutate(ID = as.character(ID)) 
+
+wbnp2.data <- cleaned.data %>% 
+  select(-ID) %>% 
+  filter(YEAR.ASSIGN >= 2016) %>% 
+  filter(HERD %in% c("WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD", "WENT")) %>% 
+  rename(ID = Spreadsheet_ID) %>% 
+  mutate(ID = as.character(ID)) 
+
+admix1.data <- cleaned.data %>% 
+  select(-ID) %>% 
+  filter(YEAR.ASSIGN <= 1999) %>% 
+  filter(HERD %in% c("EINPP", "EINPW", "WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD")) %>% 
+  rename(ID = Spreadsheet_ID) %>% 
+  mutate(ID = as.character(ID)) 
+
+admix2.data <- cleaned.data %>% 
+  select(-ID) %>% 
+  filter(YEAR.ASSIGN >=2016) %>% 
+  filter(HERD %in% c("EINPP", "EINPW", "WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD", "WENT")) %>% 
+  rename(ID = Spreadsheet_ID) %>% 
+  mutate(ID = as.character(ID)) 
 ```
+
 ### Temporal Group 1
-Load Data
+
+#### Load Data
 ```{r}
+# List files
+# Full datasets
 sfiles_temp1 <- list.files("./structure/STRUCTURE_RESULTS/temp1/", full.names = TRUE)
+sfiles_temp2 <- list.files("./structure/STRUCTURE_RESULTS/temp2/", full.names = TRUE)
+sfiles_temp3 <- list.files("./structure/STRUCTURE_RESULTS/temp3/", full.names = TRUE)
+
+# WBNP Subsets
+sfiles_wbnp1 <- list.files("./structure/STRUCTURE_RESULTS/wbnp1/", full.names = TRUE)
+sfiles_wbnp2 <- list.files("./structure/STRUCTURE_RESULTS/wbnp2/", full.names = TRUE)
+
+sfiles_admix1 <- list.files("./structure/STRUCTURE_RESULTS/admix1/", full.names = TRUE)
+sfiles_admix2 <- list.files("./structure/STRUCTURE_RESULTS/admix2/", full.names = TRUE)
+
+# Qlist (pophelper)
 slist_temp1 <- readQ(files = sfiles_temp1, filetype = "structure")
+slist_temp2 <- readQ(files = sfiles_temp2, filetype = "structure")
+slist_temp3 <- readQ(files = sfiles_temp3, filetype = "structure")
+
+slist_wbnp1 <- readQ(files = sfiles_wbnp1, filetype = "structure")
+slist_wbnp2 <- readQ(files = sfiles_wbnp2, filetype = "structure")
+
+slist_admix1 <- readQ(files = sfiles_admix1, filetype = "structure")
+slist_admix2 <- readQ(files = sfiles_admix2, filetype = "structure")
 ```
 
-Optimal K clusters
+#### Optimal K clusters
 ```{r}
+# Summarise K runs
 struct_sum_temp1 <- summariseQ(tabulateQ(slist_temp1))
+struct_sum_temp2 <- summariseQ(tabulateQ(slist_temp2))
+struct_sum_temp3 <- summariseQ(tabulateQ(slist_temp3))
 
+struct_sum_wbnp1 <- summariseQ(tabulateQ(slist_wbnp1))
+struct_sum_wbnp2 <- summariseQ(tabulateQ(slist_wbnp2))
+
+struct_sum_admix1 <- summariseQ(tabulateQ(slist_admix1))
+struct_sum_admix2 <- summariseQ(tabulateQ(slist_admix2))
+
+### Plot
+# Full dataset
 p1 <- evannoMethodStructure(data = struct_sum_temp1, exportplot = T,
                            returnplot = T, returndata = F,
                            basesize = 12, linesize = 0.7,
                            height = 25, width = 25, units = "cm",
-                           outputfilename = "evannoMethodStructure_Temp1",
+                           outputfilename = "Temp1_evanno_K",
                            exportpath = "./plots/structure_plots/") 
 
 grid.arrange(p1)
-```
-The methods described by Pritchard (2000) and Evanno (2006) both indicate the most likely number of populations is 3.
 
-### Plotting
-```{r, results='hide'}
+p2 <- evannoMethodStructure(data = struct_sum_temp2, exportplot = T,
+                           returnplot = T, returndata = F,
+                           basesize = 12, linesize = 0.7,
+                           height = 25, width = 25, units = "cm",
+                           outputfilename = "Temp2_evanno_K",
+                           exportpath = "./plots/structure_plots/") 
+
+grid.arrange(p2)
+
+p3 <- evannoMethodStructure(data = struct_sum_temp3, exportplot = T,
+                           returnplot = T, returndata = F,
+                           basesize = 12, linesize = 0.7,
+                           height = 25, width = 25, units = "cm",
+                           outputfilename = "Temp3_evanno_K",
+                           exportpath = "./plots/structure_plots/") 
+
+grid.arrange(p3)
+
+# WBNP subsets
+w1 <- evannoMethodStructure(data = struct_sum_wbnp1, exportplot = T,
+                           returnplot = T, returndata = F,
+                           basesize = 12, linesize = 0.7,
+                           height = 25, width = 25, units = "cm",
+                           outputfilename = "WBNP1_evanno_K",
+                           exportpath = "./plots/structure_plots/") 
+
+grid.arrange(w1)
+
+w2 <- evannoMethodStructure(data = struct_sum_wbnp2, exportplot = T,
+                           returnplot = T, returndata = F,
+                           basesize = 12, linesize = 0.7,
+                           height = 25, width = 25, units = "cm",
+                           outputfilename = "WBNP2_evanno_K",
+                           exportpath = "./plots/structure_plots/") 
+
+grid.arrange(w2)
+
+a1 <- evannoMethodStructure(data = struct_sum_admix1, exportplot = T,
+                           returnplot = T, returndata = F,
+                           basesize = 12, linesize = 0.7,
+                           height = 25, width = 25, units = "cm",
+                           outputfilename = "admix1_evanno_K",
+                           exportpath = "./plots/structure_plots/") 
+
+grid.arrange(a1)
+ 
+a2 <- evannoMethodStructure(data = struct_sum_admix2, exportplot = T,
+                           returnplot = T, returndata = F,
+                           basesize = 12, linesize = 0.7,
+                           height = 25, width = 25, units = "cm",
+                           outputfilename = "admix2_evanno_K",
+                           exportpath = "./plots/structure_plots/") 
+
+grid.arrange(a2)
+
+```
+
+### Barplotting
+#### Temporal Group 1 (all samples - EINPP)
+```{r}
+# Align runs
+slist_temp1 <- alignK(slist_temp1, "auto")
+
+# Merge runs (average over 10 replicates)
+temp1.mk2 <- mergeQ(slist_temp1[11:20])
+temp1.mk3 <- mergeQ(slist_temp1[21:30])
+temp1.mk4 <- mergeQ(slist_temp1[31:40])
+temp1.mk5 <- mergeQ(slist_temp1[41:50])
+temp1.mk6 <- mergeQ(slist_temp1[51:60])
+temp1.mk7 <- mergeQ(slist_temp1[61:70])
+
+
+temp1.merged.list <- as.qlist(list(temp1.mk2[[1]], temp1.mk3[[1]], temp1.mk4[[1]], 
+                          temp1.mk5[[1]], temp1.mk6[[1]], temp1.mk7[[1]]))
+
 ind_label_temp1 <- readQ(files = sfiles_temp1[1], indlabfrom = TRUE) %>% as.data.frame()
 ind_label_temp1 <- rownames_to_column(ind_label_temp1, "ID")
-
 locations_temp1 <- left_join(ind_label_temp1, temp1.data, by = "ID")
 
-## 
-slist <- slist_temp1
-
-temp1_ind_order <- locations_temp1
-rownames(slist[[1]]) <- temp1_ind_order$ID
-if(length(unique(sapply(slist,nrow)))==1) slist <- lapply(slist,"rownames<-",temp1_ind_order$ID)
-lapply(slist, rownames)[1:70]
-
-slist_temp1 <- slist 
-slist_align1 <- alignK(slist_temp1, "within") # Align replicate runs
-slist_align1 <- slist_align1[11:70]
-class(slist_align1) <- "qlist"
-merged_temp1 <- mergeQ(slist_align1)
-
 loc_labels_temp1 <- locations_temp1$HERD %>% as.data.frame()
-colnames(loc_labels_temp1) <- "Region"
 
 herd_order_temp1 <- c("EINPW", "MBS", "WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD")
 
+str_cols <- c("#0089B2", "#DF0101", "#77CE61", "#A945FF", "#FF9326", "#1D72F5","#FDF060")
 
-plotQ(merged_temp1, 
+plotQ(temp1.merged.list, 
       imgoutput = "join",
             basesize = 10, 
-            clustercol = colours, 
             grplab = loc_labels_temp1, 
             subsetgrp = herd_order_temp1, 
+            clustercol = str_cols,
             ordergrp = TRUE,
-            showindlab = TRUE, 
+      
+      # Side "K" Labels
+            splab = c("K = 2", "K = 3", "K = 4", "K = 5", "K = 6", "K = 7"),
+            splabsize = 35,
+            sppos = "left",
+            splabcol = "black",
+            splabangle = 0,
+      
+            # Individual Label Settings
+            showindlab = F, 
             indlabsize = 4,        
             indlabangle = 90,
-            indlabheight = 0,       
-            grplabsize = 5, 
-            grplabangle = 45,
+            indlabheight = 0,
+      
+      # Group Label settings
+            grplabsize = 10, 
+            grplabangle =45,
             grplabpos = 0.65,
-            grplabheight = 0.2,      
+            grplabheight = 1,      
             grplabspacer = 0.1,
-            linesize = 1,          
-            pointsize = 4, 
+            grplabcol = "black",
+      
+            linesize = 2,          
+            pointsize = 15,
+      
+      # Divider Line Settings
             divcol = "white",
-            divsize = 1, 
+            divsize = 3, 
+            divtype = NULL,
+      
             useindlab = TRUE, 
             returndata = TRUE,
-            height = 12,             
-            width = 35,
-            outputfilename = "Temp1_K3",
-            exportpath = "./plots/structure_plots/")
-
-```
-
-```{r}
-# Print summary of runs (Evanno method plot is based on these values)
-summariseQ(tabulateQ(slist_temp1))
-
-# Align and merge across K
-m_k3 <- mergeQ(alignK(slist_temp1[21:30])) # This aggregates all 10 replicates of K = 3
-
-# Structure Plot
-plotQ(,
-      imgoutput = "join",
-            basesize = 10, 
-            clustercol = clist$shiny, 
-            grplab = loc_labels_temp1, 
-            subsetgrp = herd_order_temp1, 
-            ordergrp = TRUE,
-            showindlab = TRUE, 
-            indlabsize = 4,        
-            indlabangle = 90,
-            indlabheight = 0,       
-            grplabsize = 5, 
-            grplabangle = 45,
-            grplabpos = 0.65,
-            grplabheight = 0.2,      
-            grplabspacer = 0.1,
-            linesize = 1,          
-            pointsize = 4, 
-            splabsize = 17,
-            divcol = "white",
-            divsize = 1, 
-            useindlab = TRUE, 
-            returndata = TRUE,
-            height = 12,             
-            width = 35,
+      
+      # Plot settings
+            height = 7,             
+            width = 50,
+            panelspacer = 1,
+            panelratio = c(1,1),
+      
+      
+      # File settings
+            imgtype = "pdf",
             outputfilename = "Temp1",
             exportpath = "./plots/structure_plots/")
-
 ```
 
-### Temporal Group 2
-Load Data
-```{r}
-sfiles_temp2 <- list.files("./structure/STRUCTURE_RESULTS/temp2", full.names = TRUE)
-slist_temp2 <- readQ(files = sfiles_temp2, filetype = "structure")
-```
 
-Optimal K clusters
+#### Temporal Group 2 (all samples - EINPP)
 ```{r}
-struct_sum_temp2 <- summariseQ(tabulateQ(slist_temp2))
+# Align runs
+slist_temp2 <- alignK(slist_temp2, "auto")
 
-p2 <- evannoMethodStructure(data = struct_sum_temp2, exportplot = F,
-                           returnplot = T, returndata = F,
-                           basesize = 12, linesize = 0.7)
-grid.arrange(p2)
-```
+# Merge runs (average over 10 replicates)
+temp2.mk2 <- mergeQ(slist_temp2[11:20])
+temp2.mk3 <- mergeQ(slist_temp2[21:30])
+temp2.mk4 <- mergeQ(slist_temp2[31:40])
+temp2.mk5 <- mergeQ(slist_temp2[41:50])
 
-Plotting
-```{r}
-# Organize into individual and population order
+
+
+temp2.merged.list <- as.qlist(list(temp2.mk2[[1]], temp2.mk3[[1]], temp2.mk4[[1]], 
+                          temp2.mk5[[1]]))
+
 ind_label_temp2 <- readQ(files = sfiles_temp2[1], indlabfrom = TRUE) %>% as.data.frame()
 ind_label_temp2 <- rownames_to_column(ind_label_temp2, "ID")
-
 locations_temp2 <- left_join(ind_label_temp2, temp2.data, by = "ID")
 
-slist <- slist_temp2
-
-temp2_ind_order <- locations_temp2
-rownames(slist[[1]]) <- temp2_ind_order$ID
-if(length(unique(sapply(slist,nrow)))==1) slist <- lapply(slist,"rownames<-",temp2_ind_order$ID)
-lapply(slist, rownames)[0:50]
-
-slist_temp2 <- slist
-slist_align2 <- alignK(slist_temp2, "within")
-merged_temp2 <- mergeQ(slist_align2[41:50]) # Merge K = 2 runs
-
-
 loc_labels_temp2 <- locations_temp2$HERD %>% as.data.frame()
-colnames(loc_labels_temp2) <- "Region"
 
-herd_order_temp2 <- c("EINPW", "HZ", "MBS", "RL", "WAB")
+herd_order_temp2 <- c("HZ", "MBS","RL", "WAB", "WENT")
 
-# Structure Plot
-plotQ(slist_align2[45], 
-            basesize = 10,
-            clustercol = colours, 
+str_cols <- c("#0089B2", "#DF0101", "#77CE61", "#A945FF", "#FF9326", "#1D72F5","#FDF060")
+
+plotQ(temp2.merged.list, 
+      imgoutput = "join",
+            basesize = 10, 
             grplab = loc_labels_temp2, 
             subsetgrp = herd_order_temp2, 
+            clustercol = str_cols,
             ordergrp = TRUE,
-            showindlab = TRUE, 
+      
+      # Side "K" Labels
+            splab = c("K = 2", "K = 3", "K = 4", "K = 5"),
+            splabsize = 35,
+            sppos = "left",
+            splabcol = "black",
+            splabangle = 0,
+      
+            # Individual Label Settings
+            showindlab = F, 
             indlabsize = 4,        
             indlabangle = 90,
-            indlabheight = 0,       
-            grplabsize = 3, 
-            grplabangle = 0,
+            indlabheight = 0,
+      
+      # Group Label settings
+            grplabsize = 10, 
+            grplabangle =45,
             grplabpos = 0.65,
-            grplabheight = 0.2,      
+            grplabheight = 1,      
             grplabspacer = 0.1,
-            linesize = 1,          
-            pointsize = 4, 
+            grplabcol = "black",
+      
+            linesize = 2,          
+            pointsize = 15,
+      
+      # Divider Line Settings
             divcol = "white",
-            divsize = 1, 
+            divsize = 3, 
+            divtype = NULL,
+      
             useindlab = TRUE, 
             returndata = TRUE,
-            height = 12,             
-            width = 35,
-            outputfilename = "Temp2_K5",
+      
+      # Plot settings
+            height = 7,             
+            width = 50,
+            panelspacer = 1,
+            panelratio = c(1.5,1),
+      
+      
+      # File settings
+            imgtype = "pdf",
+            outputfilename = "Temp2",
             exportpath = "./plots/structure_plots/")
 ```
 
-### Temporal Group 3
-Load Data
+#### Temporal Group 3 (all samples - EINPP)
 ```{r}
-sfiles_temp3 <- list.files("./structure/results_temp3_f/", full.names = TRUE)
-slist_temp3 <- readQ(files = sfiles_temp3, filetype = "structure")
-```
+# Align runs
+slist_temp3 <- alignK(slist_temp3, "auto")
+
+# Merge runs (average over 10 replicates)
+temp3.mk2 <- mergeQ(slist_temp3[11:20])
+temp3.mk3 <- mergeQ(slist_temp3[21:30])
+temp3.mk4 <- mergeQ(slist_temp3[31:40])
+temp3.mk5 <- mergeQ(slist_temp3[41:50])
+temp3.mk6 <- mergeQ(slist_temp3[51:60])
+temp3.mk7 <- mergeQ(slist_temp3[61:70])
+temp3.mk8 <- mergeQ(slist_temp3[71:80])
+temp3.mk9 <- mergeQ(slist_temp3[81:90])
+temp3.mk10 <- mergeQ(slist_temp3[91:100])
+temp3.mk11 <- mergeQ(slist_temp3[101:110])
+temp3.mk12 <- mergeQ(slist_temp3[111:120])
+temp3.mk13 <- mergeQ(slist_temp3[121:130])
+temp3.mk14 <- mergeQ(slist_temp3[131:140])
+temp3.mk15 <- mergeQ(slist_temp3[141:150])
 
 
-Optimal K clusters
-```{r}
-struct_sum_temp3 <- summariseQ(tabulateQ(slist_temp3))
+temp3.merged.list <- as.qlist(list(temp3.mk2[[1]], temp3.mk3[[1]], temp3.mk4[[1]], 
+                          temp3.mk5[[1]], temp3.mk6[[1]], temp3.mk7[[1]],
+                          temp3.mk8[[1]], temp3.mk9[[1]], temp3.mk10[[1]],
+                          temp3.mk11[[1]], temp3.mk12[[1]], temp3.mk13[[1]], temp3.mk14[[1]], temp3.mk15[[1]]))
 
-p3 <- evannoMethodStructure(data = struct_sum_temp3, 
-                            exportplot = F,
-                           returnplot = T, returndata = F,
-                           basesize = 12, linesize = 0.7,
-                          )
-grid.arrange(p3)
-```
-
-
-```{r}
-# Organize into individual and population order
 ind_label_temp3 <- readQ(files = sfiles_temp3[1], indlabfrom = TRUE) %>% as.data.frame()
 ind_label_temp3 <- rownames_to_column(ind_label_temp3, "ID")
-
 locations_temp3 <- left_join(ind_label_temp3, temp3.data, by = "ID")
 
-slist <- slist_temp3
-
-temp3_ind_order <- locations_temp3
-rownames(slist[[1]]) <- temp3_ind_order$ID
-if(length(unique(sapply(slist,nrow)))==1) slist <- lapply(slist,"rownames<-",temp3_ind_order$ID)
-lapply(slist, rownames)[0:150]
-
-slist_temp3 <- slist
-slist_align3 <- alignK(slist_temp3, "within")
-merged_temp3 <- mergeQ(slist_align3)
-
 loc_labels_temp3 <- locations_temp3$HERD %>% as.data.frame()
-colnames(loc_labels_temp3) <- "Region"
 
 herd_order_temp3 <- c("AISH", "CL", "EINPW", "ETH", "HZ", "NAH", 
                       "NORD", "RL", "WAB", "WBNPGR", "WBNPHC", "WBNPLB", 
                       "WBNPNY", "WBNPPAD", "WENT")
 
-
-# Structure Plot
-plotQ(slist_align3[75], 
+str_cols_1 <- c("#0089B2", "#DF0101", "#77CE61", "#A945FF", "#FF9326", 
+                "#1D72F5", "#FDF060", "#E619AD", "#00C5CD", "#8B4513", 
+                "#228B22", "maroon", "#808080", "#F08080", "#4B0082")
+plotQ(temp3.merged.list, 
+      imgoutput = "join",
             basesize = 10, 
-            clustercol = colours, 
             grplab = loc_labels_temp3, 
             subsetgrp = herd_order_temp3, 
+            clustercol = str_cols_1,
             ordergrp = TRUE,
-            showindlab = TRUE, 
+      
+      # Side "K" Labels
+            splab = c("K = 2", "K = 3", "K = 4", "K = 5", "K = 6", "K = 7",
+                      "K = 8", "K = 9", "K = 10", "K = 11", "K = 12", "K = 13", "K = 14", "K = 15"),
+            splabsize = 35,
+            sppos = "left",
+            splabcol = "black",
+            splabangle = 0,
+      
+            # Individual Label Settings
+            showindlab = F, 
             indlabsize = 4,        
             indlabangle = 90,
-            indlabheight = 0,       
-            grplabsize = 3, 
-            grplabangle = 0,
+            indlabheight = 0,
+      
+      # Group Label settings
+            grplabsize = 10, 
+            grplabangle =45,
             grplabpos = 0.65,
-            grplabheight = 0.2,      
+            grplabheight = 1,      
             grplabspacer = 0.1,
-            linesize = 1,          
-            pointsize = 4, 
+            grplabcol = "black",
+      
+            linesize = 2,          
+            pointsize = 15,
+      
+      # Divider Line Settings
             divcol = "white",
-            divsize = 1, 
+            divsize = 3, 
+            divtype = NULL,
+      
             useindlab = TRUE, 
             returndata = TRUE,
-            height = 12,             
-            width = 35,
+      
+      # Plot settings
+            height = 7,             
+            width = 75,
+            panelspacer = 1,
+            panelratio = c(1,1),
+      
+      
+      # File settings
+            imgtype = "pdf",
+            outputfilename = "Temp3",
             exportpath = "./plots/structure_plots/")
 ```
+#### WBNP 1986 - 1999 (all samples - EINP)
+```{r}
+# Align runs
+slist_wbnp1 <- alignK(slist_wbnp1, "auto")
+
+# Merge runs (average over 10 replicates)
+wbnp1.mk2 <- mergeQ(slist_wbnp1[11:20])
+wbnp1.mk3 <- mergeQ(slist_wbnp1[21:30])
+wbnp1.mk4 <- mergeQ(slist_wbnp1[31:40])
+wbnp1.mk5 <- mergeQ(slist_wbnp1[41:50])
+
+wbnp1.merged.list <- as.qlist(list(wbnp1.mk2[[1]], wbnp1.mk3[[1]], wbnp1.mk4[[1]], 
+                          wbnp1.mk5[[1]]))
+
+ind_label_wbnp1 <- readQ(files = sfiles_wbnp1[1], indlabfrom = TRUE) %>% as.data.frame()
+ind_label_wbnp1 <- rownames_to_column(ind_label_wbnp1, "ID")
+locations_wbnp1 <- left_join(ind_label_wbnp1, wbnp1.data, by = "ID")
+
+loc_labels_wbnp1 <- locations_wbnp1$HERD %>% as.data.frame()
+
+herd_order_wbnp1 <- c("WBNPNY", "WBNPLB", "WBNPHC", "WBNPGR", "WBNPPAD")
+
+str_cols <- c("#0089B2", "#DF0101", "#77CE61", "#A945FF", "#FF9326", "#1D72F5","#FDF060")
+
+plotQ(wbnp1.merged.list, 
+      imgoutput = "join",
+            basesize = 10, 
+            grplab = loc_labels_wbnp1, 
+            subsetgrp = herd_order_wbnp1, 
+            clustercol = str_cols,
+            ordergrp = TRUE,
+      
+      # Side "K" Labels
+            splab = c("K = 2", "K = 3", "K = 4", "K = 5"),
+            splabsize = 35,
+            sppos = "left",
+            splabcol = "black",
+            splabangle = 0,
+      
+            # Individual Label Settings
+            showindlab = F, 
+            indlabsize = 4,        
+            indlabangle = 90,
+            indlabheight = 0,
+      
+      # Group Label settings
+            grplabsize = 10, 
+            grplabangle =45,
+            grplabpos = 0.65,
+            grplabheight = 1,      
+            grplabspacer = 0.1,
+            grplabcol = "black",
+      
+            linesize = 2,          
+            pointsize = 15,
+      
+      # Divider Line Settings
+            divcol = "white",
+            divsize = 3, 
+            divtype = NULL,
+      
+            useindlab = TRUE, 
+            returndata = TRUE,
+      
+      # Plot settings
+            height = 7,             
+            width = 40,
+            panelspacer = 1,
+            panelratio = c(1,1),
+      
+      
+      # File settings
+            imgtype = "pdf",
+            outputfilename = "Wbnp1",
+            exportpath = "./plots/structure_plots/")
+```
+
+#### WBNP 2016 - 2025 (all samples - EINP)
+```{r}
+# Align runs
+slist_wbnp2 <- alignK(slist_wbnp2, "auto")
+
+# Merge runs (average over 10 replicates)
+wbnp2.mk2 <- mergeQ(slist_wbnp2[11:20])
+wbnp2.mk3 <- mergeQ(slist_wbnp2[21:30])
+wbnp2.mk4 <- mergeQ(slist_wbnp2[31:40])
+wbnp2.mk5 <- mergeQ(slist_wbnp2[41:50])
+wbnp2.mk6 <- mergeQ(slist_wbnp2[51:60])
+
+wbnp2_mergek2 <- mergeQ(slist_wbnp2[11:20])
+
+wbnp2.merged.list <- as.qlist(list(wbnp2.mk2[[1]], wbnp2.mk3[[1]], wbnp2.mk4[[1]], 
+                          wbnp2.mk5[[1]], wbnp2.mk6[[1]]))
+
+ind_label_wbnp2 <- readQ(files = sfiles_wbnp2[1], indlabfrom = TRUE) %>% as.data.frame()
+ind_label_wbnp2 <- rownames_to_column(ind_label_wbnp2, "ID")
+locations_wbnp2 <- left_join(ind_label_wbnp2, wbnp2.data, by = "ID")
+
+loc_labels_wbnp2 <- locations_wbnp2$HERD %>% as.data.frame()
+
+herd_order_wbnp2 <- c("WBNPNY", "WBNPLB", "WBNPHC", "WBNPGR", "WBNPPAD", "WENT")
+
+str_cols <- c("#0089B2", "#DF0101", "#77CE61", "#A945FF", "#FF9326", "#1D72F5","#FDF060")
+
+plotQ(wbnp2.merged.list, 
+            imgoutput = "join",
+            basesize = 10, 
+            grplab = loc_labels_wbnp2, 
+            subsetgrp = herd_order_wbnp2, 
+            clustercol = str_cols,
+            ordergrp = TRUE,
+      
+      # Side "K" Labels
+            splab = c("K = 2", "K = 3", "K = 4", "K = 5", "K = 6"),
+            splabsize = 35,
+            sppos = "left",
+            splabcol = "black",
+            splabangle = 0,
+      
+      # Individual Label Settings
+            showindlab = F, 
+            indlabsize = 4,        
+            indlabangle = 90,
+            indlabheight = 0,
+      
+      # Group Label settings
+            grplabsize = 10, 
+            grplabangle =45,
+            grplabpos = 0.65,
+            grplabheight = 1,      
+            grplabspacer = 0.1,
+            grplabcol = "black",
+      
+            linesize = 2,          
+            pointsize = 15,
+      
+      # Divider Line Settings
+            divcol = "white",
+            divsize = 3, 
+            divtype = NULL,
+      
+            useindlab = TRUE, 
+            returndata = TRUE,
+      
+      # Plot settings
+            height = 7,             
+            width = 40,
+            panelspacer = 1,
+            panelratio = c(1,1),
+      
+      # File settings
+            imgtype = "pdf",
+            outputfilename = "Wbnp2",
+            exportpath = "./plots/structure_plots/")
+```
+#### Admixture analysis 1986 - 1999 (all samples)
+```{r}
+# Align runs
+slist_admix1 <- alignK(slist_admix1, "auto")
+
+# Merge runs (average over 10 replicates)
+admix1.mk2 <- mergeQ(slist_admix1[11:20])
+admix1.mk3 <- mergeQ(slist_admix1[21:30])
+admix1.mk4 <- mergeQ(slist_admix1[31:40])
+admix1.mk5 <- mergeQ(slist_admix1[41:50])
+admix1.mk6 <- mergeQ(slist_admix1[51:60])
+admix1.mk7 <- mergeQ(slist_admix1[61:70])
+
+admix1.merged.list <- as.qlist(list(admix1.mk2[[1]], admix1.mk3[[1]], admix1.mk4[[1]], 
+                          admix1.mk5[[1]], admix1.mk6[[1]], admix1.mk7[[1]]))
+
+ind_label_admix1 <- readQ(files = sfiles_admix1[1], indlabfrom = TRUE) %>% as.data.frame()
+ind_label_admix1 <- rownames_to_column(ind_label_admix1, "ID")
+locations_admix1 <- left_join(ind_label_admix1, admix1.data, by = "ID")
+
+loc_labels_admix1 <- locations_admix1$HERD %>% as.data.frame()
+
+herd_order_admix1 <- c("EINPP", "EINPW", "WBNPNY", "WBNPLB", "WBNPHC", "WBNPGR", "WBNPPAD")
+
+str_cols <- c("#0089B2", "#DF0101", "#77CE61", "#A945FF", "#FF9326", "#1D72F5","#FDF060")
+
+plotQ(admix1.merged.list, 
+      imgoutput = "join",
+            basesize = 10, 
+            grplab = loc_labels_admix1, 
+            subsetgrp = herd_order_admix1, 
+            clustercol = str_cols_2,
+            ordergrp = TRUE,
+      
+      # Side "K" Labels
+            splab = c("K = 2", "K = 3", "K = 4", "K = 5", "K = 6", "K = 7"),
+            splabsize = 35,
+            sppos = "left",
+            splabcol = "black",
+            splabangle = 0,
+      
+      # Individual Label Settings
+            showindlab = F, 
+            indlabsize = 4,        
+            indlabangle = 90,
+            indlabheight = 0,
+      
+      # Group Label settings
+            grplabsize = 10, 
+            grplabangle =45,
+            grplabpos = 0.65,
+            grplabheight = 1,      
+            grplabspacer = 0.1,
+            grplabcol = "black",
+      
+            linesize = 2,          
+            pointsize = 15,
+      
+      # Divider Line Settings
+            divcol = "white",
+            divsize = 3, 
+            divtype = NULL,
+      
+            useindlab = TRUE, 
+            returndata = TRUE,
+      
+      # Plot settings
+            height = 7,             
+            width = 40,
+            panelspacer = 1,
+            panelratio = c(1,1),
+      
+      # File settings
+            imgtype = "pdf",
+            outputfilename = "admix1",
+            exportpath = "./plots/structure_plots/")
+```
+#### Admixture analysis 2016 - 2025 (all samples)
+```{r}
+# Align runs
+slist_admix2 <- alignK(slist_admix2, "auto")
+
+# Merge runs (average over 10 replicates)
+admix2.mk2 <- mergeQ(slist_admix2[11:20])
+admix2.mk3 <- mergeQ(slist_admix2[21:30])
+admix2.mk4 <- mergeQ(slist_admix2[31:40])
+admix2.mk5 <- mergeQ(slist_admix2[41:50])
+admix2.mk6 <- mergeQ(slist_admix2[51:60])
+admix2.mk7 <- mergeQ(slist_admix2[61:70])
+admix2.mk8 <- mergeQ(slist_admix2[71:80])
+
+admix2.merged.list <- as.qlist(list(admix2.mk2[[1]], admix2.mk3[[1]], admix2.mk4[[1]], 
+                          admix2.mk5[[1]], admix2.mk6[[1]], admix2.mk7[[1]], admix2.mk8[[1]]))
+
+ind_label_admix2 <- readQ(files = sfiles_admix2[1], indlabfrom = TRUE) %>% as.data.frame()
+ind_label_admix2 <- rownames_to_column(ind_label_admix2, "ID")
+locations_admix2 <- left_join(ind_label_admix2, admix2.data, by = "ID")
+
+loc_labels_admix2 <- locations_admix2$HERD %>% as.data.frame()
+
+herd_order_admix2 <- c("EINPP", "EINPW", "WBNPNY", "WBNPLB", "WBNPHC", "WBNPGR", "WBNPPAD", "WENT")
+
+str_cols_2 <- c("#0089B2", "#DF0101", "#77CE61", "#A945FF", "#FF9326", "#1D72F5","#FDF060", "#E619AD")
+
+plotQ(admix2.merged.list, 
+      imgoutput = "join",
+            basesize = 10, 
+            grplab = loc_labels_admix2, 
+            subsetgrp = herd_order_admix2, 
+            clustercol = str_cols_2,
+            ordergrp = TRUE,
+      
+      # Side "K" Labels
+            splab = c("K = 2", "K = 3", "K = 4", "K = 5", "K = 6", "K = 7", "K = 8"),
+            splabsize = 35,
+            sppos = "left",
+            splabcol = "black",
+            splabangle = 0,
+      
+      # Individual Label Settings
+            showindlab = F, 
+            indlabsize = 4,        
+            indlabangle = 90,
+            indlabheight = 0,
+      
+      # Group Label settings
+            grplabsize = 10, 
+            grplabangle =45,
+            grplabpos = 0.65,
+            grplabheight = 1,      
+            grplabspacer = 0.1,
+            grplabcol = "black",
+      
+            linesize = 2,          
+            pointsize = 15,
+      
+      # Divider Line Settings
+            divcol = "white",
+            divsize = 3, 
+            divtype = NULL,
+      
+            useindlab = TRUE, 
+            returndata = TRUE,
+      
+      # Plot settings
+            height = 7,             
+            width = 40,
+            panelspacer = 1,
+            panelratio = c(1,1),
+      
+      # File settings
+            imgtype = "pdf",
+            outputfilename = "admix2",
+            exportpath = "./plots/structure_plots/")
+```
+
+## DAPC
+#### WBNP samples 1986 - 1999
+```{r echo=TRUE}
+## Unsupervised K means clustering
+# Identify K Clusters 
+grp1 <- find.clusters(wbnp1, max.n.clust = 7, n.pca = (nInd(wbnp1) -1))
+
+# Print BIC plot
+pdf(file = "./plots/WBNP1_BIC.pdf", width = 7, height = 5)
+plot(grp1$Kstat, type = "o", xlab = "Number of clusters (K)", 
+     ylab = "BIC", main = "Value of BIC \n versus number of clusters \n WBNP: 1986 - 1999" ,
+     col = "blue", pch = 1)
+dev.off()
+
+# BIC minimum value is at K =1
+table.value(table(pop(wbnp1), grp1$grp), col.lab=paste("inf", 1:5),
+row.lab=paste("ori", 1:5))
+
+## Supervised DAPC
+# TO prevent overfitting of the model, find optimal PCs to retain (Max = n-1 individuals)
+set.seed(999)
+pramx <- xvalDapc(tab(wbnp1, NA.method = "mean"), pop(wbnp1))
+
+# Determine optimal number of PCs
+numpc1 <- as.numeric(pramx$`Number of PCs Achieving Highest Mean Success`)
+
+# DAPC with known parameters
+dapc1 <- dapc(wbnp1, pop(wbnp1), n.pca = numpc1, n.da = (length(pop(wbnp1))-1))
+dapc1
+
+
+```
+```{r echo=TRUE}
+## Unsupervised K means clustering
+# Identify K Clusters 
+grp2 <- find.clusters(wbnp2, max.n.clust = 8, n.pca = (nInd(wbnp2) -1))
+
+# Print BIC plot
+pdf(file = "./plots/WBNP2_BIC.pdf", width = 7, height = 5)
+plot(grp2$Kstat, type = "o", xlab = "Number of clusters (K)", 
+     ylab = "BIC", main = "Value of BIC \n versus number of clusters \n WBNP: 2016 - 2025" ,
+     col = "blue", pch = 1)
+dev.off()
+
+# BIC minimum value is at K =1
+table.value(table(pop(wbnp2), grp2$grp), col.lab=paste("inf", 1:6),
+row.lab=paste("ori", 1:6))
+
+## Supervised DAPC
+# TO prevent overfitting of the model, find optimal PCs to retain (Max = n-1 individuals)
+set.seed(999)
+pramx2 <- xvalDapc(tab(wbnp2, NA.method = "mean"), pop(wbnp2),
+                   xval.plot = TRUE)
+
+# Determine optimal number of PCs
+numpc2 <- as.numeric(pramx2$`Number of PCs Achieving Lowest MSE`)
+
+# DAPC with known parameters
+dapc2 <- dapc(wbnp2, pop(wbnp2), n.pca = numpc2, n.da = (length(pop(wbnp2))-1))
+dapc2
+
+```
+
+```{r}
+# Plot
+pdf(file = "./plots/wbnp_DAPC_stacked.pdf", width = 20, height = 10) 
+
+# Set up  grid 1 row, 2 columns
+par(mfrow = c(1, 2)) 
+
+# Plot 1
+scatter(dapc1,posi.da="bottomright", bg="white",
+pch=17:22,cstar=0, col=str_cols,scree.pca=TRUE,
+posi.pca = "topright", ratio.da = 0.20, ratio.pca = 0.2, csub = 2,
+sub = paste0("DA1: ", round(dapc1$eig[1], 1), "% | DA2: ", round(dapc1$eig[2], 1), "%"))
+mtext("a)", side = 3, adj = -4.5, line = 2, cex = 2, font = 2)
+
+# Plot 2
+scatter(dapc2,posi.da="bottomright", bg="white",
+pch=17:22,cstar=0, col=str_cols,scree.pca=TRUE,
+posi.pca = "topright", ratio.da = 0.20, ratio.pca = 0.2, csub = 2,
+sub = paste0("DA1: ", round(dapc2$eig[1], 1), "% | DA2: ", round(dapc2$eig[2], 1), "%"))
+mtext("b)", side = 3, adj = -4.5, line = 2, cex = 2, font = 2)
+
+dev.off()
+```
+#### Joint BIC Plot
+```{r}
+# Print BIC plot
+pdf(file = "./plots/WBNP_BIC_Joined.pdf", width = 15, height = 5)
+
+par(mfrow = c(1,2))
+# Temporal group 1
+plot(grp1$Kstat, type = "o", xlab = "Number of clusters (K)", 
+     ylab = "BIC", main = "Value of BIC \n versus number of clusters \n WBNP: 1986 - 1999" ,
+     col = "blue", pch = 1)
+mtext("a)", side = 3, adj = 0, line = 2, cex = 2, font = 2)
+
+# Temporal group 3
+plot(grp2$Kstat, type = "o", xlab = "Number of clusters (K)", 
+     ylab = "BIC", main = "Value of BIC \n versus number of clusters \n WBNP: 2016 - 2025" ,
+     col = "blue", pch = 1)
+mtext("b)", side = 3, adj = 0, line = 2, cex = 2, font = 2)
+
+dev.off()
+
+```
+# STRUCTURE Plots of interest
+```{r}
+# Temp1
+plotQ(temp1.mk3, 
+            basesize = 10, 
+            grplab = loc_labels_temp1, 
+            subsetgrp = herd_order_temp1, 
+            clustercol = str_cols,
+            ordergrp = TRUE,
+      
+      # Side "K" Labels
+            splab = "K = 3",
+            splabsize = 35,
+            sppos = "left",
+            splabcol = "black",
+            splabangle = 0,
+      
+      # Individual Label Settings
+            showindlab = F, 
+            indlabsize = 4,        
+            indlabangle = 90,
+            indlabheight = 0,
+      
+      # Group Label settings
+            grplabsize = 10, 
+            grplabangle =45,
+            grplabpos = 0.65,
+            grplabheight = 1,      
+            grplabspacer = 0.1,
+            grplabcol = "black",
+      
+            linesize = 2,          
+            pointsize = 15,
+      
+      # Divider Line Settings
+            divcol = "white",
+            divsize = 3, 
+            divtype = NULL,
+      
+            useindlab = TRUE, 
+            returndata = TRUE,
+      
+      # Plot settings
+            height = 15,             
+            width = 50,
+            panelspacer = 1,
+            panelratio = c(1,1),
+      
+      # File settings
+            imgtype = "pdf",
+            outputfilename = "Temp1_k3",
+            exportpath = "./plots/structure_plots/")
+
+# Temp2
+plotQ(temp2.mk5, 
+            basesize = 10, 
+            grplab = loc_labels_temp2, 
+            subsetgrp = herd_order_temp2, 
+            clustercol = str_cols,
+            ordergrp = TRUE,
+      
+      # Side "K" Labels
+            splab = "K = 5",
+            splabsize = 35,
+            sppos = "left",
+            splabcol = "black",
+            splabangle = 0,
+      
+      # Individual Label Settings
+            showindlab = F, 
+            indlabsize = 4,        
+            indlabangle = 90,
+            indlabheight = 0,
+      
+      # Group Label settings
+            grplabsize = 10, 
+            grplabangle =45,
+            grplabpos = 0.65,
+            grplabheight = 1,      
+            grplabspacer = 0.1,
+            grplabcol = "black",
+      
+            linesize = 2,          
+            pointsize = 15,
+      
+      # Divider Line Settings
+            divcol = "white",
+            divsize = 3, 
+            divtype = NULL,
+      
+            useindlab = TRUE, 
+            returndata = TRUE,
+      
+      # Plot settings
+            height = 15,             
+            width = 50,
+            panelspacer = 1,
+            panelratio = c(1,1),
+      
+      # File settings
+            imgtype = "pdf",
+            outputfilename = "Temp2_k5",
+            exportpath = "./plots/structure_plots/")
+
+# Temp3
+plotQ(temp3.mk7, 
+            basesize = 10, 
+            grplab = loc_labels_temp3, 
+            subsetgrp = herd_order_temp3, 
+            clustercol = str_cols,
+            ordergrp = TRUE,
+      
+      # Side "K" Labels
+            splab = "K = 7",
+            splabsize = 35,
+            sppos = "left",
+            splabcol = "black",
+            splabangle = 0,
+      
+      # Individual Label Settings
+            showindlab = F, 
+            indlabsize = 4,        
+            indlabangle = 90,
+            indlabheight = 0,
+      
+      # Group Label settings
+            grplabsize = 10, 
+            grplabangle =45,
+            grplabpos = 0.65,
+            grplabheight = 1,      
+            grplabspacer = 0.1,
+            grplabcol = "black",
+      
+            linesize = 2,          
+            pointsize = 15,
+      
+      # Divider Line Settings
+            divcol = "white",
+            divsize = 3, 
+            divtype = NULL,
+      
+            useindlab = TRUE, 
+            returndata = TRUE,
+      
+      # Plot settings
+            height = 15,             
+            width = 50,
+            panelspacer = 1,
+            panelratio = c(1,1),
+      
+      # File settings
+            imgtype = "pdf",
+            outputfilename = "Temp3_k7",
+            exportpath = "./plots/structure_plots/")
+
+# WBNP1
+plotQ(wbnp1.mk2, 
+            basesize = 10, 
+            grplab = loc_labels_wbnp1, 
+            subsetgrp = herd_order_wbnp1, 
+            clustercol = str_cols,
+            ordergrp = TRUE,
+      
+      # Side "K" Labels
+            splab = "K = 2",
+            splabsize = 35,
+            sppos = "left",
+            splabcol = "black",
+            splabangle = 0,
+      
+      # Individual Label Settings
+            showindlab = F, 
+            indlabsize = 4,        
+            indlabangle = 90,
+            indlabheight = 0,
+      
+      # Group Label settings
+            grplabsize = 10, 
+            grplabangle =45,
+            grplabpos = 0.65,
+            grplabheight = 1,      
+            grplabspacer = 0.1,
+            grplabcol = "black",
+      
+            linesize = 2,          
+            pointsize = 15,
+      
+      # Divider Line Settings
+            divcol = "white",
+            divsize = 3, 
+            divtype = NULL,
+      
+            useindlab = TRUE, 
+            returndata = TRUE,
+      
+      # Plot settings
+            height = 15,             
+            width = 50,
+            panelspacer = 1,
+            panelratio = c(1,1),
+      
+      # File settings
+            imgtype = "pdf",
+            outputfilename = "WBNP1_k2",
+            exportpath = "./plots/structure_plots/")
+
+# WBNP2
+plotQ(wbnp2.mk2, 
+            basesize = 10, 
+            grplab = loc_labels_wbnp2, 
+            subsetgrp = herd_order_wbnp2, 
+            clustercol = str_cols,
+            ordergrp = TRUE,
+      
+      # Side "K" Labels
+            splab = "K = 2",
+            splabsize = 35,
+            sppos = "left",
+            splabcol = "black",
+            splabangle = 0,
+      
+      # Individual Label Settings
+            showindlab = F, 
+            indlabsize = 4,        
+            indlabangle = 90,
+            indlabheight = 0,
+      
+      # Group Label settings
+            grplabsize = 10, 
+            grplabangle =45,
+            grplabpos = 0.65,
+            grplabheight = 1,      
+            grplabspacer = 0.1,
+            grplabcol = "black",
+      
+            linesize = 2,          
+            pointsize = 15,
+      
+      # Divider Line Settings
+            divcol = "white",
+            divsize = 3, 
+            divtype = NULL,
+      
+            useindlab = TRUE, 
+            returndata = TRUE,
+      
+      # Plot settings
+            height = 15,             
+            width = 50,
+            panelspacer = 1,
+            panelratio = c(1,1),
+      
+      # File settings
+            imgtype = "pdf",
+            outputfilename = "WBNP2_k2",
+            exportpath = "./plots/structure_plots/")
+
+
+wbnp1 - k1
+wbnp1 - k2
+```
+

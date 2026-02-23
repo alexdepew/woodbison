@@ -245,6 +245,67 @@ View(temp3.HWE.sum)
 
 ```
 
+#### HWE Sig table
+```{r}
+# Temp1
+HWE.sig.temp1 <- HWE.temp1 %>% 
+  filter(HWE_p_value <= 0.05)
+
+wide_HWE.temp1 <- HWE.temp1 %>%
+  select(Locus, Population, p.adj_herd) %>%
+  pivot_wider(
+    names_from = Population, 
+    values_from = p.adj_herd
+  )  %>% 
+  mutate(across(-Locus, ~ {
+    # 1. Force 4 decimal places (turns 1 into "1.0000")
+    formatted <- sprintf("%.4f", .)
+    
+    # 2. Add asterisk if the ORIGINAL numeric value was <= 0.05
+    if_else(. <= 0.05, paste0(formatted, "*"), formatted)
+  }))
+
+write.csv(wide_HWE.temp1, "./tables/temp1.HWE.p_adjust.csv", row.names = F)
+
+
+# Temp2 
+wide_HWE.temp2 <- HWE.temp2 %>%
+  select(Locus, Population, p.adj_herd) %>%
+  pivot_wider(
+    names_from = Population, 
+    values_from = p.adj_herd
+  ) %>% 
+  mutate(across(-Locus, ~ {
+    # 1. Force 4 decimal places (turns 1 into "1.0000")
+    formatted <- sprintf("%.4f", .)
+    
+    # 2. Add asterisk if the ORIGINAL numeric value was <= 0.05
+    if_else(. <= 0.05, paste0(formatted, "*"), formatted)
+  }))
+
+write.csv(wide_HWE.temp2, "./tables/temp2.HWE.p_adjust.csv", row.names = F)
+
+
+# Temp3
+HWE.sig.temp3 <- HWE.temp3 %>% 
+filter(HWE_p_value <= 0.05)
+
+wide_HWE.temp3 <- HWE.temp3 %>%
+  select(Locus, Population, p.adj_herd) %>%
+  pivot_wider(
+    names_from = Population, 
+    values_from = p.adj_herd
+  ) %>% 
+  mutate(across(-Locus, ~ {
+    # 1. Force 4 decimal places (turns 1 into "1.0000")
+    formatted <- sprintf("%.4f", .)
+    
+    # 2. Add asterisk if the ORIGINAL numeric value was <= 0.05
+    if_else(. <= 0.05, paste0(formatted, "*"), formatted)
+  }))
+
+write.csv(wide_HWE.temp3, "./tables/temp3.HWE.p_adjust.csv", row.names = F)
+```
 
 ## Test for Linkage Disequilibrium
 Pairwise test for LD using Genepop through *strataG*. If LD is present in loci across the majority of herds, it may indicate physical linkage as opposed to local variation.

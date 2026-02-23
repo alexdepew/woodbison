@@ -1044,7 +1044,7 @@ loc_labels_admix1 <- locations_admix1$HERD %>% as.data.frame()
 
 herd_order_admix1 <- c("EINPP", "EINPW", "WBNPNY", "WBNPLB", "WBNPHC", "WBNPGR", "WBNPPAD")
 
-str_cols <- c("#0089B2", "#DF0101", "#77CE61", "#A945FF", "#FF9326", "#1D72F5","#FDF060")
+str_cols_2 <- c("#0089B2", "#DF0101", "#77CE61", "#A945FF", "#FF9326", "#1D72F5","#FDF060", "#E619AD")
 
 plotQ(admix1.merged.list, 
       imgoutput = "join",
@@ -1540,8 +1540,106 @@ plotQ(wbnp2.mk2,
             outputfilename = "WBNP2_k2",
             exportpath = "./plots/structure_plots/")
 
+# Admix 1
+plotQ(admix1.mk3, 
+            basesize = 10, 
+            grplab = loc_labels_admix1, 
+            subsetgrp = herd_order_admix1, 
+            clustercol = str_cols,
+            ordergrp = TRUE,
+      
+      # Side "K" Labels
+            splab = "K = 3",
+            splabsize = 35,
+            sppos = "left",
+            splabcol = "black",
+            splabangle = 0,
+      
+      # Individual Label Settings
+            showindlab = F, 
+            indlabsize = 4,        
+            indlabangle = 90,
+            indlabheight = 0,
+      
+      # Group Label settings
+            grplabsize = 10, 
+            grplabangle =45,
+            grplabpos = 0.65,
+            grplabheight = 1,      
+            grplabspacer = 0.1,
+            grplabcol = "black",
+      
+            linesize = 2,          
+            pointsize = 15,
+      
+      # Divider Line Settings
+            divcol = "white",
+            divsize = 3, 
+            divtype = NULL,
+      
+            useindlab = TRUE, 
+            returndata = TRUE,
+      
+      # Plot settings
+            height = 15,             
+            width = 50,
+            panelspacer = 1,
+            panelratio = c(1,1),
+      
+      # File settings
+            imgtype = "pdf",
+            outputfilename = "admix1_k3",
+            exportpath = "./plots/structure_plots/")
 
-wbnp1 - k1
-wbnp1 - k2
+# Admix 2
+plotQ(admix2.mk4, 
+            basesize = 10, 
+            grplab = loc_labels_admix2, 
+            subsetgrp = herd_order_admix2, 
+            clustercol = str_cols,
+            ordergrp = TRUE,
+      
+      # Side "K" Labels
+            splab = "K = 4",
+            splabsize = 35,
+            sppos = "left",
+            splabcol = "black",
+            splabangle = 0,
+      
+      # Individual Label Settings
+            showindlab = F, 
+            indlabsize = 4,        
+            indlabangle = 90,
+            indlabheight = 0,
+      
+      # Group Label settings
+            grplabsize = 10, 
+            grplabangle =45,
+            grplabpos = 0.65,
+            grplabheight = 1,      
+            grplabspacer = 0.1,
+            grplabcol = "black",
+      
+            linesize = 2,          
+            pointsize = 15,
+      
+      # Divider Line Settings
+            divcol = "white",
+            divsize = 3, 
+            divtype = NULL,
+      
+            useindlab = TRUE, 
+            returndata = TRUE,
+      
+      # Plot settings
+            height = 15,             
+            width = 50,
+            panelspacer = 1,
+            panelratio = c(1,1),
+      
+      # File settings
+            imgtype = "pdf",
+            outputfilename = "admix2_k4",
+            exportpath = "./plots/structure_plots/")
 ```
 

@@ -550,7 +550,8 @@ p1 <- evannoMethodStructure(data = struct_sum_temp1, exportplot = T,
                            basesize = 12, linesize = 0.7,
                            height = 25, width = 25, units = "cm",
                            outputfilename = "Temp1_evanno_K",
-                           exportpath = "./plots/structure_plots/") 
+                           exportpath = "./plots/structure_plots/",
+                           imgtype = "pdf") 
 
 grid.arrange(p1)
 
@@ -559,7 +560,8 @@ p2 <- evannoMethodStructure(data = struct_sum_temp2, exportplot = T,
                            basesize = 12, linesize = 0.7,
                            height = 25, width = 25, units = "cm",
                            outputfilename = "Temp2_evanno_K",
-                           exportpath = "./plots/structure_plots/") 
+                           exportpath = "./plots/structure_plots/",
+                           imgtype = "pdf")
 
 grid.arrange(p2)
 
@@ -568,7 +570,8 @@ p3 <- evannoMethodStructure(data = struct_sum_temp3, exportplot = T,
                            basesize = 12, linesize = 0.7,
                            height = 25, width = 25, units = "cm",
                            outputfilename = "Temp3_evanno_K",
-                           exportpath = "./plots/structure_plots/") 
+                           exportpath = "./plots/structure_plots/",
+                           imgtype = "pdf") 
 
 grid.arrange(p3)
 
@@ -578,7 +581,8 @@ w1 <- evannoMethodStructure(data = struct_sum_wbnp1, exportplot = T,
                            basesize = 12, linesize = 0.7,
                            height = 25, width = 25, units = "cm",
                            outputfilename = "WBNP1_evanno_K",
-                           exportpath = "./plots/structure_plots/") 
+                           exportpath = "./plots/structure_plots/",
+                           imgtype = "pdf")
 
 grid.arrange(w1)
 
@@ -587,7 +591,8 @@ w2 <- evannoMethodStructure(data = struct_sum_wbnp2, exportplot = T,
                            basesize = 12, linesize = 0.7,
                            height = 25, width = 25, units = "cm",
                            outputfilename = "WBNP2_evanno_K",
-                           exportpath = "./plots/structure_plots/") 
+                           exportpath = "./plots/structure_plots/",
+                           imgtype = "pdf")
 
 grid.arrange(w2)
 
@@ -596,7 +601,8 @@ a1 <- evannoMethodStructure(data = struct_sum_admix1, exportplot = T,
                            basesize = 12, linesize = 0.7,
                            height = 25, width = 25, units = "cm",
                            outputfilename = "admix1_evanno_K",
-                           exportpath = "./plots/structure_plots/") 
+                           exportpath = "./plots/structure_plots/",
+                           imgtype = "pdf") 
 
 grid.arrange(a1)
  
@@ -605,11 +611,46 @@ a2 <- evannoMethodStructure(data = struct_sum_admix2, exportplot = T,
                            basesize = 12, linesize = 0.7,
                            height = 25, width = 25, units = "cm",
                            outputfilename = "admix2_evanno_K",
-                           exportpath = "./plots/structure_plots/") 
+                           exportpath = "./plots/structure_plots/",
+                           imgtype = "pdf") 
 
 grid.arrange(a2)
 
 ```
+## Evanno Data
+```{r}
+EMt1 <- data.frame(evannoMethodStructure(data = struct_sum_temp1, exportplot = F,
+                           returnplot = F, returndata = T))
+
+
+EMt2 <- data.frame(evannoMethodStructure(data = struct_sum_temp2, exportplot = F,
+                           returnplot = F, returndata = T))
+
+
+EMt3 <- data.frame(evannoMethodStructure(data = struct_sum_temp3, exportplot = F,
+                           returnplot = F, returndata = T))
+
+# WBNP subsets
+EMwb1 <- data.frame(evannoMethodStructure(data = struct_sum_wbnp1, exportplot = F,
+                           returnplot = F, returndata = T))
+
+
+
+EMwb2 <- data.frame(evannoMethodStructure(data = struct_sum_wbnp2, exportplot = F,
+                           returnplot = F, returndata = T))
+
+
+
+EMad1 <- data.frame(evannoMethodStructure(data = struct_sum_admix1, exportplot = F,
+                           returnplot = F, returndata = T))
+
+
+ 
+EMad2 <- data.frame(evannoMethodStructure(data = struct_sum_admix2, exportplot = F,
+                           returnplot = F, returndata = T))
+
+```
+
 
 ### Barplotting
 #### Temporal Group 1 (all samples - EINPP)
@@ -885,7 +926,7 @@ locations_wbnp1 <- left_join(ind_label_wbnp1, wbnp1.data, by = "ID")
 
 loc_labels_wbnp1 <- locations_wbnp1$HERD %>% as.data.frame()
 
-herd_order_wbnp1 <- c("WBNPNY", "WBNPLB", "WBNPHC", "WBNPGR", "WBNPPAD")
+herd_order_wbnp1 <- c("WBNPLB", "WBNPNY", "WBNPHC", "WBNPGR", "WBNPPAD")
 
 str_cols <- c("#0089B2", "#DF0101", "#77CE61", "#A945FF", "#FF9326", "#1D72F5","#FDF060")
 
@@ -965,7 +1006,7 @@ locations_wbnp2 <- left_join(ind_label_wbnp2, wbnp2.data, by = "ID")
 
 loc_labels_wbnp2 <- locations_wbnp2$HERD %>% as.data.frame()
 
-herd_order_wbnp2 <- c("WBNPNY", "WBNPLB", "WBNPHC", "WBNPGR", "WBNPPAD", "WENT")
+herd_order_wbnp2 <- c("WBNPLB", "WBNPNY", "WBNPHC", "WBNPGR", "WBNPPAD", "WENT")
 
 str_cols <- c("#0089B2", "#DF0101", "#77CE61", "#A945FF", "#FF9326", "#1D72F5","#FDF060")
 
@@ -1042,7 +1083,7 @@ locations_admix1 <- left_join(ind_label_admix1, admix1.data, by = "ID")
 
 loc_labels_admix1 <- locations_admix1$HERD %>% as.data.frame()
 
-herd_order_admix1 <- c("EINPP", "EINPW", "WBNPNY", "WBNPLB", "WBNPHC", "WBNPGR", "WBNPPAD")
+herd_order_admix1 <- c("EINPP", "EINPW", "WBNPLB", "WBNPNY", "WBNPHC", "WBNPGR", "WBNPPAD")
 
 str_cols_2 <- c("#0089B2", "#DF0101", "#77CE61", "#A945FF", "#FF9326", "#1D72F5","#FDF060", "#E619AD")
 
@@ -1120,7 +1161,7 @@ locations_admix2 <- left_join(ind_label_admix2, admix2.data, by = "ID")
 
 loc_labels_admix2 <- locations_admix2$HERD %>% as.data.frame()
 
-herd_order_admix2 <- c("EINPP", "EINPW", "WBNPNY", "WBNPLB", "WBNPHC", "WBNPGR", "WBNPPAD", "WENT")
+herd_order_admix2 <- c("EINPP", "EINPW", "WBNPLB", "WBNPNY", "WBNPHC", "WBNPGR", "WBNPPAD", "WENT")
 
 str_cols_2 <- c("#0089B2", "#DF0101", "#77CE61", "#A945FF", "#FF9326", "#1D72F5","#FDF060", "#E619AD")
 
@@ -1337,7 +1378,7 @@ plotQ(temp1.mk3,
             exportpath = "./plots/structure_plots/")
 
 # Temp2
-plotQ(temp2.mk5, 
+plotQ(temp2.mk4, 
             basesize = 10, 
             grplab = loc_labels_temp2, 
             subsetgrp = herd_order_temp2, 
@@ -1345,7 +1386,7 @@ plotQ(temp2.mk5,
             ordergrp = TRUE,
       
       # Side "K" Labels
-            splab = "K = 5",
+            splab = "K = 4",
             splabsize = 35,
             sppos = "left",
             splabcol = "black",
@@ -1384,7 +1425,7 @@ plotQ(temp2.mk5,
       
       # File settings
             imgtype = "pdf",
-            outputfilename = "Temp2_k5",
+            outputfilename = "Temp2_k4",
             exportpath = "./plots/structure_plots/")
 
 # Temp3

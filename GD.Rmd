@@ -26,26 +26,46 @@ library(poppr)
 
 ## Load Required Data
 ```{r}
-bison.data <- read.csv("Cleaned_samples.06.01.2026.csv",
+bison.data <- read.csv("Cleaned_locus_data_20.02.2026.csv",
                        check.names = F)
 ```
 
 Merge WBNP Subherds
 ```{r}
-bison.data <- bison.data %>% 
-  filter(HERD != "WBNP") %>% 
-  mutate(HERD.2 = if_else(grepl("^WBNP|WENT", HERD), "WBNP", HERD)) %>% 
+mod.data <- bison.data %>% 
+  mutate(HERD.2 = case_when(
+    grepl("WBNPLB|WBNPNY", HERD) ~ "WBNPC1",
+    grepl("WBNPPAD|WBNPGR|WENT", HERD) ~ "WBNPC2",
+    TRUE                         ~ HERD  # This acts as the "else" (keep original name)
+  )) %>% 
   relocate(HERD.2, .after = HERD)
 ```
 
 #### Convert data to Genind object
 ```{r}
 # Make genind object
+merge.genind <- df2genind(X=mod.data[,c(20:ncol(mod.data))],
+                              sep = "/",
+                              ind.names = mod.data$Spreadsheet_ID,
+                              loc.names = NULL,
+                              pop = mod.data$HERD.2,
+                              NA.char = "NA",
+                              ploidy = 2,
+                              type = "codom",
+                              strata = NULL,
+                              hierarchy = NULL)
+
+# Attach collection year metadata
+idx <- match(indNames(merge.genind), mod.data$Spreadsheet_ID)
+stopifnot(!any(is.na(idx)))
+merge.genind@other$YEAR.ASSIGN <- mod.data$YEAR.ASSIGN[idx]
+
+# Make genind object
 bison.genind <- df2genind(X=bison.data[,c(20:ncol(bison.data))],
                               sep = "/",
                               ind.names = bison.data$Spreadsheet_ID,
                               loc.names = NULL,
-                              pop = bison.data$HERD.2,
+                              pop = bison.data$HERD,
                               NA.char = "NA",
                               ploidy = 2,
                               type = "codom",
@@ -56,15 +76,23 @@ bison.genind <- df2genind(X=bison.data[,c(20:ncol(bison.data))],
 idx <- match(indNames(bison.genind), bison.data$Spreadsheet_ID)
 stopifnot(!any(is.na(idx)))
 bison.genind@other$YEAR.ASSIGN <- bison.data$YEAR.ASSIGN[idx]
-
-# Remove loci with more than 20% missing data
-bison.genind <- missingno(bison.genind, type = "loci", cutoff = 0.20)
 ```
 
 
 #### Subset data 
 Data is subset into three temporal groups. Temporal groups are: 1: pre-1999, 2: pre-2016, and 3: post-2016
 ```{r}
+# Merged WBNP herds
+m1 <- merge.genind[merge.genind@other$YEAR.ASSIGN <=1999,]
+m1.sum <- summary(m1) # Create summary of genind object
+
+m2 <- merge.genind[merge.genind@other$YEAR.ASSIGN >= 2000 & merge.genind@other$YEAR.ASSIGN <= 2015, ]
+m2.sum <- summary(m2)
+
+m3 <- merge.genind[merge.genind@other$YEAR.ASSIGN >=2016,]
+m3.sum <- summary(m3)
+
+
 # Create datasets containing samples of interest for temporal comparisons
 temp1 <- bison.genind[bison.genind@other$YEAR.ASSIGN <=1999,]
 temp1.sum <- summary(temp1) # Create summary of genind object
@@ -74,19 +102,8 @@ temp2.sum <- summary(temp2)
 
 temp3 <- bison.genind[bison.genind@other$YEAR.ASSIGN >=2016,]
 temp3.sum <- summary(temp3)
-
-
-# Remove populations which do not contain significant sample sizes in temporal groups
-table(pop(temp1))
-table(pop(temp2)) # WBNP samples, ETH, NORD samples can be removed
-table(pop(temp3))
-
-# Remove herds from temporal group 2 
-remove_herds <- c("WBNP", "ETH", "NORD", "WENT", "WBNPPAD", "WBNPNY")
-temp2 <- temp2[pop = setdiff(popNames(temp2), remove_herds), drop = TRUE]
-temp2.sum <- summary(temp2) # Recalculate summary
-temp2.sum
 ```
+
 # Descriptive Statistics 
 Functions requiring the package *strataG* require inputs to be in "gtypes" objects. Programs such as HP-RARE require data to be in GENEPOP file format. 
 ```{r}
@@ -94,6 +111,11 @@ Functions requiring the package *strataG* require inputs to be in "gtypes" objec
 temp1.g <- genind2gtypes(temp1)
 temp2.g <- genind2gtypes(temp2)
 temp3.g <- genind2gtypes(temp3)
+
+# Merged data
+m1.g <- genind2gtypes(m1)
+m2.g <- genind2gtypes(m2)
+m3.g <- genind2gtypes(m3)
 
 # Convert genind to genepop
 library(graph4lg)
@@ -105,6 +127,11 @@ genind_to_genepop(temp3, output = "genepop_files/temp3.genepop.txt")
 temp1.stats <- basic.stats(temp1, diploid = TRUE, digits = 3)
 temp2.stats <- basic.stats(temp2, diploid = TRUE, digits = 3)
 temp3.stats <- basic.stats(temp3, diploid = TRUE, digits = 3)
+
+# Merged data
+m1.stats <- basic.stats(m1, diploid = TRUE, digits = 3)
+m2.stats <- basic.stats(m2, diploid = TRUE, digits = 3)
+m3.stats <- basic.stats(m3, diploid = TRUE, digits = 3)
 ```
 
 ## Temporal Group 1
@@ -143,6 +170,42 @@ descr.df1 <- enframe(temp1.N, name = "Population", value = "N") %>%
 
 print(descr.df1)
 ```
+```{r}
+# Number of samples per population
+m1.N = m1.sum$n.by.pop
+m1.N
+
+# Heterozygosity
+m1.Ho <- round(colMeans(m1.stats$Ho), 2) # Observed (Ho)
+# HO SD
+m1.Ho.sd <- round(apply(m1.stats$Ho, 2, sd, na.rm = TRUE), 2) # SD Ho
+
+m1.He <- round(colMeans(m1.stats$Hs), 2) # Expected (He)
+# HE SD
+m1.He.sd <- round(apply(m1.stats$Hs, 2, sd, na.rm = TRUE), 2) # SD Ho
+
+
+# Allelic Richness
+m1.Ar <- allelic.richness(m1, min.n = NULL, diploid = TRUE)
+m1.Ar.mean <- round(colMeans(m1.Ar$Ar), 2)
+# AR SD
+m1.Ar.sd <- round(apply(m1.Ar$Ar, 2, sd, na.rm = TRUE), 2)
+
+# FIS
+m1.Fis <- round(colMeans(m1.stats$Fis, na.rm = TRUE), 2)
+
+# Create Table
+descr.df.m1 <- enframe(m1.N, name = "Population", value = "N") %>%
+  mutate(
+        HE = paste(m1.He[Population], "±", m1.He.sd[Population]), # Combine SD with ±
+        HO = paste(m1.Ho[Population], "±", m1.Ho.sd[Population]), # Combine SD with ±
+        AR = paste(m1.Ar.mean[Population], "±", m1.Ar.sd[Population]), # Combine with ±
+        FIS = m1.Fis
+        )
+
+print(descr.df.m1)
+```
+
 ## Temporal Group 2
 ```{r}
 # Number of samples per population
@@ -179,6 +242,8 @@ descr.df2 <- enframe(temp2.N, name = "Population", value = "N") %>%
 
 print(descr.df2)
 ```
+
+
 
 ## Temporal Group 3
 ```{r}
@@ -217,25 +282,41 @@ descr.df3 <- enframe(temp3.N, name = "Population", value = "N") %>%
 print(descr.df3)
 ```
 
-Join Tables (Wide)
+# Merged 3
 ```{r}
-full.descr.wide <- descr.df1 %>% 
-  full_join(descr.df2, by = "Population") %>% 
-  full_join(descr.df3, by = "Population") %>% 
-  
-  # Relocate columns for merging in excel
-  relocate(c("N.y", "N"), .after = "N.x") %>% # Number of samples
-  relocate(c("HE.y", "HE"), .after = "HE.x") %>% 
-  relocate(c("HO.y", "HO"), .after = "HO.x") %>%
-  relocate(c("AR.y", "AR"), .after = "AR.x") %>% 
-  relocate(c("FIS.y", "FIS"), .after = "FIS.x") %>% 
-  arrange(Population == "EINPP", Population)
+# Number of samples per population
+m3.N = m3.sum$n.by.pop
+m3.N
 
-# Export to csv
-write.table(full.descr.wide, "./tables/Temporal_GD_Table_wide.csv", 
-            sep = ",",
-            fileEncoding = "UTF-8", 
-            row.names = FALSE)
+# Heterozygosity
+m3.Ho <- round(colMeans(m3.stats$Ho), 2) # Observed (Ho)
+# HO SD
+m3.Ho.sd <- round(apply(m3.stats$Ho, 2, sd, na.rm = TRUE), 2) # SD Ho
+
+m3.He <- round(colMeans(m3.stats$Hs), 2) # Expected (He)
+# HE SD
+m3.He.sd <- round(apply(m3.stats$Hs, 2, sd, na.rm = TRUE), 2) # SD Ho
+
+
+# Allelic Richness
+m3.Ar <- allelic.richness(m3, min.n = NULL, diploid = TRUE)
+m3.Ar.mean <- round(colMeans(m3.Ar$Ar), 2)
+# AR SD
+m3.Ar.sd <- round(apply(m3.Ar$Ar, 2, sd, na.rm = TRUE), 2)
+
+# FIS
+m3.Fis <- round(colMeans(m3.stats$Fis, na.rm = TRUE), 2)
+
+# Create Table
+descr.df.m3 <- enframe(m3.N, name = "Population", value = "N") %>%
+  mutate(
+        HE = paste(m3.He[Population], "±", m3.He.sd[Population]), # Combine SD with ±
+        HO = paste(m3.Ho[Population], "±", m3.Ho.sd[Population]), # Combine SD with ±
+        AR = paste(m3.Ar.mean[Population], "±", m3.Ar.sd[Population]), # Combine with ±
+        FIS = m3.Fis
+        )
+
+print(descr.df.m3)
 ```
 
 Join Tables (Long)
@@ -244,7 +325,15 @@ df1_v <- descr.df1 %>% mutate(Period = "T1")
 df2_v <- descr.df2 %>% mutate(Period = "T2")
 df3_v <- descr.df3 %>% mutate(Period = "T3")
 
-full.descr.long <- bind_rows(df1_v, df2_v, df3_v) %>% 
+dfm1_v <- descr.df.m1 %>% 
+  filter(Population %in% c("WBNPC1", "WBNPC2")) %>% 
+  mutate(Period = "T1")
+
+dfm3_v <- descr.df.m3 %>% 
+  filter(Population %in% c("WBNPC1", "WBNPC2")) %>% 
+  mutate(Period = "T3")
+
+full.descr.long <- bind_rows(df1_v, df2_v, df3_v, dfm1_v, dfm3_v) %>% 
   arrange(Population == "EINPP", Population) %>% 
   relocate(Period, .after = Population)
 
@@ -269,4 +358,136 @@ temporal_test <- wilcox.test(WAB_T1, WAB_T2, paired = TRUE)
 temporal_test
 ```
 
+```{r}
+mRatio(temp1.g, by.strata = TRUE)
+```
+
+
+# Genetic Distance
+#### Merge WBNP C1 and C2 to the temp1 and temp2 datasets
+```{r}
+WBNP_Clusters <- mod.data %>% 
+  filter(HERD.2 %in% c("WBNPC1", "WBNPC2")) %>% 
+  mutate(HERD = HERD.2) %>% 
+  select(-HERD.2)
+
+# Bind rows to full dataset for comparison
+wbnp_clust.merged <- bison.data %>% 
+  bind_rows(WBNP_Clusters)
+
+
+# Make genind object
+full.gen <- df2genind(X=wbnp_clust.merged[,c(20:ncol(wbnp_clust.merged))],
+                              sep = "/",
+                              ind.names = wbnp_clust.merged$Spreadsheet_ID,
+                              loc.names = NULL,
+                              pop = wbnp_clust.merged$HERD,
+                              NA.char = "NA",
+                              ploidy = 2,
+                              type = "codom",
+                              strata = NULL,
+                              hierarchy = NULL)
+
+# Attach collection year metadata
+full.gen@other$YEAR.ASSIGN <- wbnp_clust.merged$YEAR.ASSIGN
+
+# Subset into temporal groups
+temp1_merge <- full.gen[full.gen@other$YEAR.ASSIGN <=1999]
+
+temp2_merge <- full.gen[full.gen@other$YEAR.ASSIGN %in% 2000:2015]
+# Remove Wentzel from this group
+temp2_merge <- temp2_merge[!temp2_merge@pop == "WBNPC2"]
+
+temp3_merge <- full.gen[full.gen@other$YEAR.ASSIGN>= 2016]
+```
+
+
+#### Weir and Cockerham (1984) Fst
+```{r}
+# Temporal group 1
+## Order herds 
+temp1_fst.mat <- as.matrix(pairwise.WCfst(temp1_merge,
+                                        diploid = TRUE))
+
+fst1 <- data.frame(round(temp1_fst.mat, 3))
+
+# Temporal group 2
+temp2_fst.mat <- as.matrix(pairwise.WCfst(temp2_merge,
+                                          diploid = TRUE))
+
+fst2 <- data.frame(round(temp2_fst.mat, 3))
+write.csv(fst2, "./tables/fst2.csv", row.names = F)
+
+# Temporal group 3
+temp3_fst.mat <- as.matrix(pairwise.WCfst(temp3_merge, 
+                                          diploid = TRUE))
+fst3 <- data.frame(round(temp3_fst.mat, 3))
+write.csv(fst3, "./tables/fst3.csv", row.names = F)
+
+
+```
+
+
+```{r}
+# Reorder
+current_names <- colnames(temp1_fst.mat)
+
+# 2. Define the new order manually (swapping the last two)
+new_order <- c("WBNPLB", "WBNPNY", "WBNPHC", "WBNPGR", "WBNPPAD", 
+                "EINPW", "MBS", "EINPP", "WBNPC1", "WBNPC2")
+
+# 3. Apply the swap to both rows and columns
+temp1_fst.ordered <- temp1_fst.mat[new_order, new_order]
+
+# View the result
+round(temp1_fst.ordered, 3)
+write.csv(temp1_fst.ordered, "./tables/fst1.csv", row.names = T)
+
+# Reorder
+current_names2 <- colnames(temp2_fst.mat)
+current_names2
+
+# 2. Define the new order manually (swapping the last two)
+new_order2 <- c("HZ","MBS", "RL", "WAB", "WENT")
+
+# 3. Apply the swap to both rows and columns
+temp2_fst.ordered <- temp2_fst.mat[new_order2, new_order2]
+
+# View the result
+round(temp2_fst.ordered, 3)
+write.csv(temp2_fst.ordered, "./tables/fst2.csv", row.names = T)
+
+# Reorder
+current_names3 <- colnames(temp3_fst.mat)
+current_names3
+
+# 2. Define the new order manually (swapping the last two)
+new_order3 <- c("WBNPLB", "WBNPNY", "WBNPHC", "WBNPGR", "WBNPPAD", "WENT", "AISH","CL", "EINPW", "ETH", "HZ", "NAH", "NORD", "RL", "WAB", "EINPP", "WBNPC1", "WBNPC2")
+
+# 3. Apply the swap to both rows and columns
+temp3_fst.ordered <- temp3_fst.mat[new_order3, new_order3]
+
+# View the result
+round(temp3_fst.ordered, 3)
+write.csv(temp3_fst.ordered, "./tables/fst3.csv", row.names = T)
+
+
+```
+
+## Bootstraps of Fst
+```{r}
+boot1.mat <- boot.ppfst(temp1_merge, nboot = 1000)
+boot1.mat$ll
+
+boot2.mat <- boot.ppfst(temp2_merge, nboot = 1000)
+boot2.mat$ll
+
+boot3.mat <- boot.ppfst(temp3_merge, nboot = 1000)
+boot3.mat$ll
+
+```
+Hs.test
+```{r}
+Hs.test(temp1_merge[temp1_merge@pop == "MBS"],temp1_merge)
+```
 

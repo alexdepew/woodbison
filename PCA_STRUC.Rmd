@@ -1683,4 +1683,3 @@ plotQ(admix2.mk4,
             outputfilename = "admix2_k4",
             exportpath = "./plots/structure_plots/")
 ```
-

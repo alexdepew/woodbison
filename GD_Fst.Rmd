@@ -25,7 +25,7 @@ library(poppr)
 
 ## Load Required Data
 ```{r}
-bison.data <- read.csv("Cleaned_samples.06.01.2026.csv",
+bison.data <- read.csv("Cleaned_locus_data_20.02.2026.csv",
                        check.names = F)
 ```
 
@@ -71,14 +71,6 @@ temp3.sum <- summary(temp3)
 table(pop(temp1))
 table(pop(temp2)) # WBNP samples, ETH, NORD samples can be removed
 table(pop(temp3))
-
-# Remove herds from temporal group 2 and 3
-remove_herds <- c("WBNPPAD", "WBNPNY", "ETH", "NORD", "WENT")
-temp2 <- temp2[!pop(temp2) %in% remove_herds, ]
-temp2.sum <- summary(temp2) # Recalculate summary
-
-temp3 <- temp3[!pop(temp3) %in% "WBNP"]
-temp3.sum <- summary(temp3) # Recalculate summary
 
 ```
 # Descriptive Statistics 
@@ -169,6 +161,8 @@ temp1.descr
 
 # Write to csv
 write.csv(temp1.descr,"tables/Descriptive Stats Temp1.csv")
+
+colMeans(temp1.descr[2:9])
 ```
 
 ## Temporal Group 2
@@ -310,6 +304,7 @@ temp3.descr
 # Write to csv
 write.csv(temp3.descr,"tables/Descriptive Stats Temp3.csv")
 ```
+
 
 # Visualize Expected Heterozygosity
 ```{r}

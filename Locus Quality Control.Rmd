@@ -51,7 +51,7 @@ bison.genind@other$YEAR.ASSIGN <- bison.data$YEAR.ASSIGN
 ```
 
 ## Locus Filtering
-Preliminary locus filtering relied on *prima facie* information into X-linked loci, followed by the removal of sex markers (not used in analyses). Further tests include:
+Preliminary locus filtering relied on *a priori* information into X-linked loci, followed by the removal of sex markers (not used in analyses). Further tests include:
 
 - Test for polymorphism (do the markers exhibit sufficient variability to be informative?)
 - Test for HWE deviations
@@ -525,6 +525,8 @@ compiled_patterns <- n1 %>%
   arrange(desc(Prevalence), Population, Locus)
 
 table(compiled_patterns$Locus)
+
+write.csv(compiled_patterns, "./tables/Sig.Nulls.csv", row.names = F)
 ```
 
 
@@ -697,6 +699,7 @@ write.table(temp1.microdrop, "./microdrop/temp1.microdrop.txt", sep= " ",
 temp1.drop <- read.table("./microdrop/temp1_MLE_Rates_loc",
                          sep = "\t", header = TRUE)
 
+summary(temp1.drop)
 # Temp2 ----
 temp2.str <- temp2
 pop(temp2.str) <- as.numeric(as.factor(pop(temp2.str)))
@@ -714,6 +717,7 @@ write.table(temp2.microdrop, "./microdrop/temp2.microdrop.txt", sep= " ",
 # Read data file
 temp2.drop <- read.table("./microdrop/temp2_MLE_Rates_loc",
                          sep = "\t", header = TRUE)
+summary(temp2.drop)
 
 # Temp3 ----
 temp3.str <- temp3
@@ -732,7 +736,225 @@ write.table(temp3.microdrop, "./microdrop/temp3.microdrop.txt", sep= " ",
 # Read data file
 temp3.drop <- read.table("./microdrop/temp3_MLE_Rates_loc",
                          sep = "\t", header = TRUE)
+
+summary(temp3.drop)
 ```
+```{r}
+# --- TEMP 1 ---
+temp1_pop_list <- seppop(temp1.str)
+
+lapply(names(temp1_pop_list), function(pop) {
+    out_path <- paste0("./microdrop/temp/temp1_", pop, ".struct.txt")
+    final_path <- paste0("./microdrop/input/temp1_", pop, ".microdrop.txt") # Define final_path
+    
+    genind_to_structure(temp1_pop_list[[pop]], output = out_path)
+    temp_data <- read.table(out_path, skip = 1)
+    
+    # Create and write header
+    locus_header <- c("Indiv", "Pop", locNames(temp1_pop_list[[pop]]))
+    cat(paste(locus_header, collapse = " "), "\n", file = final_path)
+    
+    # Append data (Note: append = TRUE is critical here)
+    write.table(temp_data, 
+              file = final_path, 
+              append = TRUE,
+              sep = " ", 
+              row.names = FALSE, 
+              col.names = FALSE, 
+              quote = FALSE)
+    
+    message("Finished processing population: ", pop)
+})
+
+# --- TEMP 2 ---
+temp2_pop_list <- seppop(temp2.str)
+
+lapply(names(temp2_pop_list), function(pop) {
+    out_path <- paste0("./microdrop/temp/temp2_", pop, ".struct.txt")
+    final_path <- paste0("./microdrop/input/temp2_", pop, ".microdrop.txt")
+    
+    genind_to_structure(temp2_pop_list[[pop]], output = out_path)
+    temp_data <- read.table(out_path, skip = 1)
+    
+    locus_header <- c("Indiv", "Pop", locNames(temp2_pop_list[[pop]]))
+    cat(paste(locus_header, collapse = " "), "\n", file = final_path)
+    
+    write.table(temp_data, 
+              file = final_path, 
+              append = TRUE,
+              sep = " ", 
+              row.names = FALSE, 
+              col.names = FALSE, 
+              quote = FALSE)
+    
+    message("Finished processing population: ", pop)
+})
+
+# --- TEMP 3 ---
+temp3_pop_list <- seppop(temp3.str)
+
+lapply(names(temp3_pop_list), function(pop) {
+    out_path <- paste0("./microdrop/temp/temp3_", pop, ".struct.txt")
+    final_path <- paste0("./microdrop/input/temp3_", pop, ".microdrop.txt")
+    
+    genind_to_structure(temp3_pop_list[[pop]], output = out_path)
+    temp_data <- read.table(out_path, skip = 1)
+    
+    locus_header <- c("Indiv", "Pop", locNames(temp3_pop_list[[pop]]))
+    cat(paste(locus_header, collapse = " "), "\n", file = final_path)
+    
+    write.table(temp_data, 
+              file = final_path, 
+              append = TRUE,
+              sep = " ", 
+              row.names = FALSE, 
+              col.names = FALSE, 
+              quote = FALSE)
+    
+    message("Finished processing population: ", pop)
+})
+```
+### All in One: Input files and Parameter files
+```{r}
+# --- Function to generate param files ---
+# We put this in a list so we can loop through temp1, temp2, temp3
+data_sets <- list("temp1" = temp1.str, "temp2" = temp2.str, "temp3" = temp3.str)
+
+lapply(names(data_sets), function(prefix) {
+  
+  obj <- data_sets[[prefix]]
+  pop_list <- seppop(obj)
+  
+  lapply(names(pop_list), function(pop) {
+    
+    # 1. Setup paths and data
+    pop_obj <- pop_list[[pop]]
+    file_name <- paste0(prefix, "_", pop, ".microdrop.txt")
+    data_path <- paste0("./microdrop/input/", file_name)
+    param_path <- paste0("./microdrop/params/param_", prefix, "_", pop, ".txt")
+    temp_struct <- paste0("./microdrop/temp/", prefix, "_", pop, ".struct.txt")
+    
+    # 2. Generate the Data File (with header)
+    genind_to_structure(pop_obj, output = temp_struct)
+    temp_data <- read.table(temp_struct, skip = 1)
+    
+    locus_header <- c("Indiv", "Pop", locNames(pop_obj))
+    cat(paste(locus_header, collapse = " "), "\n", file = data_path)
+    write.table(temp_data, file = data_path, append = TRUE, sep = " ", 
+                row.names = FALSE, col.names = FALSE, quote = FALSE)
+    
+    # 3. Calculate Parameters for this specific population
+    num_inds <- nInd(pop_obj)
+    num_loci <- nLoc(pop_obj)
+    out_folder <- paste0(prefix, "_", pop, "_results")
+    
+# 4. Create the Param File content (Note the added ./input/ path)
+    param_content <- c(
+      "# This is a paramfile for MicroDrop generated automatically",
+      "###----Main Parameters----###",
+      paste0("DATA_FILE      ", "./input/", file_name), # Pointing MicroDrop to the input folder
+      paste0("INDS           ", num_inds),
+      paste0("LOCI           ", num_loci),
+      "NON_DATA_ROWS  1",
+      "NON_DATA_COLS  2",
+      paste0("OUT_FOLDER     ", out_folder),
+      "TOLERANCE      0.001",
+      "MAX_ITER       10000",
+      "MAX_ALLELES    100",
+      "N_PERMU        100",
+      "N_REPS         3",
+      "N_IMPT         4",
+      "",
+      "###----Advanced Parameters----###",
+      "ASMPT          0",
+      "FCTR           0"
+    )
+    
+    # 5. Write the Param File
+    writeLines(param_content, con = param_path)
+    
+    message("Finished Data and Param files for: ", prefix, "_", pop)
+  })
+})
+```
+```{r}
+# 1. Find all MLE_Rates_loc files
+# Adjust the path to match your structure (looking inside each _results folder)
+mle_files <- list.files(path = "./microdrop/results", 
+                        pattern = "MLE_Rates_loc", 
+                        recursive = TRUE, 
+                        full.names = TRUE)
+
+# 2. Function to read and label by population
+read_mle <- function(file_path) {
+  # Extract population name (e.g., "temp1_1") from the folder path
+  pop_id <- gsub("./|/MLE_Rates_loc|_results", "", file_path)
+  
+  # Read the tab-separated file
+  # Note: If it's space-separated, remove sep="\t"
+  df <- read.table(file_path, header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+  
+  # Add the population column
+  df$Population <- pop_id
+  return(df)
+}
+
+# 3. Combine everything
+library(dplyr)
+all_mle_rates <- lapply(mle_files, read_mle) %>% bind_rows()
+
+# 4. Quick look at the top dropout loci across all pops
+dropout <- all_mle_rates %>% 
+  # Sort by highest dropout first
+  arrange(desc(dropout_rate)) %>% 
+  # Fix the names and extract the temporal group
+  mutate(
+    Pop = str_replace(Population, "microdroresult", ""),
+    Temporal_Group = str_extract(Pop, "temp\\d")
+  ) %>% 
+  select(-Population)
+
+# 
+
+temp1.dropout <- dropout %>% 
+  filter(str_detect(Temporal_Group, "^temp1"))
+
+temp1.loc.avg <- temp1.dropout %>%
+  group_by(locusID) %>%
+  summarize(
+    mean_dropout = mean(dropout_rate, na.rm = TRUE),
+    sd_dropout = sd(dropout_rate, na.rm = TRUE) # Useful for checking consistency
+  ) %>%
+  arrange(desc(mean_dropout))
+
+
+temp2.dropout <- dropout %>% 
+  filter(str_detect(Temporal_Group, "^temp2"))
+
+temp2.loc.avg <- temp2.dropout %>%
+  group_by(locusID) %>%
+  summarize(
+    mean_dropout = mean(dropout_rate, na.rm = TRUE),
+    sd_dropout = sd(dropout_rate, na.rm = TRUE) # Useful for checking consistency
+  ) %>%
+  arrange(desc(mean_dropout))
+
+temp3.dropout <- dropout %>% 
+  filter(str_detect(Temporal_Group, "^temp3"))
+
+temp3.loc.avg <- temp3.dropout %>%
+  group_by(locusID) %>%
+  summarize(
+    mean_dropout = mean(dropout_rate, na.rm = TRUE),
+    sd_dropout = sd(dropout_rate, na.rm = TRUE) # Useful for checking consistency
+  ) %>%
+  arrange(desc(mean_dropout))
+```
+
+
+
+
+
 
 # Format final dataset for use in analyses
 Removal of herds with insufficient sample sizes for analyses, remove loci which have demonstrated high levels of missing data, and which have a propensity for null alleles. 

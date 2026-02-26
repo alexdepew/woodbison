@@ -151,7 +151,7 @@ temp1.He.sd <- round(apply(temp1.stats$Hs, 2, sd, na.rm = TRUE), 2) # SD Ho
 
 
 # Allelic Richness
-temp1.Ar <- allelic.richness(temp1, min.n = NULL, diploid = TRUE)
+temp1.Ar <- allelic.richness(temp1, min.n = 10, diploid = TRUE)
 temp1.Ar.mean <- round(colMeans(temp1.Ar$Ar), 2)
 # AR SD
 temp1.Ar.sd <- round(apply(temp1.Ar$Ar, 2, sd, na.rm = TRUE), 2)
@@ -186,7 +186,7 @@ m1.He.sd <- round(apply(m1.stats$Hs, 2, sd, na.rm = TRUE), 2) # SD Ho
 
 
 # Allelic Richness
-m1.Ar <- allelic.richness(m1, min.n = NULL, diploid = TRUE)
+m1.Ar <- allelic.richness(m1, min.n = 10, diploid = TRUE)
 m1.Ar.mean <- round(colMeans(m1.Ar$Ar), 2)
 # AR SD
 m1.Ar.sd <- round(apply(m1.Ar$Ar, 2, sd, na.rm = TRUE), 2)
@@ -223,7 +223,7 @@ temp2.He.sd <- round(apply(temp2.stats$Hs, 2, sd, na.rm = TRUE), 2) # SD Ho
 
 
 # Allelic Richness
-temp2.Ar <- allelic.richness(temp2, min.n = NULL, diploid = TRUE)
+temp2.Ar <- allelic.richness(temp2, min.n = 10, diploid = TRUE)
 temp2.Ar.mean <- round(colMeans(temp2.Ar$Ar), 2)
 # AR SD
 temp2.Ar.sd <- round(apply(temp2.Ar$Ar, 2, sd, na.rm = TRUE), 2)
@@ -262,7 +262,7 @@ temp3.He.sd <- round(apply(temp3.stats$Hs, 2, sd, na.rm = TRUE), 2) # SD Ho
 
 
 # Allelic Richness
-temp3.Ar <- allelic.richness(temp3, min.n = NULL, diploid = TRUE)
+temp3.Ar <- allelic.richness(temp3, min.n = 10, diploid = TRUE)
 temp3.Ar.mean <- round(colMeans(temp3.Ar$Ar), 2)
 # AR SD
 temp3.Ar.sd <- round(apply(temp3.Ar$Ar, 2, sd, na.rm = TRUE), 2)
@@ -299,7 +299,7 @@ m3.He.sd <- round(apply(m3.stats$Hs, 2, sd, na.rm = TRUE), 2) # SD Ho
 
 
 # Allelic Richness
-m3.Ar <- allelic.richness(m3, min.n = NULL, diploid = TRUE)
+m3.Ar <- allelic.richness(m3, min.n = 10, diploid = TRUE)
 m3.Ar.mean <- round(colMeans(m3.Ar$Ar), 2)
 # AR SD
 m3.Ar.sd <- round(apply(m3.Ar$Ar, 2, sd, na.rm = TRUE), 2)
@@ -344,19 +344,6 @@ write.table(full.descr.long, "./tables/Temporal_GD_Table_long.csv",
             row.names = FALSE)
 ```
 
-# Temporal Comparison
-```{r}
-#WAB
-MBS_T1 <- temp2.Ar$Ar[,3]
-MBS_T1
-
-MBS_T2 <- temp3.Ar$Ar[,6]
-MBS_T2
-
-temporal_test <- wilcox.test(WAB_T1, WAB_T2, paired = TRUE)
-
-temporal_test
-```
 
 ```{r}
 mRatio(temp1.g, by.strata = TRUE)
@@ -476,18 +463,219 @@ write.csv(temp3_fst.ordered, "./tables/fst3.csv", row.names = T)
 
 ## Bootstraps of Fst
 ```{r}
-boot1.mat <- boot.ppfst(temp1_merge, nboot = 1000)
+boot1.mat <- boot.ppfst(temp1_merge, nboot = 1000, quant=c(0.025,0.975))
 boot1.mat$ll
 
-boot2.mat <- boot.ppfst(temp2_merge, nboot = 1000)
+boot2.mat <- boot.ppfst(temp2_merge, nboot = 1000, quant=c(0.025,0.975))
 boot2.mat$ll
 
-boot3.mat <- boot.ppfst(temp3_merge, nboot = 1000)
+boot3.mat <- boot.ppfst(temp3_merge, nboot = 1000, quant=c(0.025,0.975))
 boot3.mat$ll
 
 ```
-Hs.test
+Fis Sig
 ```{r}
-Hs.test(temp1_merge[temp1_merge@pop == "MBS"],temp1_merge)
+temp1_fis_boot <- boot.ppfis(dat=temp1_merge,nboot=1000,quant=c(0.025,0.975))
+temp1_fis_boot$fis.ci
+
+temp1_merge.stat <- basic.stats(temp1_merge)
+colMeans(temp1_merge.stat$Fis)
+
+temp2_fis_boot <- boot.ppfis(dat=temp2_merge,nboot=1000,quant=c(0.025,0.975))
+temp2_fis_boot$fis.ci
+
+temp2_merge.stat <- basic.stats(temp2_merge)
+colMeans(temp2_merge.stat$Fis)
+
+temp3_fis_boot <- boot.ppfis(dat=temp3_merge,nboot=1000,quant=c(0.025,0.975))
+temp3_fis_boot$fis.ci
+
+temp3_merge.stat <- basic.stats(temp3_merge)
+colMeans(temp3_merge.stat$Fis)
 ```
+
+```{r}
+# HE
+# Put your objects into a named list
+all_temps <- list("T1" = temp1_merge.stat, "T2" = temp2.stats, "T3" = temp3_merge.stat)
+
+# Define the metric to compare (Hs is Expected Heterozygosity)
+metric <- "Hs"
+
+# Define the possible pairs of time periods
+period_pairs <- list(c("T1", "T2"), c("T2", "T3"), c("T1", "T3"))
+
+# List to store results
+wilcox_results <- list()
+
+for (pair in period_pairs) {
+  p1 <- pair[1]
+  p2 <- pair[2]
+  
+  # Find herds common to both time periods
+  common_herds <- intersect(colnames(all_temps[[p1]][[metric]]), 
+                            colnames(all_temps[[p2]][[metric]]))
+  
+  for (herd in common_herds) {
+    # Extract per-locus values
+    v1 <- all_temps[[p1]][[metric]][, herd]
+    v2 <- all_temps[[p2]][[metric]][, herd]
+    
+    # Run the paired test
+    test <- wilcox.test(v1, v2, paired = TRUE)
+    
+    # Store results in a data frame
+    wilcox_results[[paste(herd, p1, p2, sep="_")]] <- data.frame(
+      Herd = herd,
+      Comparison = paste(p1, "vs", p2),
+      V_stat = test$statistic,
+      p_value = round(test$p.value, 5),
+      Significant = ifelse(test$p.value < 0.05, "Yes", "No")
+    )
+  }
+}
+
+# Combine into one master table
+temporal_summary_table <- do.call(rbind, wilcox_results)
+print(temporal_summary_table)
+
+```
+
+```{r}
+# Change the metric to Ho
+metric_ho <- "Ho"
+
+# List to store Ho results
+wilcox_results_ho <- list()
+
+for (pair in period_pairs) {
+  p1 <- pair[1]
+  p2 <- pair[2]
+  
+  common_herds <- intersect(colnames(all_temps[[p1]][[metric_ho]]), 
+                            colnames(all_temps[[p2]][[metric_ho]]))
+  
+  for (herd in common_herds) {
+    v1 <- all_temps[[p1]][[metric_ho]][, herd]
+    v2 <- all_temps[[p2]][[metric_ho]][, herd]
+    
+    # Paired test evaluates if v2 is consistently lower/higher than v1 across loci
+    test <- wilcox.test(v1, v2, paired = TRUE)
+    
+    wilcox_results_ho[[paste(herd, p1, p2, sep="_")]] <- data.frame(
+      Herd = herd,
+      Comparison = paste(p1, "vs", p2),
+      V_stat = test$statistic,
+      p_value = round(test$p.value, 5),
+      Significant = ifelse(test$p.value < 0.05, "Yes", "No")
+    )
+  }
+}
+
+# Combine and apply FDR correction to account for multiple herd comparisons
+temporal_summary_ho <- do.call(rbind, wilcox_results_ho)
+temporal_summary_ho$adj_p_value <- p.adjust(temporal_summary_ho$p_value, method = "fdr")
+temporal_summary_ho$Significant_Adj <- ifelse(temporal_summary_ho$adj_p_value < 0.05, "Yes", "No")
+
+print(temporal_summary_ho)
+```
+
+# Allelic Richness
+```{r}
+temp1_merge.Ar <- allelic.richness(temp1_merge, min.n = 10, diploid = TRUE)
+temp3_merge.Ar <- allelic.richness(temp3_merge, min.n = 10, diploid = TRUE)
+
+# Define the objects (ensure you include all relevant temporal groups)
+# Note: Rarefaction ensures Ar is comparable across different sample sizes (n)
+all_temps_ar <- list("T1" = temp1_merge.Ar, "T2" = temp2.Ar, "T3" = temp3_merge.Ar)
+
+# Define the metric (Ar represents Allelic Richness)
+metric_ar <- "Ar"
+
+# Pairs of time periods to compare
+period_pairs <- list(c("T1", "T2"), c("T2", "T3"), c("T1", "T3"))
+
+# List to store Ar results
+wilcox_results_ar <- list()
+
+for (pair in period_pairs) {
+  p1 <- pair[1]
+  p2 <- pair[2]
+  
+  # Find herds common to both time periods
+  common_herds <- intersect(colnames(all_temps_ar[[p1]][[metric_ar]]), 
+                            colnames(all_temps_ar[[p2]][[metric_ar]]))
+  
+  for (herd in common_herds) {
+    # Extract per-locus Ar values
+    v1 <- all_temps_ar[[p1]][[metric_ar]][, herd]
+    v2 <- all_temps_ar[[p2]][[metric_ar]][, herd]
+    
+    # Run the paired test
+    # This evaluates if Ar consistently decreases/increases across loci
+    test <- wilcox.test(v1, v2, paired = TRUE)
+    
+    # Store results
+    wilcox_results_ar[[paste(herd, p1, p2, sep="_")]] <- data.frame(
+      Herd = herd,
+      Comparison = paste(p1, "vs", p2),
+      V_stat = test$statistic,
+      p_value = round(test$p.value, 5),
+      Significant = ifelse(test$p.value < 0.05, "Yes", "No")
+    )
+  }
+}
+
+# Combine and apply False Discovery Rate (FDR) correction
+temporal_summary_ar <- do.call(rbind, wilcox_results_ar)
+temporal_summary_ar$adj_p_value <- p.adjust(temporal_summary_ar$p_value, method = "fdr")
+temporal_summary_ar$Significant_Adj <- ifelse(temporal_summary_ar$adj_p_value < 0.05, "Yes", "No")
+
+print(temporal_summary_ar)
+```
+
+
+
+
+```{r}
+# Choose the temporal group to test (e.g., temp3)
+current_obj <- temp3_merge
+herd_list <- levels(pop(current_obj))
+
+# Storage for results
+one_vs_all_results <- list()
+
+for (target_herd in herd_list) {
+  
+  # 1. Create a copy of the object to avoid overwriting original data
+  temp_genind <- current_obj
+  
+  # 2. Recode: Target herd stays the same, everyone else becomes "Others"
+  new_pop_vector <- ifelse(pop(temp_genind) == target_herd, target_herd, "Others")
+  pop(temp_genind) <- as.factor(new_pop_vector)
+  
+  # 3. Split the new 2-population genind
+  split_gen <- seppop(temp_genind)
+  
+  # 4. Run the permutation test (Hs.test)
+  # Comparing Target vs. Pooled Others
+  test_out <- Hs.test(split_gen[[target_herd]], split_gen[["Others"]], n.sim = 999)
+  
+  # 5. Store data
+  one_vs_all_results[[target_herd]] <- data.frame(
+    Herd = target_herd,
+    Observed_Diff = test_out$obs, # Negative means herd is LESS diverse than others
+    P_Value = test_out$pvalue
+  )
+}
+
+# Combine into a master table and apply correction
+final_one_vs_all <- do.call(rbind, one_vs_all_results)
+final_one_vs_all$adj_p_value <- p.adjust(final_one_vs_all$P_Value, method = "fdr")
+
+print(final_one_vs_all)
+
+write.csv(final_one_vs_all, "./tables/temp3_sig_hs.csv", row.names = F)
+```
+
 

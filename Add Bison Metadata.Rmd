@@ -34,13 +34,13 @@ library(tidyverse)
 # Load required data
 ```{r}
 microsat_database <- 
-  read.csv("Full_Bison_Dataset_18.12.2025.csv")
+  read.csv("./datafiles/Full_Bison_Dataset_18.12.2025.csv")
 
 trentdavis <- 
-  read.csv("Input files/GWilson_All Trent and Davis Samples_metadata.csv")
+  read.csv("metadata_input_files//GWilson_All Trent and Davis Samples_metadata.csv")
 
 trent <-
-  read.csv("Input files/GWilson_Bison_All_Genotypes_July2025_long.csv")
+  read.csv("metadata_input_files//GWilson_Bison_All_Genotypes_July2025_long.csv")
 
 petri_metadata <- 
   read.csv("Input files/Petri_Sample_List_Bison_2025.csv") %>% 
@@ -417,5 +417,5 @@ duplicate_microsat_database_tidy <-
   filter(n() > 1) %>% 
   ungroup() 
 
-write.csv(microsat_database_tidy, "Comprehensive_Bison_Database_Metadata_18.12.2025.csv")
+write.csv(microsat_database_tidy, "./datafiles/Comprehensive_Bison_Database_Metadata_18.12.2025.csv")
 ```

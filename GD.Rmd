@@ -26,7 +26,7 @@ library(poppr)
 
 ## Load Required Data
 ```{r}
-bison.data <- read.csv("Cleaned_locus_data_20.02.2026.csv",
+bison.data <- read.csv("./datafiles/Cleaned_locus_data_20.02.2026.csv",
                        check.names = F)
 ```
 

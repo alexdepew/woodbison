@@ -1351,7 +1351,7 @@ plotQ(temp1.mk3,
             grplabsize = 10, 
             grplabangle =45,
             grplabpos = 0.65,
-            grplabheight = 1,      
+            grplabheight = 0.5,      
             grplabspacer = 0.1,
             grplabcol = "black",
       
@@ -1374,8 +1374,11 @@ plotQ(temp1.mk3,
       
       # File settings
             imgtype = "pdf",
+            returnplot = TRUE,
             outputfilename = "Temp1_k3",
             exportpath = "./plots/structure_plots/")
+
+p1 <- pt1_list$plot[[1]]
 
 # Temp2
 plotQ(temp2.mk4, 
@@ -1425,6 +1428,7 @@ plotQ(temp2.mk4,
       
       # File settings
             imgtype = "pdf",
+            returnplot = TRUE,
             outputfilename = "Temp2_k4",
             exportpath = "./plots/structure_plots/")
 
@@ -1683,3 +1687,334 @@ plotQ(admix2.mk4,
             outputfilename = "admix2_k4",
             exportpath = "./plots/structure_plots/")
 ```
+
+
+
+
+```{r}
+# WBNP1
+pt1 <- plotQ(wbnp1.mk2, 
+            basesize = 10, 
+            grplab = loc_labels_wbnp1, 
+            subsetgrp = herd_order_wbnp1, 
+            clustercol = str_cols,
+            ordergrp = TRUE,
+      
+      # Side "K" Labels
+            splab = "K = 2",
+            splabsize = 20,
+            sppos = "left",
+            splabcol = "black",
+            splabangle = 0,
+      
+      # Individual Label Settings
+            showindlab = F, 
+            indlabsize = 0,        
+            indlabangle = 90,
+            indlabheight = 0,
+      
+      # Group Label settings
+            grplabsize = 5, 
+            grplabangle = 45,
+            grplabpos = 0.60,
+            grplabheight = 0.2,      
+            grplabspacer = 0,
+            grplabcol = "black",
+      
+            linesize = 1,          
+            pointsize = 8,
+      
+      # Divider Line Settings
+            divcol = "white",
+            divsize = 1, 
+            divtype = NULL,
+      
+            useindlab = TRUE, 
+            returndata = TRUE,
+      
+      # Plot settings
+            height = 5,             
+            width = 50,
+            panelspacer = 1,
+            panelratio = c(1,2),
+      
+      # File settings
+            imgtype = "pdf",
+            returnplot = TRUE,
+            outputfilename = "testw1",
+            exportpath = "./plots/structure_plots/")
+
+# WBNP2
+pt2 <- plotQ(wbnp2.mk2, 
+            basesize = 10, 
+            grplab = loc_labels_wbnp2, 
+            subsetgrp = herd_order_wbnp2, 
+            clustercol = str_cols,
+            ordergrp = TRUE,
+      
+      # Side "K" Labels
+            splab = "K = 2",
+            splabsize = 15,
+            sppos = "left",
+            splabcol = "black",
+            splabangle = 0,
+      
+      # Individual Label Settings
+            showindlab = F, 
+            indlabsize = 4,        
+            indlabangle = 90,
+            indlabheight = 0,
+      
+      # Group Label settings
+            grplabsize = 3, 
+            grplabangle = 45,
+            grplabpos = 0.60,
+            grplabheight = 0.2,      
+            grplabspacer = 0.1,
+            grplabcol = "black",
+      
+            linesize = 1,          
+            pointsize = 8,
+      
+      # Divider Line Settings
+            divcol = "white",
+            divsize = 1, 
+            divtype = NULL,
+      
+            useindlab = TRUE, 
+            returndata = TRUE,
+      
+      # Plot settings
+            height = 15,             
+            width = 50,
+            panelspacer = 1,
+            panelratio = c(2,3),
+      
+      # File settings
+            imgtype = "pdf",
+            returnplot = TRUE,
+            outputfilename = "testw2",
+            exportpath = "./plots/structure_plots/")
+
+# Admix 1
+pt3 <- plotQ(admix1.mk3, 
+            basesize = 10, 
+            grplab = loc_labels_admix1, 
+            subsetgrp = herd_order_admix1, 
+            clustercol = str_cols,
+            ordergrp = TRUE,
+      
+      # Side "K" Labels
+            splab = "K = 3",
+            splabsize = 15,
+            sppos = "left",
+            splabcol = "black",
+            splabangle = 0,
+      
+      # Individual Label Settings
+            showindlab = F, 
+            indlabsize = 4,        
+            indlabangle = 90,
+            indlabheight = 0,
+      
+      # Group Label settings
+            grplabsize = 3, 
+            grplabangle = 45,
+            grplabpos = 0.60,
+            grplabheight = 0.2,      
+            grplabspacer = 0.1,
+            grplabcol = "black",
+      
+            linesize = 1,          
+            pointsize = 8,
+      
+      # Divider Line Settings
+            divcol = "white",
+            divsize = 1, 
+            divtype = NULL,
+      
+            useindlab = TRUE, 
+            returndata = TRUE,
+      
+      # Plot settings
+            height = 15,             
+            width = 50,
+            panelspacer = 1,
+            panelratio = c(2,3),
+      
+      # File settings
+            imgtype = "pdf",
+            returnplot = TRUE,
+            outputfilename = "testa1",
+            exportpath = "./plots/structure_plots/")
+
+# Admix 2
+pt4 <- plotQ(admix2.mk4, 
+            basesize = 10, 
+            grplab = loc_labels_admix2, 
+            subsetgrp = herd_order_admix2, 
+            clustercol = str_cols,
+            ordergrp = TRUE,
+      
+      # Side "K" Labels
+            splab = "K = 4",
+            splabsize = 15,
+            sppos = "left",
+            splabcol = "black",
+            splabangle = 0,
+      
+      # Individual Label Settings
+            showindlab = F, 
+            indlabsize = 4,        
+            indlabangle = 90,
+            indlabheight = 0,
+      
+      # Group Label settings
+            grplabsize = 3, 
+            grplabangle = 45,
+            grplabpos = 0.60,
+            grplabheight = 0.2,      
+            grplabspacer = 0.1,
+            grplabcol = "black",
+      
+            linesize = 1,          
+            pointsize = 8,
+      
+      # Divider Line Settings
+            divcol = "white",
+            divsize = 1, 
+            divtype = NULL,
+      
+            useindlab = TRUE, 
+            returndata = TRUE,
+      
+      # Plot settings
+            height = 15,             
+            width = 50,
+            panelspacer = 1,
+            panelratio = c(2,3),
+      
+      # File settings
+            imgtype = "pdf",
+            returnplot = TRUE,
+            outputfilename = "testa2",
+            exportpath = "./plots/structure_plots/")
+```
+
+```{r}
+library(gridExtra)
+library(grid)
+# Pull plotting objects
+g1 <- pt1$plot[[1]]
+g2 <- pt2$plot[[1]]
+g3 <- pt3$plot[[1]]
+g4 <- pt4$plot[[1]]
+
+# WBNP Structure
+panel_a <- arrangeGrob(g1, left = textGrob("a)", 
+                                           x = unit(0.5, "line"),
+                                           y = unit(1, "npc"),
+                                           just = c("left", "top"),
+                                           gp = gpar(fontsize = 15, fontface = "bold")))
+
+panel_b <- arrangeGrob(g2, left = textGrob("b)", 
+                                           x = unit(0.5, "line"),
+                                           y = unit(1, "npc"),
+                                           just = c("left", "top"),
+                                           gp = gpar(fontsize = 15, fontface = "bold")))
+
+# Stack plots
+WBNP_Struct <- grid.arrange(panel_a, panel_b, ncol = 1)
+
+# Export as SVG
+ggsave("./plots/structure_plots/WBNP_STRUCTURE_Stacked.svg", 
+       plot = WBNP_Struct, 
+       width = 10, 
+       height = 8)
+
+# WBNP Structure
+panel_c <- arrangeGrob(g3, left = textGrob("a)", 
+                                           x = unit(0.5, "line"),
+                                           y = unit(1, "npc"),
+                                           just = c("left", "top"),
+                                           gp = gpar(fontsize = 15, fontface = "bold")))
+
+panel_d <- arrangeGrob(g4, left = textGrob("b)", 
+                                           x = unit(0.5, "line"),
+                                           y = unit(1, "npc"),
+                                           just = c("left", "top"),
+                                           gp = gpar(fontsize = 15, fontface = "bold")))
+
+# Stack plots
+grid.arrange(panel_c, panel_d, ncol = 1)
+```
+# PCA Next to STRUCTURE
+```{r}
+library(grid)
+library(gridGraphics)
+library(gridExtra)
+
+# Define the drawing function
+draw_pca_wbnp1 <- function() {
+  # Your existing s.class code
+  s.class(pca.wbnp1$li, fac = pop(wbnp1), col = transp(cols_wbnp1, 0.75),
+          axesell = F, cstar = 0, cpoint = 3, grid = F, csub = 2,
+          sub = paste0("PC1: ", round(eig.perc.wbnp1[1], 1), "% | PC2: ", round(eig.perc.wbnp1[2], 1), "%"))
+  
+  add.scatter.eig(pca.wbnp1$eig[1:20], 3, 1, 2, ratio = 0.15, "bottomright")
+}
+
+# Convert base plot to a grid-compatible grob
+grid.newpage() # Open a fresh page
+grid.echo(draw_pca_wbnp1) # "Record" the base plot
+pca_grob <- grid.grab() # Grab it as a grob object
+
+# Create Labelled Panel A (PCA)
+panel_a <- arrangeGrob(pca_grob, top = textGrob("a)", x = unit(0.5, "line"), y = unit(0.8, "npc"), 
+                                               just = c("left", "top"), 
+                                               gp = gpar(fontsize = 18, fontface = "bold")))
+
+# Create Labelled Panel B (STRUCTURE)
+panel_b <- arrangeGrob(g1, top = textGrob("b)", x = unit(0.5, "line"), y = unit(0.8, "npc"), 
+                                          just = c("left", "top"), 
+                                          gp = gpar(fontsize = 18, fontface = "bold")))
+
+
+# K Clusters
+# Extract Likelihood [[1]] and Delta K [[4]]
+p_lik <- w1$grobs[[1]]
+p_dk <- w1$grobs[[4]]
+# Label Likelihood as 'c'
+panel_c <- arrangeGrob(p_lik, top = textGrob("c)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+# Label Delta K as 'd'
+panel_d <- arrangeGrob(p_dk, top = textGrob("d)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+# Stack b on top of the (c + d) row
+right_column <- arrangeGrob(panel_b, panel_cd_row, 
+                            ncol = 1, 
+                            heights = c(1, 1.2))
+
+
+# Stack b on top of the (c + d) row
+right_column <- arrangeGrob(panel_b, panel_cd_row, 
+                            ncol = 1, 
+                            heights = c(1, 1.2))
+
+# Final assembly
+final_layout <- grid.arrange(panel_a, right_column, 
+                             ncol = 2, 
+                             widths = c(1, 1))
+
+# Save as SVG with a wide aspect ratio
+ggsave("PCA_STRUC_K_Final.svg", 
+       plot = final_layout, 
+       width = 33, 
+       height = 11)
+
+```
+

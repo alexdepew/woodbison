@@ -345,10 +345,6 @@ write.table(full.descr.long, "./tables/Temporal_GD_Table_long.csv",
 ```
 
 
-```{r}
-mRatio(temp1.g, by.strata = TRUE)
-```
-
 
 # Genetic Distance
 #### Merge WBNP C1 and C2 to the temp1 and temp2 datasets
@@ -497,7 +493,7 @@ colMeans(temp3_merge.stat$Fis)
 ```{r}
 # HE
 # Put your objects into a named list
-all_temps <- list("T1" = temp1_merge.stat, "T2" = temp2.stats, "T3" = temp3_merge.stat)
+all_temps <- lis t("T1" = temp1_merge.stat, "T2" = temp2.stats, "T3" = temp3_merge.stat)
 
 # Define the metric to compare (Hs is Expected Heterozygosity)
 metric <- "Hs"

@@ -14,7 +14,7 @@ This script is used to evaluate temporal patterns in population structure in all
 
 Files used described below:
 
-- `Cleaned_samples.06.01.2026.csv`
+- `Cleaned_locus_data_20.02.2026.csv`
    - Contains all samples for population genetic analyses, post-filtering
    
 ## Load Required Packages
@@ -1378,7 +1378,6 @@ plotQ(temp1.mk3,
             outputfilename = "Temp1_k3",
             exportpath = "./plots/structure_plots/")
 
-p1 <- pt1_list$plot[[1]]
 
 # Temp2
 plotQ(temp2.mk4, 
@@ -1754,23 +1753,23 @@ pt2 <- plotQ(wbnp2.mk2,
       
       # Side "K" Labels
             splab = "K = 2",
-            splabsize = 15,
+            splabsize = 20,
             sppos = "left",
             splabcol = "black",
             splabangle = 0,
       
       # Individual Label Settings
             showindlab = F, 
-            indlabsize = 4,        
+            indlabsize = 0,        
             indlabangle = 90,
             indlabheight = 0,
       
       # Group Label settings
-            grplabsize = 3, 
+            grplabsize = 5, 
             grplabangle = 45,
             grplabpos = 0.60,
             grplabheight = 0.2,      
-            grplabspacer = 0.1,
+            grplabspacer = 0,
             grplabcol = "black",
       
             linesize = 1,          
@@ -1785,10 +1784,10 @@ pt2 <- plotQ(wbnp2.mk2,
             returndata = TRUE,
       
       # Plot settings
-            height = 15,             
+            height = 5,             
             width = 50,
             panelspacer = 1,
-            panelratio = c(2,3),
+            panelratio = c(1,2),
       
       # File settings
             imgtype = "pdf",
@@ -1806,23 +1805,23 @@ pt3 <- plotQ(admix1.mk3,
       
       # Side "K" Labels
             splab = "K = 3",
-            splabsize = 15,
+            splabsize = 20,
             sppos = "left",
             splabcol = "black",
             splabangle = 0,
       
       # Individual Label Settings
             showindlab = F, 
-            indlabsize = 4,        
+            indlabsize = 0,        
             indlabangle = 90,
             indlabheight = 0,
       
       # Group Label settings
-            grplabsize = 3, 
+            grplabsize = 5, 
             grplabangle = 45,
             grplabpos = 0.60,
             grplabheight = 0.2,      
-            grplabspacer = 0.1,
+            grplabspacer = 0,
             grplabcol = "black",
       
             linesize = 1,          
@@ -1837,10 +1836,10 @@ pt3 <- plotQ(admix1.mk3,
             returndata = TRUE,
       
       # Plot settings
-            height = 15,             
+            height = 5,             
             width = 50,
             panelspacer = 1,
-            panelratio = c(2,3),
+            panelratio = c(1,2),
       
       # File settings
             imgtype = "pdf",
@@ -1858,23 +1857,23 @@ pt4 <- plotQ(admix2.mk4,
       
       # Side "K" Labels
             splab = "K = 4",
-            splabsize = 15,
+             splabsize = 20,
             sppos = "left",
             splabcol = "black",
             splabangle = 0,
       
       # Individual Label Settings
             showindlab = F, 
-            indlabsize = 4,        
+            indlabsize = 0,        
             indlabangle = 90,
             indlabheight = 0,
       
       # Group Label settings
-            grplabsize = 3, 
+            grplabsize = 5, 
             grplabangle = 45,
             grplabpos = 0.60,
             grplabheight = 0.2,      
-            grplabspacer = 0.1,
+            grplabspacer = 0,
             grplabcol = "black",
       
             linesize = 1,          
@@ -1889,10 +1888,10 @@ pt4 <- plotQ(admix2.mk4,
             returndata = TRUE,
       
       # Plot settings
-            height = 15,             
+            height = 5,             
             width = 50,
             panelspacer = 1,
-            panelratio = c(2,3),
+            panelratio = c(1,2),
       
       # File settings
             imgtype = "pdf",
@@ -1913,13 +1912,13 @@ g4 <- pt4$plot[[1]]
 # WBNP Structure
 panel_a <- arrangeGrob(g1, left = textGrob("a)", 
                                            x = unit(0.5, "line"),
-                                           y = unit(1, "npc"),
+                                           y = unit(0.975, "npc"),
                                            just = c("left", "top"),
                                            gp = gpar(fontsize = 15, fontface = "bold")))
 
 panel_b <- arrangeGrob(g2, left = textGrob("b)", 
                                            x = unit(0.5, "line"),
-                                           y = unit(1, "npc"),
+                                           y = unit(0.975, "npc"),
                                            just = c("left", "top"),
                                            gp = gpar(fontsize = 15, fontface = "bold")))
 
@@ -1930,23 +1929,29 @@ WBNP_Struct <- grid.arrange(panel_a, panel_b, ncol = 1)
 ggsave("./plots/structure_plots/WBNP_STRUCTURE_Stacked.svg", 
        plot = WBNP_Struct, 
        width = 10, 
-       height = 8)
+       height = 10)
 
 # WBNP Structure
 panel_c <- arrangeGrob(g3, left = textGrob("a)", 
                                            x = unit(0.5, "line"),
-                                           y = unit(1, "npc"),
+                                           y = unit(0.975, "npc"),
                                            just = c("left", "top"),
                                            gp = gpar(fontsize = 15, fontface = "bold")))
 
 panel_d <- arrangeGrob(g4, left = textGrob("b)", 
                                            x = unit(0.5, "line"),
-                                           y = unit(1, "npc"),
+                                           y = unit(0.975, "npc"),
                                            just = c("left", "top"),
                                            gp = gpar(fontsize = 15, fontface = "bold")))
 
 # Stack plots
-grid.arrange(panel_c, panel_d, ncol = 1)
+WBNP_admix_Struct <- grid.arrange(panel_c, panel_d, ncol = 1)
+
+# Export as SVG
+ggsave("./plots/structure_plots/WBNP_admix_STRUCTURE_Stacked.svg", 
+       plot = WBNP_admix_Struct, 
+       width = 10, 
+       height = 10)
 ```
 # PCA Next to STRUCTURE
 ```{r}
@@ -1957,8 +1962,10 @@ library(gridExtra)
 # Define the drawing function
 draw_pca_wbnp1 <- function() {
   # Your existing s.class code
-  s.class(pca.wbnp1$li, fac = pop(wbnp1), col = transp(cols_wbnp1, 0.75),
-          axesell = F, cstar = 0, cpoint = 3, grid = F, csub = 2,
+s.class(pca.wbnp1$li, fac = pop(wbnp1), col = transp(cols_wbnp1, 0.75),
+          axesell = F, cstar = 0, cpoint = 3, grid = F, 
+          csub = 1.5, # Slightly smaller text helps with spacing
+          possub = "bottomleft", # This forces the label to the bottom-left corner
           sub = paste0("PC1: ", round(eig.perc.wbnp1[1], 1), "% | PC2: ", round(eig.perc.wbnp1[2], 1), "%"))
   
   add.scatter.eig(pca.wbnp1$eig[1:20], 3, 1, 2, ratio = 0.15, "bottomright")
@@ -1994,10 +2001,9 @@ panel_d <- arrangeGrob(p_dk, top = textGrob("d)", x = unit(0.5, "line"), y = uni
                                              just = c("left", "top"), 
                                              gp = gpar(fontsize = 18, fontface = "bold")))
 
-# Stack b on top of the (c + d) row
-right_column <- arrangeGrob(panel_b, panel_cd_row, 
-                            ncol = 1, 
-                            heights = c(1, 1.2))
+panel_cd_row <- arrangeGrob(panel_c, panel_d, 
+                            ncol = 2, 
+                            widths = c(1, 1))
 
 
 # Stack b on top of the (c + d) row
@@ -2013,7 +2019,7 @@ final_layout <- grid.arrange(panel_a, right_column,
 # Save as SVG with a wide aspect ratio
 ggsave("PCA_STRUC_K_Final.svg", 
        plot = final_layout, 
-       width = 33, 
+       width = 27, 
        height = 11)
 
 ```

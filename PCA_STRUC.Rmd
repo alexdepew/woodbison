@@ -90,27 +90,26 @@ temp3.sum <- summary(temp3)
 Visualize population structure without assumptions of HWE or LD, to identify clusters in the data. 
 ```{r}
 custom_palette <- c(
-  "#E31A1C", # AISH - Bold Red
-  "#6A3D9A", # CL - Deep Purple
+  "#E31A1C", # AISH - Bold Red (Primary Red)
+  "#33A02C", # CL - Deep Green (Moved from Purple to separate from NAH)
   "#FF7F00", # EINPP - Bright Orange
-  "#A6CEE3", # EINPW - Sky Blue
-  "#B15928", # ETH - Burnt Sienna
-  "#FB9A99", # HZ - Soft Pink
-  "#FDBF6F", # MBS - Light Orange
-  "#CAB2D6", # NAH - Lavender
-  "#FFFF99", # NORD - Pale Yellow
-  "#1F78B4", # RL - Steel Blue
-  "#E377C2", # WAB - Magenta
-  # --- WBNP SUB-HERD BOLD SET (Replaced Lime) ---
-  "#006400", # WBNPGR (Garden River) - Dark Forest Green
-  "#FFD700", # WBNPHC (Hay Camp) - Bold Gold (High Visibility)
-  "#00CED1", # WBNPLB (Little Buffalo) - Dark Turquoise
-  "#FF4500", # WBNPNY (Nyarrowu) - Vermillion (Red-Orange)
-  "#4169E1", # WBNPPAD (Delta) - Royal Blue
+  "#1F78B4", # EINPW - Deep Blue (Darkened for white page contrast)
+  "#B15928", # ETH - Burnt Sienna (Red-Brown)
+  "#FB9A99", # HZ - Darker Rose (Adjusted for visibility)
+  "#FDBF6F", # MBS - Golden Tan (Darkened slightly)
+  "#6A3D9A", # NAH - Deep Royal Purple
+  "#543005", # NORD - Dark Espresso Brown (Strongest contrast)
+  "#000000", # RL - Pure Black
+  "#E377C2", # WAB - Strong Magenta
+  # --- WBNP SUB-HERD BOLD SET (Cool/High Contrast Tones) ---
+  "#01665E", # WBNPGR (Garden River) - Deep Teal
+  "#80cdc1", # WBNPHC (Hay Camp) - Sage Green (Dark enough for white)
+  "#35978f", # WBNPLB (Little Buffalo) - Muted Turquoise
+  "#dfc27d", # WBNPNY (Nyarling) - Dark Sand (No Yellow)
+  "#01665e", # WBNPPAD (Delta) - Dark Pine
   # ----------------------------------------------
-  "#333333"  # WENT - Graphite
+  "#636363"  # WENT - Medium-Dark Grey (Distinct from RL/Black)
 )
-
 all_herds <- c(
   "AISH", "CL", "EINPP", "EINPW", "ETH", "HZ", "MBS", "NAH", "NORD", 
   "RL", "WAB", "WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD", "WENT")
@@ -500,8 +499,6 @@ admix2.data <- cleaned.data %>%
   rename(ID = Spreadsheet_ID) %>% 
   mutate(ID = as.character(ID)) 
 ```
-
-### Temporal Group 1
 
 #### Load Data
 ```{r}
@@ -1303,6 +1300,7 @@ mtext("b)", side = 3, adj = -4.5, line = 2, cex = 2, font = 2)
 
 dev.off()
 ```
+
 #### Joint BIC Plot
 ```{r}
 # Print BIC plot
@@ -1899,7 +1897,7 @@ pt4 <- plotQ(admix2.mk4,
             outputfilename = "testa2",
             exportpath = "./plots/structure_plots/")
 ```
-
+# Stack STRUCTURE Plots for WBNP
 ```{r}
 library(gridExtra)
 library(grid)
@@ -1953,44 +1951,110 @@ ggsave("./plots/structure_plots/WBNP_admix_STRUCTURE_Stacked.svg",
        width = 10, 
        height = 10)
 ```
-# PCA Next to STRUCTURE
+
+# Combine STRUCTURE + PCA Plots
 ```{r}
 library(grid)
 library(gridGraphics)
 library(gridExtra)
+```
+
+#### Temp 1
+```{r}
+##############################
+# ----- STRUCTURE PLOT ----- #
+##############################
+
+plot1 <- plotQ(temp1.mk3, 
+            basesize = 10, 
+            grplab = loc_labels_temp1, 
+            subsetgrp = herd_order_temp1, 
+            clustercol = str_cols,
+            ordergrp = TRUE,
+      
+      # Side "K" Labels
+            splab = "K = 3",
+            splabsize = 20,
+            sppos = "left",
+            splabcol = "black",
+            splabangle = 0,
+      
+      # Individual Label Settings
+            showindlab = F, 
+            indlabsize = 0,        
+            indlabangle = 90,
+            indlabheight = 0,
+      
+      # Group Label settings
+            grplabsize = 5, 
+            grplabangle = 45,
+            grplabpos = 0.60,
+            grplabheight = 0.2,      
+            grplabspacer = 0,
+            grplabcol = "black",
+      
+            linesize = 1,          
+            pointsize = 8,
+      
+      # Divider Line Settings
+            divcol = "white",
+            divsize = 1, 
+            divtype = NULL,
+      
+            useindlab = TRUE, 
+            returndata = TRUE,
+      
+      # Plot settings
+            height = 5,             
+            width = 50,
+            panelspacer = 1,
+            panelratio = c(1,2),
+      
+      # File settings
+            imgtype = "pdf",
+            returnplot = TRUE,
+            outputfilename = "plottemp1",
+            exportpath = "./plots/structure_plots/")
+
+# Pull STRUCTURE Plot from object
+t1 <- plot1$plot[[1]]
+
+##############################
+# ----- COMBINE PLOTS  ----- #
+##############################
 
 # Define the drawing function
-draw_pca_wbnp1 <- function() {
+draw_pca_temp1 <- function() {
   # Your existing s.class code
-s.class(pca.wbnp1$li, fac = pop(wbnp1), col = transp(cols_wbnp1, 0.75),
+s.class(pca.temp1$li, fac = pop(temp1), col = transp(cols_temp1, 0.75),
           axesell = F, cstar = 0, cpoint = 3, grid = F, 
           csub = 1.5, # Slightly smaller text helps with spacing
           possub = "bottomleft", # This forces the label to the bottom-left corner
-          sub = paste0("PC1: ", round(eig.perc.wbnp1[1], 1), "% | PC2: ", round(eig.perc.wbnp1[2], 1), "%"))
+          sub = paste0("PC1: ", round(eig.perc.temp1[1], 1), "% | PC2: ", round(eig.perc.temp1[2], 1), "%"))
   
-  add.scatter.eig(pca.wbnp1$eig[1:20], 3, 1, 2, ratio = 0.15, "bottomright")
+  add.scatter.eig(pca.temp1$eig[1:20], 3, 1, 2, ratio = 0.15, "bottomright")
 }
 
 # Convert base plot to a grid-compatible grob
 grid.newpage() # Open a fresh page
-grid.echo(draw_pca_wbnp1) # "Record" the base plot
-pca_grob <- grid.grab() # Grab it as a grob object
+grid.echo(draw_pca_temp1) # "Record" the base plot
+temp1_pca_grob <- grid.grab() # Grab it as a grob object
 
 # Create Labelled Panel A (PCA)
-panel_a <- arrangeGrob(pca_grob, top = textGrob("a)", x = unit(0.5, "line"), y = unit(0.8, "npc"), 
-                                               just = c("left", "top"), 
-                                               gp = gpar(fontsize = 18, fontface = "bold")))
+panel_a <- arrangeGrob(temp1_pca_grob, top = textGrob("a)", x = unit(0.5, "line"), y = unit(0.8, "npc"), 
+                                                      just = c("left", "top"), 
+                                                      gp = gpar(fontsize = 18, fontface = "bold")))
 
 # Create Labelled Panel B (STRUCTURE)
-panel_b <- arrangeGrob(g1, top = textGrob("b)", x = unit(0.5, "line"), y = unit(0.8, "npc"), 
+panel_b <- arrangeGrob(t1, top = textGrob("b)", x = unit(0.5, "line"), y = unit(0.8, "npc"), 
                                           just = c("left", "top"), 
                                           gp = gpar(fontsize = 18, fontface = "bold")))
 
 
 # K Clusters
 # Extract Likelihood [[1]] and Delta K [[4]]
-p_lik <- w1$grobs[[1]]
-p_dk <- w1$grobs[[4]]
+p_lik <- p1$grobs[[1]]
+p_dk <- p1$grobs[[4]]
 # Label Likelihood as 'c'
 panel_c <- arrangeGrob(p_lik, top = textGrob("c)", x = unit(0.5, "line"), y = unit(1, "npc"), 
                                              just = c("left", "top"), 
@@ -2017,10 +2081,372 @@ final_layout <- grid.arrange(panel_a, right_column,
                              widths = c(1, 1))
 
 # Save as SVG with a wide aspect ratio
-ggsave("PCA_STRUC_K_Final.svg", 
+ggsave("Temp1.Structuring.full.svg", 
        plot = final_layout, 
        width = 27, 
        height = 11)
 
+```
+
+
+
+
+
+
+#### Temp 2
+```{r}
+##############################
+# ----- STRUCTURE PLOT ----- #
+##############################
+
+plot2 <- plotQ(temp2.mk4, 
+            basesize = 10, 
+            grplab = loc_labels_temp2, 
+            subsetgrp = herd_order_temp2, 
+            clustercol = str_cols,
+            ordergrp = TRUE,
+      
+      # Side "K" Labels
+            splab = "K = 4",
+            splabsize = 20,
+            sppos = "left",
+            splabcol = "black",
+            splabangle = 0,
+      
+      # Individual Label Settings
+            showindlab = F, 
+            indlabsize = 0,        
+            indlabangle = 90,
+            indlabheight = 0,
+      
+      # Group Label settings
+            grplabsize = 5, 
+            grplabangle = 45,
+            grplabpos = 0.60,
+            grplabheight = 0.2,      
+            grplabspacer = 0,
+            grplabcol = "black",
+      
+            linesize = 1,          
+            pointsize = 8,
+      
+      # Divider Line Settings
+            divcol = "white",
+            divsize = 1, 
+            divtype = NULL,
+      
+            useindlab = TRUE, 
+            returndata = TRUE,
+      
+      # Plot settings
+            height = 5,             
+            width = 50,
+            panelspacer = 1,
+            panelratio = c(1,2),
+      
+      # File settings
+            imgtype = "pdf",
+            returnplot = TRUE,
+            outputfilename = "plottemp2",
+            exportpath = "./plots/structure_plots/")
+
+# Pull STRUCTURE Plot from object
+t2 <- plot2$plot[[1]]
+
+##############################
+# ----- COMBINE PLOTS  ----- #
+##############################
+
+# Define the drawing function
+draw_pca_temp2 <- function() {
+  # Your existing s.class code
+s.class(pca.temp2$li, fac = pop(temp2), col = transp(cols_temp2, 0.75),
+          axesell = F, cstar = 0, cpoint = 3, grid = F, 
+          csub = 1.5, # Slightly smaller text helps with spacing
+          possub = "bottomleft", # This forces the label to the bottom-left corner
+          sub = paste0("PC1: ", round(eig.perc.temp2[1], 1), "% | PC2: ", round(eig.perc.temp2[2], 1), "%"))
+  
+  add.scatter.eig(pca.temp2$eig[1:20], 3, 1, 2, ratio = 0.15, "bottomright")
+}
+
+# Convert base plot to a grid-compatible grob
+grid.newpage() # Open a fresh page
+grid.echo(draw_pca_temp2) # "Record" the base plot
+temp2_pca_grob <- grid.grab() # Grab it as a grob object
+
+# Create Labelled Panel A (PCA)
+panel_a <- arrangeGrob(temp2_pca_grob, top = textGrob("a)", x = unit(0.5, "line"), y = unit(0.8, "npc"), 
+                                                      just = c("left", "top"), 
+                                                      gp = gpar(fontsize = 18, fontface = "bold")))
+
+# Create Labelled Panel B (STRUCTURE)
+panel_b <- arrangeGrob(t2, top = textGrob("b)", x = unit(0.5, "line"), y = unit(0.8, "npc"), 
+                                          just = c("left", "top"), 
+                                          gp = gpar(fontsize = 18, fontface = "bold")))
+
+
+# K Clusters
+# Extract Likelihood [[1]] and Delta K [[4]]
+p_lik <- p2$grobs[[1]]
+p_dk <- p2$grobs[[4]]
+# Label Likelihood as 'c'
+panel_c <- arrangeGrob(p_lik, top = textGrob("c)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+# Label Delta K as 'd'
+panel_d <- arrangeGrob(p_dk, top = textGrob("d)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+panel_cd_row <- arrangeGrob(panel_c, panel_d, 
+                            ncol = 2, 
+                            widths = c(1, 1))
+
+
+# Stack b on top of the (c + d) row
+right_column <- arrangeGrob(panel_b, panel_cd_row, 
+                            ncol = 1, 
+                            heights = c(1, 1.2))
+
+# Final assembly
+final_layout <- grid.arrange(panel_a, right_column, 
+                             ncol = 2, 
+                             widths = c(1, 1))
+
+# Save as SVG with a wide aspect ratio
+ggsave("Temp2.Structuring.full.svg", 
+       plot = final_layout, 
+       width = 27, 
+       height = 11)
+
+```
+
+#### Temp 3
+```{r}
+##############################
+# ----- STRUCTURE PLOT ----- #
+##############################
+
+plot3 <- plotQ(temp3.mk7, 
+            basesize = 10, 
+            grplab = loc_labels_temp3, 
+            subsetgrp = herd_order_temp3, 
+            clustercol = str_cols,
+            ordergrp = TRUE,
+      
+      # Side "K" Labels
+            splab = "K = 7",
+            splabsize = 20,
+            sppos = "left",
+            splabcol = "black",
+            splabangle = 0,
+      
+      # Individual Label Settings
+            showindlab = F, 
+            indlabsize = 0,        
+            indlabangle = 90,
+            indlabheight = 0,
+      
+      # Group Label settings
+            grplabsize = 5, 
+            grplabangle = 45,
+            grplabpos = 0.60,
+            grplabheight = 0.2,      
+            grplabspacer = 0,
+            grplabcol = "black",
+      
+            linesize = 1,          
+            pointsize = 8,
+      
+      # Divider Line Settings
+            divcol = "white",
+            divsize = 1, 
+            divtype = NULL,
+      
+            useindlab = TRUE, 
+            returndata = TRUE,
+      
+      # Plot settings
+            height = 5,             
+            width = 50,
+            panelspacer = 1,
+            panelratio = c(1,2),
+      
+      # File settings
+            imgtype = "pdf",
+            returnplot = TRUE,
+            outputfilename = "plottemp3",
+            exportpath = "./plots/structure_plots/")
+
+# Pull STRUCTURE Plot from object
+t3 <- plot3$plot[[1]]
+
+##############################
+# ----- COMBINE PLOTS  ----- #
+##############################
+
+# Define the drawing function
+draw_pca_temp3 <- function() {
+  # Your existing s.class code
+s.class(pca.temp3$li, fac = pop(temp3), col = transp(cols_temp3, 0.75),
+          axesell = F, cstar = 0, cpoint = 3, grid = F, 
+          csub = 1.5, # Slightly smaller text helps with spacing
+          possub = "bottomleft", # This forces the label to the bottom-left corner
+          sub = paste0("PC1: ", round(eig.perc.temp3[1], 1), "% | PC2: ", round(eig.perc.temp3[2], 1), "%"))
+  
+  add.scatter.eig(pca.temp3$eig[1:20], 3, 1, 2, ratio = 0.15, "bottomright")
+}
+
+# Convert base plot to a grid-compatible grob
+grid.newpage() # Open a fresh page
+grid.echo(draw_pca_temp3) # "Record" the base plot
+temp3_pca_grob <- grid.grab() # Grab it as a grob object
+
+# Create Labelled Panel A (PCA)
+panel_a <- arrangeGrob(temp3_pca_grob, top = textGrob("a)", x = unit(0.5, "line"), y = unit(0.8, "npc"), 
+                                                      just = c("left", "top"), 
+                                                      gp = gpar(fontsize = 18, fontface = "bold")))
+
+# Create Labelled Panel B (STRUCTURE)
+panel_b <- arrangeGrob(t3, top = textGrob("b)", x = unit(0.5, "line"), y = unit(0.8, "npc"), 
+                                          just = c("left", "top"), 
+                                          gp = gpar(fontsize = 18, fontface = "bold")))
+
+
+# K Clusters
+# Extract Likelihood [[1]] and Delta K [[4]]
+p_lik <- p3$grobs[[1]]
+p_dk <- p3$grobs[[4]]
+# Label Likelihood as 'c'
+panel_c <- arrangeGrob(p_lik, top = textGrob("c)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+# Label Delta K as 'd'
+panel_d <- arrangeGrob(p_dk, top = textGrob("d)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+panel_cd_row <- arrangeGrob(panel_c, panel_d, 
+                            ncol = 2, 
+                            widths = c(1, 1))
+
+
+# Stack b on top of the (c + d) row
+right_column <- arrangeGrob(panel_b, panel_cd_row, 
+                            ncol = 1, 
+                            heights = c(1, 1.2))
+
+# Final assembly
+final_layout <- grid.arrange(panel_a, right_column, 
+                             ncol = 2, 
+                             widths = c(1, 1))
+
+# Save as SVG with a wide aspect ratio
+ggsave("Temp3.Structuring.full.svg", 
+       plot = final_layout, 
+       width = 27, 
+       height = 11)
+
+```
+
+## Evanno Plots
+```{r}
+# K Clusters
+# Extract Likelihood [[1]] and Delta K [[4]] for each WBNP dataset
+
+# WBNP1 -------------------
+p_lik <- w1$grobs[[1]]
+p_dk <- w1$grobs[[4]]
+
+# Label Likelihood as 'a'
+panel_a <- arrangeGrob(p_lik, top = textGrob("a)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+# Label Delta K as 'b'
+panel_b <- arrangeGrob(p_dk, top = textGrob("b)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+evanno_w1 <- grid.arrange(panel_a, panel_b, 
+                         ncol = 2, 
+                         widths = c(1, 1))
+
+ggsave("./plots/structure_plots/WBNP1.evanno.svg", 
+       plot = evanno_w1, 
+       width = 27, 
+       height = 11)
+
+
+# WBNP2 -------------------
+p_lik <- w2$grobs[[1]]
+p_dk <- w2$grobs[[4]]
+
+# Label Likelihood as 'a'
+panel_a <- arrangeGrob(p_lik, top = textGrob("a)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+# Label Delta K as 'b'
+panel_b <- arrangeGrob(p_dk, top = textGrob("b)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+evanno_w2 <- grid.arrange(panel_a, panel_b, 
+                         ncol = 2, 
+                         widths = c(1, 1))
+
+ggsave("./plots/structure_plots/WBNP2.evanno.svg", 
+       plot = evanno_w2, 
+       width = 27, 
+       height = 11)
+
+# ADMIX1 -------------------
+p_lik <- a1$grobs[[1]]
+p_dk <- a1$grobs[[4]]
+
+# Label Likelihood as 'a'
+panel_a <- arrangeGrob(p_lik, top = textGrob("a)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+# Label Delta K as 'b'
+panel_b <- arrangeGrob(p_dk, top = textGrob("b)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+evanno_a1 <- grid.arrange(panel_a, panel_b, 
+                         ncol = 2, 
+                         widths = c(1, 1))
+
+ggsave("./plots/structure_plots/Admix1.evanno.svg", 
+       plot = evanno_a1, 
+       width = 27, 
+       height = 11)
+
+# ADMIX2 -------------------
+p_lik <- a2$grobs[[1]]
+p_dk <- a2$grobs[[4]]
+
+# Label Likelihood as 'a'
+panel_a <- arrangeGrob(p_lik, top = textGrob("a)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+# Label Delta K as 'b'
+panel_b <- arrangeGrob(p_dk, top = textGrob("b)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+evanno_a2 <- grid.arrange(panel_a, panel_b, 
+                         ncol = 2, 
+                         widths = c(1, 1))
+
+ggsave("./plots/structure_plots/Admix2.evanno.svg", 
+       plot = evanno_a2, 
+       width = 27, 
+       height = 11)
 ```
 

@@ -1,0 +1,160 @@
+---
+title: "PCA_STRUCT_2"
+author: "Alex Depew"
+date: "2026-03-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# File information
+This script is used to evaluate temporal patterns in population structure in all wood bison herds in Canada. 
+
+Files used described below:
+
+- `Cleaned_locus_data_20.02.2026.csv`
+   - Contains all samples for population genetic analyses, post-filtering
+   
+## Load Required Packages
+```{r}
+rm(list = ls())
+library(adegenet)
+library(graph4lg)
+library(poppr)
+library(hierfstat)
+library(pophelper)
+library(tidyverse)
+library(gridExtra)
+library(factoextra)
+```
+
+## Load Required Data
+```{r}
+cleaned.data <- read.csv("./datafiles/Cleaned_locus_data_20.02.2026.csv",
+                         check.names = F)
+```
+
+#### Convert data to Genind object
+```{r}
+# Make genind object
+bison.genind <- df2genind(X=cleaned.data[,c(19:ncol(cleaned.data))],
+                              sep = "/",
+                              ind.names = cleaned.data$Spreadsheet_ID,
+                              loc.names = NULL,
+                              pop = cleaned.data$HERD,
+                              NA.char = "NA",
+                              ploidy = 2,
+                              type = "codom",
+                              strata = NULL,
+                              hierarchy = NULL)
+
+# Attach collection year metadata
+idx <- match(indNames(bison.genind), cleaned.data$Spreadsheet_ID)
+stopifnot(!any(is.na(idx)))
+bison.genind@other$YEAR.ASSIGN <- cleaned.data$YEAR.ASSIGN[idx]
+```
+
+#### Subset data 
+Data is subset into three temporal groups. Temporal groups are: 1: pre-1999, 2: pre-2016, and 3: post-2016
+```{r}
+# Create datasets containing samples of interest for temporal comparisons
+temp1 <- bison.genind[bison.genind@other$YEAR.ASSIGN <=2015,]
+temp1.sum <- summary(temp1) # Create summary of genind object
+
+temp2 <- bison.genind[bison.genind@other$YEAR.ASSIGN >=2016,]
+temp2.sum <- summary(temp2)
+```
+
+Remove Elk Island Plains for Structure Analyses
+```{r}
+#temp1 <- temp1[temp1@pop != "EINPP"]
+#temp1.sum <- summary(temp1)
+
+#temp2 <- temp2[temp2@pop != "EINPP"]
+#temp2.sum <- summary(temp2)
+```
+
+# Principal Coordinate Analysis (PCA)
+Visualize population structure without assumptions of HWE or LD, to identify clusters in the data. 
+```{r}
+cols <- c(
+  
+  # --- EINPW Derivatives ---
+  "#E31A1C", # AISH
+  "#1F78B4", # CL
+  "#33a02c", # EINPW
+  "#CAB2D6", # ETH
+  "#FB9A99", # HZ
+  "#6A3D9A", # NAH
+  "#800000", # NORD
+
+  # --- WBNP Metapopulation ---
+  "#1B9E77", # WBNPGR
+  "#D95F02", # WBNPHC
+  "#7570B3", # WBNPLB
+  "#E7298A", # WBNPNY
+  "#66A61E", # WBNPPAD
+  "#E6AB02", # WENT
+  "#A6761D", # RL
+  "#666666", # WAB
+  
+  # --- WBNP Derivatives ---
+  "darkred", # MBS
+  
+  # --- Plains Bison ---
+  "#FF7F00" # EINPP
+
+
+)
+all_herds <- c(
+  "AISH", "CL", "EINPP", "EINPW", "ETH", "HZ", "MBS", "NAH", "NORD", 
+  "RL", "WAB", "WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD", "WENT")
+
+herd_cols <- setNames(cols, all_herds)
+
+
+```
+
+
+# PCA
+### Perform PCA on both datasets
+```{r}
+# Perform PCA
+x.temp1 <- tab(temp1, freq = TRUE, NA.method = "mean")
+pca.temp1 <- dudi.pca(x.temp1, center = T, scale = F, scannf = F, nf = 2)
+
+x.temp2 <- tab(temp2, freq = TRUE, NA.method = "mean")
+pca.temp2 <- dudi.pca(x.temp2, center = T, scale = F, scannf = F, nf = 2)
+```
+
+
+```{r}
+levels_temp1 <- levels(pop(temp1))
+temp1_cols <- herd_cols[levels_temp1]
+png(filename="plots/pca_temp1v2.png",
+    width = 1200, height = 840, units = "px", pointsize = 32)
+
+# Now use the custom color palette in s.class
+s.class(pca.temp1$li, fac = pop(temp1), xax = 1, yax = 2, col = transp(temp1_cols, .7), axesel = FALSE, cstar = 0, cpoint = 1, clabel = 0) 
+
+# Add scatter points for eigenvalues as before
+add.scatter.eig(pca.temp1$eig[1:20], 3, 1, 2, ratio = .15, "bottomright")
+dev.off()
+```
+```{r}
+# Colour selection
+levels_temp2 <- levels(pop(temp2))
+temp2_cols <- herd_cols[levels_temp2]
+
+png(filename="plots/pca_temp2v2.png",
+    width = 1200, height = 840, units = "px", pointsize = 32)
+
+# Now use the custom color palette in s.class
+s.class(pca.temp2$li, fac = pop(temp2), xax = 1, yax = 2, col = transp(temp2_cols, .7), axesel = FALSE, cstar = 0, cpoint = 1, clabel = 0) 
+
+# Add scatter points for eigenvalues as before
+add.scatter.eig(pca.temp2$eig[1:20], 3, 1, 2, ratio = .15, "bottomright")
+dev.off()
+```
+

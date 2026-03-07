@@ -1,0 +1,992 @@
+---
+title: "Locus filtering"
+author: "Alex Depew"
+date: "2026-01-14"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# File information
+This script is for data quality control, specificially locus quality control, to ensure accuracy of subsequent analyses.
+Files used described below:
+
+- `Cleaned_samples.24.12.2025`
+   - Contains all bison microsatellite data from wood and plains bison with added metadata for year collected
+
+## Load Required Packages
+```{r warning = FALSE, message = FALSE}
+rm(list = ls())
+library(adegenet)
+library(PopGenReport)
+library(poppr)
+library(pegas)
+library(strataG)
+library(tidyverse)
+library(graph4lg)
+```
+
+## Load Required Data
+```{r}
+bison.data <- read.csv("./datafiles/Cleaned_samples.16.02.2026.csv",
+                       check.names = F)
+```
+
+#### Convert data to Genind object
+```{r}
+# Make genind object
+bison.genind <- df2genind(X=bison.data[,c(19:ncol(bison.data))],
+                              sep = "/",
+                              ind.names = bison.data$Spreadsheet_ID,
+                              loc.names = NULL,
+                              pop = bison.data$HERD,
+                              NA.char = "NA",
+                              ploidy = 2,
+                              type = "codom",
+                              strata = NULL,
+                              hierarchy = NULL)
+bison.genind@other$YEAR.ASSIGN <- bison.data$YEAR.ASSIGN
+```
+
+## Locus Filtering
+Preliminary locus filtering relied on *a priori* information into X-linked loci, followed by the removal of sex markers (not used in analyses). Further tests include:
+
+- Test for polymorphism (do the markers exhibit sufficient variability to be informative?)
+- Test for HWE deviations
+- Test for linkage disequilibrium
+- Null alleles
+- Allelic Dropout
+
+## Determine percent of complete genotypes by loci
+```{r}
+locmiss_bison <-  propTyped(bison.genind, by = "loc")
+locmiss_bison[which(locmiss_bison < 0.80)] # print loci with < 80% complete genotypes
+
+barplot(locmiss_bison, ylim = c(0,1), ylab = "Complete genotypes (proportion)", xlab = "Locus", las = 2, cex.names = 0.7)
+
+bison.genind <- missingno(bison.genind, type = "loci", cutoff = 0.20)
+
+```
+Locus BM4028 contained more >20% missing data, and therefore was removed from the global dataset.
+
+## Check loci are polymorphic
+```{r}
+summary(bison.genind)
+isPoly(bison.genind) %>% summary
+```
+All loci are polymorphic, as "TRUE" is returned by the *isPoly* function. The summary of the genind object indicates that the loci contain between 4 and 14 loci. No loci are monomorphic, and therefore none must be removed for being uninformative.
+
+# Data Subsetting
+Subsequent genotype quality control measures must be completed within temporal groups, within herds, as to not induce the Wahlund effect. By evaluating deviations from Hardy-Weinberg Equilibrium (HWE), Linkage Disequilibrium (LD), and the presence of null alleles at this granular level, it is possible to distinguish between localized biological variation and systematic technical errors that persist across the entire population.
+
+Data is subset into three temporal groups. Temporal groups are: 1: pre-1999, 2: pre-2016, and 3: post-2016
+```{r}
+# Create datasets containing samples of interest for temporal comparisons
+temp1 <- bison.genind[bison.genind@other$YEAR.ASSIGN <=1999,]
+temp1.sum <- summary(temp1) # Create summary of genind object
+
+temp2 <- bison.genind[bison.genind@other$YEAR.ASSIGN >= 2000 & bison.genind@other$YEAR.ASSIGN <= 2015, ]
+temp2.sum <- summary(temp2)
+
+temp3 <- bison.genind[bison.genind@other$YEAR.ASSIGN >=2016,]
+temp3.sum <- summary(temp3)
+
+
+# Remove populations which do not contain significant sample sizes in temporal groups
+table(pop(temp1))
+table(pop(temp2)) # WBNP samples, ETH, NORD samples can be removed
+table(pop(temp3))
+
+# Remove herds from temporal group 2 
+remove_herds2 <- c("WBNP", "ETH", "NORD", "WBNPNY", "WBNPPAD")
+temp2 <- temp2[!temp2@pop %in% remove_herds2]
+temp2.sum <- summary(temp2) # Recalculate summary
+temp2.sum
+table(pop(temp2))
+
+# Remove Wentzel from temporal group 3
+remove_herds3 <- "WBNP"
+temp3 <- temp3[!temp3@pop %in% remove_herds3]
+table(pop(temp3))
+```
+
+## Test for HWE deviations
+Because of the variance in, and small sample sizes seen in some herds, a Markov Chain Monte Carlo exact test can be used to evaluate deviations from HWE.
+```{r}
+# In order to use the genepop's MCMC method of deterimining HWE deviations, the strataG implementation can be used. the bison "genind" objects must be reformatted as "gtypes" objects
+temp1.g <- genind2gtypes(temp1)
+temp2.g <- genind2gtypes(temp2)
+temp3.g <- genind2gtypes(temp3)
+
+# Further, HWE deviations and linkage disequilibrium are tested within each population. Deviations or LD which occur across populations (at the same locus/loci) may indicate technical errors, adaptation, or linkage
+pop_list_temp1 <- strataSplit(temp1.g)
+pop_list_temp2 <- strataSplit(temp2.g)
+pop_list_temp3 <- strataSplit(temp3.g)
+```
+
+### Test for HWE
+Test for hardy weinberg equilibrium intra-population
+```{r}
+# Apply HWE test from genepop. The strataG wrapper formats this back into R nicely for subsequent manipulation
+
+# Temp1 ----
+hwe_results_list_temp1 <- lapply(pop_list_temp1, function(pop) {
+  hweTest(
+    pop, 
+    use.genepop = T,     
+    which = "Proba",         
+    dememorization = 10000,  
+    batches = 500,           
+    num.rep = 5000,
+    delete.files = TRUE
+  )
+})
+
+HWE.temp1 <- as.data.frame(hwe_results_list_temp1) %>% # Make results as df
+  rownames_to_column("Locus") %>%  
+  pivot_longer(
+    cols = -c(Locus), 
+    names_to = "Population",       
+    values_to = "HWE_p_value"      
+  ) %>% 
+  # p-value correction by Population
+  group_by(Population) %>% 
+  mutate(p.adj_herd = p.adjust(HWE_p_value, method = "BH")) %>% 
+  ungroup() 
+
+# Temp2 ----
+hwe_results_list_temp2 <- lapply(pop_list_temp2, function(pop) {
+  hweTest(
+    pop, 
+    use.genepop = T,     
+    which = "Proba",         
+    dememorization = 10000,  
+    batches = 500,           
+    num.rep = 5000,
+    delete.files = TRUE
+  )
+})
+
+HWE.temp2 <- as.data.frame(hwe_results_list_temp2) %>% # Make results as df
+  rownames_to_column("Locus") %>%  
+  pivot_longer(
+    cols = -c(Locus), 
+    names_to = "Population",       
+    values_to = "HWE_p_value"      
+  ) %>% 
+  # p-value correction by Population
+  group_by(Population) %>% 
+  mutate(p.adj_herd = p.adjust(HWE_p_value, method = "BH")) %>% 
+  ungroup() 
+
+
+# Temp3 ----
+hwe_results_list_temp3 <- lapply(pop_list_temp3, function(pop) {
+  hweTest(
+    pop, 
+    use.genepop = T,     
+    which = "Proba",         
+    dememorization = 10000,  
+    batches = 500,           
+    num.rep = 5000,
+    delete.files = TRUE
+  )
+})
+
+HWE.temp3 <- as.data.frame(hwe_results_list_temp3) %>% # Make results as df
+  rownames_to_column("Locus") %>%  
+  pivot_longer(
+    cols = -c(Locus), 
+    names_to = "Population",       
+    values_to = "HWE_p_value"      
+  ) %>% 
+  # p-value correction by Population
+  group_by(Population) %>% 
+  mutate(p.adj_herd = p.adjust(HWE_p_value, method = "BH")) %>% 
+  ungroup() 
+```
+
+### Summarize HWE Deviations
+```{r}
+# Temp1 ----
+temp1.HWE.sum <- HWE.temp1 %>%
+  group_by(Population) %>%
+  summarise(
+    HWE_Deviations = sum(p.adj_herd <= 0.05, na.rm = TRUE),
+  ) %>%
+  arrange(desc(HWE_Deviations)) # Sort with most deviations at the top
+
+# View the summary table
+View(temp1.HWE.sum)
+
+# Temp2 ----
+temp2.HWE.sum <- HWE.temp2 %>%
+  group_by(Population) %>%
+  summarise(
+    HWE_Deviations = sum(p.adj_herd <= 0.05, na.rm = TRUE),
+  ) %>%
+  arrange(desc(HWE_Deviations)) # Sort with most deviations at the top
+
+# View the summary table
+View(temp2.HWE.sum)
+
+# Temp3 ----
+temp3.HWE.sum <- HWE.temp3 %>%
+  group_by(Population) %>%
+  summarise(
+    HWE_Deviations = sum(p.adj_herd <= 0.05, na.rm = TRUE),
+  ) %>%
+  arrange(desc(HWE_Deviations)) # Sort with most deviations at the top
+
+# View the summary table
+View(temp3.HWE.sum)
+
+```
+
+#### HWE Sig table
+```{r}
+# Temp1
+HWE.sig.temp1 <- HWE.temp1 %>% 
+  filter(HWE_p_value <= 0.05)
+
+wide_HWE.temp1 <- HWE.temp1 %>%
+  select(Locus, Population, p.adj_herd) %>%
+  pivot_wider(
+    names_from = Population, 
+    values_from = p.adj_herd
+  )  %>% 
+  mutate(across(-Locus, ~ {
+    # 1. Force 4 decimal places (turns 1 into "1.0000")
+    formatted <- sprintf("%.4f", .)
+    
+    # 2. Add asterisk if the ORIGINAL numeric value was <= 0.05
+    if_else(. <= 0.05, paste0(formatted, "*"), formatted)
+  }))
+
+write.csv(wide_HWE.temp1, "./tables/temp1.HWE.p_adjust.csv", row.names = F)
+
+
+# Temp2 
+wide_HWE.temp2 <- HWE.temp2 %>%
+  select(Locus, Population, p.adj_herd) %>%
+  pivot_wider(
+    names_from = Population, 
+    values_from = p.adj_herd
+  ) %>% 
+  mutate(across(-Locus, ~ {
+    # 1. Force 4 decimal places (turns 1 into "1.0000")
+    formatted <- sprintf("%.4f", .)
+    
+    # 2. Add asterisk if the ORIGINAL numeric value was <= 0.05
+    if_else(. <= 0.05, paste0(formatted, "*"), formatted)
+  }))
+
+write.csv(wide_HWE.temp2, "./tables/temp2.HWE.p_adjust.csv", row.names = F)
+
+
+# Temp3
+HWE.sig.temp3 <- HWE.temp3 %>% 
+filter(HWE_p_value <= 0.05)
+
+wide_HWE.temp3 <- HWE.temp3 %>%
+  select(Locus, Population, p.adj_herd) %>%
+  pivot_wider(
+    names_from = Population, 
+    values_from = p.adj_herd
+  ) %>% 
+  mutate(across(-Locus, ~ {
+    # 1. Force 4 decimal places (turns 1 into "1.0000")
+    formatted <- sprintf("%.4f", .)
+    
+    # 2. Add asterisk if the ORIGINAL numeric value was <= 0.05
+    if_else(. <= 0.05, paste0(formatted, "*"), formatted)
+  }))
+
+write.csv(wide_HWE.temp3, "./tables/temp3.HWE.p_adjust.csv", row.names = F)
+```
+
+## Test for Linkage Disequilibrium
+Pairwise test for LD using Genepop through *strataG*. If LD is present in loci across the majority of herds, it may indicate physical linkage as opposed to local variation.
+```{r}
+# Temp1 ----
+LD_results_temp1 <- lapply(pop_list_temp1, function(pop) {
+  LDgenepop(
+  pop,
+  dememorization = 10000,
+  batches = 100,
+  iterations = 5000,
+  delete.files = TRUE
+  )
+})
+
+LD.df.temp1 <- bind_rows(LD_results_temp1, .id = "Population") # Put into dataframe format
+
+LD.df.temp1 <- LD.df.temp1 %>%
+  group_by(Population) %>%  # Separate by populations
+  mutate(p.adj_herd = p.adjust(p.value, method = "BH")) %>% # Perform BH correction within each population
+  ungroup()
+
+# Dataframe of significant pairwise values
+LD.temp1.sig <- LD.df.temp1 %>% 
+  filter(p.adj_herd <= 0.05 & 
+           !is.na(Locus.2))
+
+write.csv(LD.temp1.sig, "./tables/temp1LD.csv", row.names = F)
+
+
+# Temp2 ----
+LD_results_temp2 <- lapply(pop_list_temp2, function(pop) {
+  LDgenepop(
+  pop,
+  dememorization = 10000,
+  batches = 100,
+  iterations = 5000,
+  delete.files = TRUE
+  )
+})
+
+LD.df.temp2 <- bind_rows(LD_results_temp2, .id = "Population") # Put into dataframe format
+
+LD.df.temp2 <- LD.df.temp2 %>%
+  group_by(Population) %>%  # Separate by populations
+  mutate(p.adj_herd = p.adjust(p.value, method = "BH")) %>% # Perform BH correction within each population
+  ungroup()
+
+# Dataframe of significant pairwise values
+LD.temp2.sig <- LD.df.temp2 %>% 
+  filter(p.adj_herd <= 0.05 & 
+           !is.na(Locus.2))
+
+write.csv(LD.temp2.sig, "./tables/temp2LD.csv", row.names = F)
+
+
+# Temp3 ----
+LD_results_temp3 <- lapply(pop_list_temp3, function(pop) {
+  LDgenepop(
+  pop,
+  dememorization = 10000,
+  batches = 100,
+  iterations = 5000,
+  delete.files = TRUE
+  )
+})
+
+LD.df.temp3 <- bind_rows(LD_results_temp3, .id = "Population") # Put into dataframe format
+
+LD.df.temp3 <- LD.df.temp3 %>%
+  group_by(Population) %>%  # Separate by populations
+  mutate(p.adj_herd = p.adjust(p.value, method = "BH")) %>% # Perform BH correction within each population
+  ungroup() 
+
+# Dataframe of significant pairwise values
+LD.temp3.sig <- LD.df.temp3 %>% 
+  filter(p.adj_herd <= 0.05 & 
+           !is.na(Locus.2))
+
+write.csv(LD.temp3.sig, "./tables/temp3LD.csv", row.names = F)
+```
+The dataframes containing only significant pairwise comparisons following the Benjamini-Hochberg correction return significant p-values in populations which are represented by relatively small sample sizes (n = 8). Instead of indicating true linkage disequilibrium, the lack of intra-population allele data likely inflates the variance in allele frequency estimates, increasing the probability of detecting spurious non-random locus associations due to sampling effects. Significance for non-random association was detected in EINPP and/or EINPW in all temporal groups, yet the loci purported to have significant association were isolated to either EINPP or EINPW (potential local variation/fixation), and were not concordant across temporal groups. 
+
+
+## Test for null alleles and allelic dropout
+To test for null alleles and allelic dropout, a combination of diagnostic and correction methods can be used. Microchecker is an external program which can test for the presence of null alleles using heterozygote deficiency methods as described by Chakraborty (1994) and Brookfield (1996). It also assess the presence of short allele dominance by comparing the proportion of short to long repeats. In order to use this program, datasets must be reformatted into genepop format using the package *graph4lg*.
+```{r}
+genind_to_genepop(temp1,
+                  output = "genepop_files/temp1.genepop.txt")
+
+genind_to_genepop(temp2,
+                  output = "genepop_files/temp2.genepop.txt")
+
+genind_to_genepop(temp3,
+                  output = "genepop_files/temp3.genepop.txt")
+```
+
+### Obtain null allele frequency
+Micro-checker can be used as a diagnostic tool for assessing the presence of null alleles in the data. The methods are based on heterozygosity deficiency methods.
+
+#### FreeNA Results
+```{r}
+# Locus Labels
+loc_lab <- c(
+  "BMS1117", "TGLA53", "BMC4214", "BM1225", "BM47", 
+  "BMS1315", "IL4", "BM2113", "BMS1716", "BM1706", 
+  "BMS1675", "BMS1857", "BMS1001", "BMS601", "BM720", 
+  "ILSTS102", "BMS1074", "BMS1172", "BMS2258", "BM757", 
+  "SPS115", "BMS527", "BM2830", "INRA194", "BMS941", 
+  "INRA037", "BM4107", "TGLA122", "HUJ246", "BMS528", 
+  "BM4440", "TGLA44", "BMS510", "BMS1355", "BM1824", 
+  "BMS812", "BMS2639", "BMS410", "AGLA232", "BM17132", 
+  "BM711", "INRA133", "RM372", "BM4311", "BMS1747", 
+  "BL1036", "BM1862", "BMS1862", "URB011"
+)
+
+# Match locus to numeric labels in null file
+loc_match <- tibble(
+  Locus_ID = 1:49, 
+  Locus = loc_lab
+)
+
+# Temp1 ----
+temp1_pops_lab <- c("EINPP", "EINPW", "MBS", "WBNPGR", "WBNPHC", 
+             "WBNPLB", "WBNPNY", "WBNPPAD")
+
+# Match population to numeric labels in null file
+temp1_pop_match <- tibble(
+  Pop = 1:8,
+  Population = temp1_pops_lab
+)
+
+temp1.FreeNA.nulls <- read.table("./genepop_files/FreeNA_out/temp1.Null_freq.txt",
+                          col.names = c("Locus_ID", "Pop", "FreeNA"))
+
+temp1.FreeNA.nulls <- left_join(temp1.FreeNA.nulls, loc_match, by = "Locus_ID") %>% 
+  select(-Locus_ID) %>% 
+  left_join(temp1_pop_match, temp1.FreeNA.nulls, by = "Pop") %>% 
+  select(-Pop) %>% 
+  relocate(FreeNA, .after = Population) %>% 
+  relocate(Locus, .after = Population)
+
+# Temp2 ----
+temp2_pops_lab <- c("HZ", "MBS", "RL", "WAB", "WENT")
+
+# Match population to numeric labels in null file
+temp2_pop_match <- tibble(
+  Pop = 1:5,
+  Population = temp2_pops_lab
+)
+
+temp2.FreeNA.nulls <- read.table("./genepop_files/FreeNA_out/temp2.Null_freq.txt",
+                          col.names = c("Locus_ID", "Pop", "FreeNA"))
+
+temp2.FreeNA.nulls <- left_join(temp2.FreeNA.nulls, loc_match, by = "Locus_ID") %>% 
+  select(-Locus_ID) %>% 
+  left_join(temp2_pop_match, temp2.FreeNA.nulls, by = "Pop") %>% 
+  select(-Pop) %>% 
+  relocate(FreeNA, .after = Population) %>% 
+  relocate(Locus, .after = Population)
+
+# Temp3 ----
+temp3_pops_lab <- c("AISH", "CL", "EINPP",
+                    "EINPW", "ETH", "HZ",
+                    "NAH", "NORD", "RL",
+                    "WAB", "WBNPPGR", "WBNPHC",
+                    "WBNPLB", "WBNPNY", "WBNPPAD", "WENT")
+
+# Match population to numeric labels in null file
+temp3_pop_match <- tibble(
+  Pop = 1:16,
+  Population = temp3_pops_lab
+)
+
+temp3.FreeNA.nulls <- read.table("./genepop_files/FreeNA_out/temp3.Null_freq.txt",
+                          col.names = c("Locus_ID", "Pop", "FreeNA"))
+
+temp3.FreeNA.nulls <- left_join(temp3.FreeNA.nulls, loc_match, by = "Locus_ID") %>% 
+  select(-Locus_ID) %>% 
+  left_join(temp3_pop_match, temp3.FreeNA.nulls, by = "Pop") %>% 
+  select(-Pop) %>% 
+  relocate(FreeNA, .after = Population) %>% 
+  relocate(Locus, .after = Population)
+```
+
+#### Identify Significant Null Alleles
+```{r}
+# First, remove populations with sample sizes, as they are more likely to show heterozygote deficiencies and skew null allele calling
+table(pop(temp1))
+table(pop(temp2)) # WENT
+table(pop(temp3)) # NAH, WAB, WENT
+
+# Create significant dataframes of called nulls but remove the small population sizes
+null.sig.1 <- temp1.FreeNA.nulls %>% 
+  filter(FreeNA >=0.10)
+
+null.sig.2 <- temp2.FreeNA.nulls %>% 
+  filter(!Population == "WENT",
+         FreeNA >= 0.10)
+
+null.sig.3 <- temp3.FreeNA.nulls %>% 
+  filter(!Population %in% c("NAH", "WAB", "WENT"), 
+         FreeNA >= 0.10)
+
+# Merge to see list across time 
+n1 <- null.sig.1 %>% select(Population, Locus, T1 = FreeNA)
+n2 <- null.sig.2 %>% select(Population, Locus, T2 = FreeNA)
+n3 <- null.sig.3 %>% select(Population, Locus, T3 = FreeNA)
+
+compiled_patterns <- n1 %>%
+  full_join(n2, by = c("Population", "Locus")) %>%
+  full_join(n3, by = c("Population", "Locus")) %>%
+  # Replace any 0 with NA across all Timepoint columns
+  mutate(across(starts_with("T"), ~na_if(., 0))) %>%
+  # Calculate how many time points were NOT NA (actual occurrences)
+  mutate(Prevalence = rowSums(!is.na(across(starts_with("T"))))) %>%
+  arrange(desc(Prevalence), Population, Locus)
+
+table(compiled_patterns$Locus)
+
+write.csv(compiled_patterns, "./tables/Sig.Nulls.csv", row.names = F)
+```
+
+
+
+
+#### Microchecker Results
+```{r}
+# Column headers of microchecker output
+microchecker_names  <- c("Population", "Locus", "Null_Present", "Oosterhout", "Chakraborty", "Brookfield_1", "Brookfield_2")
+
+# Temp1 ----
+
+# Load Files
+temp1_files <- list.files(path = "./microchecker/temp1/", 
+                    pattern = "\\.nulls\\.txt$", 
+                    full.names = TRUE)
+
+# Process all files from Microchecker
+temp1_microchecker_nulls <- temp1_files %>%
+  set_names(basename(.)) %>%
+  map_df(~ read.table(.x, 
+                      header = FALSE, 
+                      skip = 2, # Skip first two lines of the microchecker output 
+                      nrows = 49, # Read the informative rows (per locus data)
+                      fill = TRUE, 
+                      strip.white = TRUE), # Trims white spaces
+         .id = "Population") %>% # File name into column "Population"
+  set_names(microchecker_names) %>% # Since colnames were skipped, add back in
+  mutate(
+    Population = str_replace(Population, "\\.t1\\.nulls\\.txt$", ""), # Remove text string for later left_join
+    Locus = str_trim(Locus) # Ensure no blank spaces after loci names
+  )
+
+# Temp2 ----
+
+# Load Files
+temp2_files <- list.files(path = "./microchecker/temp2/", 
+                    pattern = "\\.nulls\\.txt$", 
+                    full.names = TRUE)
+
+# Process all files from Microchecker
+temp2_microchecker_nulls <- temp2_files %>%
+  set_names(basename(.)) %>%
+  map_df(~ read.table(.x, 
+                      header = FALSE, 
+                      skip = 2, # Skip first two lines of the microchecker output 
+                      nrows = 49, # Read the informative rows (per locus data)
+                      fill = TRUE, 
+                      strip.white = TRUE), # Trims white spaces
+         .id = "Population") %>% # File name into column "Population"
+  set_names(microchecker_names) %>% # Since colnames were skipped, add back in
+  mutate(
+    Population = str_replace(Population, "\\.t2\\.nulls\\.txt$", ""), # Remove text string for later left_join
+    Locus = str_trim(Locus) # Ensure no blank spaces after loci names
+  )
+
+# Temp3 ----
+
+# Load Files
+temp3_files <- list.files(path = "./microchecker/temp3/", 
+                    pattern = "\\.nulls\\.txt$", 
+                    full.names = TRUE)
+
+# Process all files from Microchecker
+temp3_microchecker_nulls <- temp3_files %>%
+  set_names(basename(.)) %>%
+  map_df(~ read.table(.x, 
+                      header = FALSE, 
+                      skip = 2, # Skip first two lines of the microchecker output 
+                      nrows = 49, # Read the informative rows (per locus data)
+                      fill = TRUE, 
+                      strip.white = TRUE), # Trims white spaces
+         .id = "Population") %>% # File name into column "Population"
+  set_names(microchecker_names) %>% # Since colnames were skipped, add back in
+  mutate(
+    Population = str_replace(Population, "\\.t3\\.nulls\\.txt$", ""), # Remove text string for later left_join
+    Locus = str_trim(Locus) # Ensure no blank spaces after loci names
+  )
+
+```
+
+#### Merge MicroChecker and FreeNA Results
+```{r}
+temp1.nulls <- left_join(temp1_microchecker_nulls, temp1.FreeNA.nulls,
+                              by = c("Population", "Locus")) 
+
+temp2.nulls <- left_join(temp2_microchecker_nulls, temp2.FreeNA.nulls,
+                              by = c("Population", "Locus")) 
+
+temp3.nulls <- left_join(temp3_microchecker_nulls, temp3.FreeNA.nulls,
+                              by = c("Population", "Locus")) 
+```
+
+
+```{r}
+temp1.sigs <- temp1.FreeNA.nulls %>% 
+  filter(FreeNA >= 0.10)
+
+
+
+tg1 <- data.frame(Locus = names(temp1.sigs), Freq = as.numeric(temp1.sigs), Group = "TG1")
+tg2 <- data.frame(Locus = names(temp2.sigs), Freq = as.numeric(temp2.sigs), Group = "TG2")
+tg3 <- data.frame(Locus = names(temp3.sigs), Freq = as.numeric(temp3.sigs), Group = "TG3")
+
+tg3
+# Bind 
+FreeNA.sig <- bind_rows(tg1,tg2,tg3)
+
+
+
+compiled_view <- FreeNA.sig %>%
+  # Spread the Groups into their own columns
+  pivot_wider(names_from = Group, values_from = Freq, values_fill = 0) %>%
+  # Add a total column to see "Repeat Offenders"
+  mutate(Total_Prevalence = rowSums(across(where(is.numeric)))) %>%
+  # Sort by the most problematic loci
+  arrange(desc(Total_Prevalence))
+
+compiled_view
+```
+
+```{r}
+ML_nulls <- read.table("./microchecker/temp1.ML.txt",
+           header = TRUE)
+
+temp1.ML <- data.frame(t(ML_nulls))
+colnames(temp1.ML) <- temp1.ML[1, ]
+
+
+temp1.ML <- temp1.ML %>% 
+  rename_with(~ str_remove(., "_.*")) %>% 
+  slice(-1) %>% 
+  rownames_to_column("Locus")
+
+
+temp1.ML
+
+
+# Temp1 sig ML
+temp1.sig.ML <- temp1.ML %>%
+  pivot_longer(
+    cols = -Locus,         # Everything EXCEPT Sample_ID
+    names_to = "Population",   # What to call the old column headers
+    values_to = "P_Value"      # What to call the actual numbers
+  ) %>% 
+  # p-value correction
+  mutate(P_Adjust = p.adjust(P_Value, method = "BH")) %>% 
+  filter(P_Adjust <=0.05)
+```
+
+## Test for allelic dropout
+Microdrop requires structure input files, yet the structure input files do not work unless they are delimited with EXACTLY one space. Note: you must delete the "POP" and "IND" column headers in nano text editor prior to running the program, as the input requires N-2 column names (colnames = locnames = 49).
+```{r}
+# Microdrop requires STRUCTURE input files but they need to be space delimited
+# Temp1 ----
+temp1.str <- temp1
+pop(temp1.str) <- as.numeric(as.factor(pop(temp1.str)))
+
+genind_to_structure(temp1.str,
+                    output = "./structure/temp1.structure.txt")
+
+temp1.microdrop <- read.table("./structure/temp1.structure.txt",
+                         skip = 1,
+                         col.names = c("IND", "POP", loc_lab))
+
+write.table(temp1.microdrop, "./microdrop/temp1.microdrop.txt", sep= " ",
+            row.names = F)
+
+# Read data file
+temp1.drop <- read.table("./microdrop/temp1_MLE_Rates_loc",
+                         sep = "\t", header = TRUE)
+
+summary(temp1.drop)
+# Temp2 ----
+temp2.str <- temp2
+pop(temp2.str) <- as.numeric(as.factor(pop(temp2.str)))
+
+genind_to_structure(temp2.str,
+                    output = "./structure/temp2.structure.txt")
+
+temp2.microdrop <- read.table("./structure/temp2.structure.txt",
+                         skip = 1,
+                         col.names = c("IND", "POP", loc_lab))
+
+write.table(temp2.microdrop, "./microdrop/temp2.microdrop.txt", sep= " ",
+            row.names = F)
+
+# Read data file
+temp2.drop <- read.table("./microdrop/temp2_MLE_Rates_loc",
+                         sep = "\t", header = TRUE)
+summary(temp2.drop)
+
+# Temp3 ----
+temp3.str <- temp3
+pop(temp3.str) <- as.numeric(as.factor(pop(temp3.str)))
+
+genind_to_structure(temp3.str,
+                    output = "./structure/temp3.structure.txt")
+
+temp3.microdrop <- read.table("./structure/temp3.structure.txt",
+                         skip = 1,
+                         col.names = c("IND", "POP", loc_lab))
+
+write.table(temp3.microdrop, "./microdrop/temp3.microdrop.txt", sep= " ",
+            row.names = F)
+
+# Read data file
+temp3.drop <- read.table("./microdrop/temp3_MLE_Rates_loc",
+                         sep = "\t", header = TRUE)
+
+summary(temp3.drop)
+```
+```{r}
+# --- TEMP 1 ---
+temp1_pop_list <- seppop(temp1.str)
+
+lapply(names(temp1_pop_list), function(pop) {
+    out_path <- paste0("./microdrop/temp/temp1_", pop, ".struct.txt")
+    final_path <- paste0("./microdrop/input/temp1_", pop, ".microdrop.txt") # Define final_path
+    
+    genind_to_structure(temp1_pop_list[[pop]], output = out_path)
+    temp_data <- read.table(out_path, skip = 1)
+    
+    # Create and write header
+    locus_header <- c("Indiv", "Pop", locNames(temp1_pop_list[[pop]]))
+    cat(paste(locus_header, collapse = " "), "\n", file = final_path)
+    
+    # Append data (Note: append = TRUE is critical here)
+    write.table(temp_data, 
+              file = final_path, 
+              append = TRUE,
+              sep = " ", 
+              row.names = FALSE, 
+              col.names = FALSE, 
+              quote = FALSE)
+    
+    message("Finished processing population: ", pop)
+})
+
+# --- TEMP 2 ---
+temp2_pop_list <- seppop(temp2.str)
+
+lapply(names(temp2_pop_list), function(pop) {
+    out_path <- paste0("./microdrop/temp/temp2_", pop, ".struct.txt")
+    final_path <- paste0("./microdrop/input/temp2_", pop, ".microdrop.txt")
+    
+    genind_to_structure(temp2_pop_list[[pop]], output = out_path)
+    temp_data <- read.table(out_path, skip = 1)
+    
+    locus_header <- c("Indiv", "Pop", locNames(temp2_pop_list[[pop]]))
+    cat(paste(locus_header, collapse = " "), "\n", file = final_path)
+    
+    write.table(temp_data, 
+              file = final_path, 
+              append = TRUE,
+              sep = " ", 
+              row.names = FALSE, 
+              col.names = FALSE, 
+              quote = FALSE)
+    
+    message("Finished processing population: ", pop)
+})
+
+# --- TEMP 3 ---
+temp3_pop_list <- seppop(temp3.str)
+
+lapply(names(temp3_pop_list), function(pop) {
+    out_path <- paste0("./microdrop/temp/temp3_", pop, ".struct.txt")
+    final_path <- paste0("./microdrop/input/temp3_", pop, ".microdrop.txt")
+    
+    genind_to_structure(temp3_pop_list[[pop]], output = out_path)
+    temp_data <- read.table(out_path, skip = 1)
+    
+    locus_header <- c("Indiv", "Pop", locNames(temp3_pop_list[[pop]]))
+    cat(paste(locus_header, collapse = " "), "\n", file = final_path)
+    
+    write.table(temp_data, 
+              file = final_path, 
+              append = TRUE,
+              sep = " ", 
+              row.names = FALSE, 
+              col.names = FALSE, 
+              quote = FALSE)
+    
+    message("Finished processing population: ", pop)
+})
+```
+### All in One: Input files and Parameter files
+```{r}
+# --- Function to generate param files ---
+# We put this in a list so we can loop through temp1, temp2, temp3
+data_sets <- list("temp1" = temp1.str, "temp2" = temp2.str, "temp3" = temp3.str)
+
+lapply(names(data_sets), function(prefix) {
+  
+  obj <- data_sets[[prefix]]
+  pop_list <- seppop(obj)
+  
+  lapply(names(pop_list), function(pop) {
+    
+    # 1. Setup paths and data
+    pop_obj <- pop_list[[pop]]
+    file_name <- paste0(prefix, "_", pop, ".microdrop.txt")
+    data_path <- paste0("./microdrop/input/", file_name)
+    param_path <- paste0("./microdrop/params/param_", prefix, "_", pop, ".txt")
+    temp_struct <- paste0("./microdrop/temp/", prefix, "_", pop, ".struct.txt")
+    
+    # 2. Generate the Data File (with header)
+    genind_to_structure(pop_obj, output = temp_struct)
+    temp_data <- read.table(temp_struct, skip = 1)
+    
+    locus_header <- c("Indiv", "Pop", locNames(pop_obj))
+    cat(paste(locus_header, collapse = " "), "\n", file = data_path)
+    write.table(temp_data, file = data_path, append = TRUE, sep = " ", 
+                row.names = FALSE, col.names = FALSE, quote = FALSE)
+    
+    # 3. Calculate Parameters for this specific population
+    num_inds <- nInd(pop_obj)
+    num_loci <- nLoc(pop_obj)
+    out_folder <- paste0(prefix, "_", pop, "_results")
+    
+# 4. Create the Param File content (Note the added ./input/ path)
+    param_content <- c(
+      "# This is a paramfile for MicroDrop generated automatically",
+      "###----Main Parameters----###",
+      paste0("DATA_FILE      ", "./input/", file_name), # Pointing MicroDrop to the input folder
+      paste0("INDS           ", num_inds),
+      paste0("LOCI           ", num_loci),
+      "NON_DATA_ROWS  1",
+      "NON_DATA_COLS  2",
+      paste0("OUT_FOLDER     ", out_folder),
+      "TOLERANCE      0.001",
+      "MAX_ITER       10000",
+      "MAX_ALLELES    100",
+      "N_PERMU        100",
+      "N_REPS         3",
+      "N_IMPT         4",
+      "",
+      "###----Advanced Parameters----###",
+      "ASMPT          0",
+      "FCTR           0"
+    )
+    
+    # 5. Write the Param File
+    writeLines(param_content, con = param_path)
+    
+    message("Finished Data and Param files for: ", prefix, "_", pop)
+  })
+})
+```
+```{r}
+# 1. Find all MLE_Rates_loc files
+# Adjust the path to match your structure (looking inside each _results folder)
+mle_files <- list.files(path = "./microdrop/results", 
+                        pattern = "MLE_Rates_loc", 
+                        recursive = TRUE, 
+                        full.names = TRUE)
+
+# 2. Function to read and label by population
+read_mle <- function(file_path) {
+  # Extract population name (e.g., "temp1_1") from the folder path
+  pop_id <- gsub("./|/MLE_Rates_loc|_results", "", file_path)
+  
+  # Read the tab-separated file
+  # Note: If it's space-separated, remove sep="\t"
+  df <- read.table(file_path, header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+  
+  # Add the population column
+  df$Population <- pop_id
+  return(df)
+}
+
+# 3. Combine everything
+library(dplyr)
+all_mle_rates <- lapply(mle_files, read_mle) %>% bind_rows()
+
+# 4. Quick look at the top dropout loci across all pops
+dropout <- all_mle_rates %>% 
+  # Sort by highest dropout first
+  arrange(desc(dropout_rate)) %>% 
+  # Fix the names and extract the temporal group
+  mutate(
+    Pop = str_replace(Population, "microdroresult", ""),
+    Temporal_Group = str_extract(Pop, "temp\\d")
+  ) %>% 
+  select(-Population)
+
+# 
+
+temp1.dropout <- dropout %>% 
+  filter(str_detect(Temporal_Group, "^temp1"))
+
+temp1.loc.avg <- temp1.dropout %>%
+  group_by(locusID) %>%
+  summarize(
+    mean_dropout = mean(dropout_rate, na.rm = TRUE),
+    sd_dropout = sd(dropout_rate, na.rm = TRUE) # Useful for checking consistency
+  ) %>%
+  arrange(desc(mean_dropout))
+
+
+temp2.dropout <- dropout %>% 
+  filter(str_detect(Temporal_Group, "^temp2"))
+
+temp2.loc.avg <- temp2.dropout %>%
+  group_by(locusID) %>%
+  summarize(
+    mean_dropout = mean(dropout_rate, na.rm = TRUE),
+    sd_dropout = sd(dropout_rate, na.rm = TRUE) # Useful for checking consistency
+  ) %>%
+  arrange(desc(mean_dropout))
+
+temp3.dropout <- dropout %>% 
+  filter(str_detect(Temporal_Group, "^temp3"))
+
+temp3.loc.avg <- temp3.dropout %>%
+  group_by(locusID) %>%
+  summarize(
+    mean_dropout = mean(dropout_rate, na.rm = TRUE),
+    sd_dropout = sd(dropout_rate, na.rm = TRUE) # Useful for checking consistency
+  ) %>%
+  arrange(desc(mean_dropout))
+```
+
+
+
+
+
+
+# Format final dataset for use in analyses
+Removal of herds with insufficient sample sizes for analyses, remove loci which have demonstrated high levels of missing data, and which have a propensity for null alleles. 
+```{r}
+# Remove loci called for null alleles
+analysis.gen <- bison.genind[, loc = !locNames(bison.genind) == "BMS601"] # Remove locus
+analysis.gen # Ensure loci were removed (now 47)
+
+# Remove populations with insufficient sample sizes (Temp2)
+temp2_remove <- (pop(analysis.gen) %in% c("WBNP", "ETH", "NORD", "WBNPNY", "WBNPPAD")) & (analysis.gen@other$YEAR.ASSIGN %in% 2000:2015) # Isolate samples for removal
+
+analysis.gen <- analysis.gen[!temp2_remove, ] # Remove
+
+# Remove populations with insufficient sample sizes (Temp3)
+temp3_remove <- (pop(analysis.gen) == "WBNP") & (analysis.gen@other$YEAR.ASSIGN >= 2016)
+
+analysis.gen <- analysis.gen[!temp3_remove, ] # Remove
+
+# Print out final dataset
+analysis.gen
+
+# Create filtered dataset for working with in subsequent analyses
+analysis.data <- bison.data %>% 
+  select(-BMS601, -BM4028) %>% # Remove locus with nulls (BMS601) and missing data (BM4028)
+    filter(!(HERD %in% c("WBNP", "ETH", "NORD", "WBNPNY", "WBNPPAD") & # Insufficient sample sizes
+           YEAR.ASSIGN %in% 2000:2015)) %>% 
+    filter(!(HERD == "WBNP" & YEAR.ASSIGN >= 2016)) # No subherd designation
+
+# Write out to csv
+write.csv(analysis.data, "./datafiles/Cleaned_locus_data_20.02.2026.csv", row.names = F)
+```
+
+
+
+

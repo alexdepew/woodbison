@@ -260,7 +260,6 @@ theme(
 
 ```
 
-
 ### Arrange Plots together
 ```{r}
 pca1_nl <- pca1 + theme(legend.position = "none")
@@ -282,5 +281,163 @@ ggsave("./plots/global_pcas.svg",
        height = 12, 
        units = "in")
 ```
+# STRUCTURE Analysis 
+```{r}
+# Temp1 structure
+temp1.str <- temp1
+pop(temp1.str) <- as.numeric(as.factor(pop(temp1.str)))
+
+genind_to_structure(temp1.str,
+                    output = "STRUCTURE_files/temp1.w_plains.structure.txt")
+# Temp2 structure
+temp2.str <- temp2
+pop(temp2.str) <- as.numeric(as.factor(pop(temp2.str)))
+
+genind_to_structure(temp2.str,
+                    output = "STRUCTURE_files/temp2.w_plains.structure.txt")
+```
+
+
+#### Load Data
+```{r}
+# List files
+# Full datasets
+sfiles_temp1 <- list.files("./STRUCTURE_files/results/temp1_w_plains/", full.names = TRUE)
+sfiles_temp2 <- list.files("./STRUCTURE_files/results/temp2_w_plains/", full.names = TRUE)
+
+# Qlist (pophelper)
+slist_temp1 <- readQ(files = sfiles_temp1, filetype = "structure")
+slist_temp2 <- readQ(files = sfiles_temp2, filetype = "structure")
+
+# Summarise runs
+struct_sum_temp1 <- summariseQ(tabulateQ(slist_temp1))
+struct_sum_temp2 <- summariseQ(tabulateQ(slist_temp2))
+
+# K plots
+p1 <- evannoMethodStructure(data = struct_sum_temp1, exportplot = T,
+                           returnplot = T, returndata = F,
+                           basesize = 25, linesize = 0.7,
+                           height = 25, width = 25, units = "cm",
+                           outputfilename = "Temp1_K",
+                           exportpath = "./STRUCTURE_files/",
+                           imgtype = "pdf")
+
+p_lik <- p1$grobs[[1]]
+p_dk <- p1$grobs[[4]]
+
+library(gridExtra)
+library(grid)
+# Label Likelihood as 'a'
+panel_a <- arrangeGrob(p_lik, top = textGrob("a)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+# Label Delta K as 'b'
+panel_b <- arrangeGrob(p_dk, top = textGrob("b)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+evanno_w1 <- grid.arrange(panel_a, panel_b, 
+                         ncol = 2, 
+                         widths = c(1, 1))
+
+ggsave("./STRUCTURE_files/temp1.k.svg", 
+       plot = evanno_w1, 
+       width = 27, 
+       height = 11)
+```
+
+```{r}
+
+temp1.data <- cleaned.data %>% 
+  select(-ID) %>% 
+  filter(YEAR.ASSIGN <=2015) %>%
+  rename(ID = Spreadsheet_ID) %>% 
+  mutate(ID = as.character(ID))
+# Align runs
+slist_temp1 <- alignK(slist_temp1, "auto")
+
+# Merge runs (average over 10 replicates)
+temp1.mk2 <- mergeQ(slist_temp1[11:20])
+temp1.mk3 <- mergeQ(slist_temp1[21:30])
+temp1.mk4 <- mergeQ(slist_temp1[31:40])
+temp1.mk5 <- mergeQ(slist_temp1[41:50])
+temp1.mk6 <- mergeQ(slist_temp1[51:60])
+temp1.mk7 <- mergeQ(slist_temp1[61:70])
+temp1.mk8 <- mergeQ(slist_temp1[71:80])
+temp1.mk9 <- mergeQ(slist_temp1[81:90])
+temp1.mk10 <- mergeQ(slist_temp1[91:100])
+temp1.mk11 <- mergeQ(slist_temp1[101:110])
+temp1.mk12 <- mergeQ(slist_temp1[111:120])
+
+
+temp1.merged.list <- as.qlist(list(temp1.mk2[[1]], temp1.mk3[[1]], temp1.mk4[[1]], 
+                          temp1.mk5[[1]], temp1.mk6[[1]], temp1.mk7[[1]], temp1.mk8[[1]],
+                          temp1.mk9[[1]], temp1.mk10[[1]], temp1.mk11[[1]], temp1.mk12[[1]]))
+
+ind_label_temp1 <- readQ(files = sfiles_temp1[1], indlabfrom = TRUE) %>% as.data.frame()
+ind_label_temp1 <- rownames_to_column(ind_label_temp1, "ID")
+locations_temp1 <- left_join(ind_label_temp1, temp1.data, by = "ID")
+
+loc_labels_temp1 <- locations_temp1$HERD %>% as.data.frame()
+
+herd_order_temp1 <- c("EINPP", "EINPW", "HZ", "MBS", "RL", "WAB", "WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD", "WENT")
+
+str_cols <- c("#0089B2", "#DF0101", "#77CE61", "#A945FF", "#FF9326", "#1D72F5","#FDF060")
+
+plotQ(temp1.merged.list, 
+      imgoutput = "join",
+            basesize = 10, 
+            grplab = loc_labels_temp1, 
+            subsetgrp = herd_order_temp1, 
+            clustercol = herd_palette,
+            ordergrp = TRUE,
+      
+      # Side "K" Labels
+            splab = c("K = 2", "K = 3", "K = 4", "K = 5", "K = 6", "K = 7", "K = 8", "K = 9", "K = 10", "K = 11", "K = 12"),
+            splabsize = 35,
+            sppos = "left",
+            splabcol = "black",
+            splabangle = 0,
+      
+            # Individual Label Settings
+            showindlab = F, 
+            indlabsize = 4,        
+            indlabangle = 90,
+            indlabheight = 0,
+      
+      # Group Label settings
+            grplabsize = 10, 
+            grplabangle =45,
+            grplabpos = 0.65,
+            grplabheight = 1,      
+            grplabspacer = 0.1,
+            grplabcol = "black",
+      
+            linesize = 2,          
+            pointsize = 15,
+      
+      # Divider Line Settings
+            divcol = "white",
+            divsize = 3, 
+            divtype = NULL,
+      
+            useindlab = TRUE, 
+            returndata = TRUE,
+      
+      # Plot settings
+            height = 7,             
+            width = 50,
+            panelspacer = 1,
+            panelratio = c(1,1),
+      
+      
+      # File settings
+            imgtype = "pdf",
+            outputfilename = "Temp1_w_plains",
+            exportpath = "./plots/structure_plots/")
+```
+```
+
 
 

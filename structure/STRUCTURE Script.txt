@@ -21,6 +21,18 @@ wget https://raw.githubusercontent.com/dentearl/structureHarvester/refs/heads/ma
 wget https://raw.githubusercontent.com/alexdepew/woodbison/refs/heads/main/STRUCTURE_files/temp1.w_plains.structure.txt
 dos2unix -n temp1.w_plains.structure.txt temp1.str # ensures data is clean and readable by structure in unix format
 
+# Temp2 global data with plains
+wget https://raw.githubusercontent.com/alexdepew/woodbison/refs/heads/main/STRUCTURE_files/temp2.w_plains.structure.txt
+dos2unix -n temp2.w_plains.structure.txt temp2.str # ensures data is clean and readable by structure in unix format
+
+# Temp1 global data with NO plains
+wget https://raw.githubusercontent.com/alexdepew/woodbison/refs/heads/main/STRUCTURE_files/temp1.no_plains.structure.txt
+dos2unix -n temp1.no_plains.structure.txt temp1_np.str # ensures data is clean and readable by structure in unix format
+
+# Temp2 global data with NO plains
+wget https://raw.githubusercontent.com/alexdepew/woodbison/refs/heads/main/STRUCTURE_files/temp2.no_plains.structure.txt
+dos2unix -n temp2.no_plains.structure.txt temp2_np.str # ensures data is clean and readable by structure in unix format
+
 # Now edit the parameters in the input.py for each temporal group using nano
 
 #### Begin structure runs (temp1)

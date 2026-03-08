@@ -1,0 +1,213 @@
+---
+title: "WBNP_PCA_STRUCT"
+author: "Alex Depew"
+date: "2026-03-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# File information
+This script is used to evaluate the presence and extent of genetic substructure within Wood Buffalo National Park. 
+
+Files used described below:
+
+- `Revised_cleandata_07.03.2026.csv`
+   - Contains all samples for population genetic analyses, post-filtering
+   
+## Load Required Packages
+```{r}
+rm(list = ls())
+library(adegenet)
+library(graph4lg)
+library(poppr)
+library(hierfstat)
+library(pophelper)
+library(tidyverse)
+library(gridExtra)
+library(factoextra)
+library(ggplot2)
+library(ggpubr)
+library(grid)
+```
+
+## Load Required Data
+```{r}
+cleaned.data <- read.csv("./datafiles/Revised_cleandata_07.03.2026.csv",
+                         check.names = F)
+```
+
+#### Convert data to Genind object
+```{r}
+# Make genind object
+bison.genind <- df2genind(X=cleaned.data[,c(19:ncol(cleaned.data))],
+                              sep = "/",
+                              ind.names = cleaned.data$Spreadsheet_ID,
+                              loc.names = NULL,
+                              pop = cleaned.data$HERD,
+                              NA.char = "NA",
+                              ploidy = 2,
+                              type = "codom",
+                              strata = NULL,
+                              hierarchy = NULL)
+
+# Attach collection year metadata
+idx <- match(indNames(bison.genind), cleaned.data$Spreadsheet_ID)
+stopifnot(!any(is.na(idx)))
+bison.genind@other$YEAR.ASSIGN <- cleaned.data$YEAR.ASSIGN[idx]
+```
+
+#### Subset data 
+Data is subset into two temporal groups. Temporal groups are: 1: pre-2016, and 3: post-2016
+```{r}
+# Create datasets containing samples of interest for temporal comparisons
+w1 <- bison.genind[bison.genind@pop %in% c("WBNPGR", "WBNPHC", 
+                                           "WBNPLB", "WBNPNY", "WBNPPAD", "WENT") &
+                   bison.genind@other$YEAR.ASSIGN <=2015,]
+
+w2 <- bison.genind[bison.genind@pop %in% c("WBNPGR", "WBNPHC", 
+                                           "WBNPLB", "WBNPNY", "WBNPPAD", "WENT") &
+                   bison.genind@other$YEAR.ASSIGN >=2016,]
+```
+
+# Principal Coordinate Analysis (PCA)
+Visualize population structure without assumptions of HWE or LD, to identify clusters in the data.
+
+```{r}
+wbnp_subherds <- c("WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD", "WENT")
+
+wbnp_palette <- c("#cecece", 
+                  "#a559aa", 
+                  "#59a89c", 
+                  "#f0c571", 
+                  "#e02b35", 
+                  "#082a54"
+                  )
+
+wbnp_cols <- setNames(as.character(wbnp_palette), wbnp_subherds)
+```
+
+# PCA
+### Perform PCA on both datasets
+```{r}
+# Perform PCA
+x.w1 <- tab(w1, freq = TRUE, NA.method = "mean")
+pca.w1 <- dudi.pca(x.w1, center = T, scale = F, scannf = F, nf = 2)
+
+# Axes % Variance
+eig.perc.w1 <- 100*pca.w1$eig/sum(pca.w1$eig)
+
+x.w2 <- tab(w2, freq = TRUE, NA.method = "mean")
+pca.w2 <- dudi.pca(x.w2, center = T, scale = F, scannf = F, nf = 2)
+
+# Axes % Variance
+eig.perc.w2 <- 100*pca.w2$eig/sum(pca.w2$eig)
+
+#### axis limits
+xlims <- c(-2.5, 3.5)
+ylims <- c(-2, 2.1)
+```
+
+## PCA plot with ggplot
+#### WBNP Temp1 (W1: No EINP)
+```{r}
+w1@pop <- factor(w1@pop, levels = sort(unique(as.character(w1@pop))))
+levels_w1 <- levels(w1@pop)
+w1_cols <- wbnp_cols[levels_w1]
+
+
+# Plot PCA object
+pcaw1 <- fviz_pca_ind(pca.w1,
+             axes = c(1, 2),
+             geom = "blank",
+             habillage = w1@pop,
+             repel = TRUE,
+             palette = w1_cols,
+             alpha.ind = 1,) + 
+  stat_ellipse(aes(color = w1@pop), type = "norm", level = 0.68) + 
+  geom_point(aes(colour = w1@pop),
+             shape = 19,
+             alpha = 0.75,
+             size = 1.2) + 
+coord_fixed(ratio = 1, xlim = xlims, ylim = ylims) +
+  
+theme(
+    plot.title = element_blank(),
+    legend.title = element_text(face = "bold"), # Kept bold but removed blank
+    axis.title = element_text(face = "bold"),
+    panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
+
+  labs(title = NULL,
+       # Fixed the placement of closing parentheses and commas below
+       x = paste0("PC1 (", round(eig.perc.w1[1], 2), "%)"),
+       y = paste0("PC2 (", round(eig.perc.w1[2], 2), "%)"),
+       colour = "Herd") + 
+    guides(colour = guide_legend(override.aes = list(size = 4, shape = 19)))
+
+       
+
+pcaw1
+```
+
+
+
+
+```{r}
+w2@pop <- factor(w2@pop, levels = sort(unique(as.character(w2@pop))))
+levels_w2 <- levels(w2@pop)
+w2_cols <- wbnp_cols[levels_w2]
+
+# Plot PCA object
+pcaw2 <- fviz_pca_ind(pca.w2,
+             axes = c(1, 2),
+             geom = "blank",
+             habillage = w2@pop,
+             repel = TRUE,
+             palette = w2_cols,
+             alpha.ind = 1) + 
+  stat_ellipse(aes(color = w2@pop), type = "norm", level = 0.68) + 
+  geom_point(aes(colour = w2@pop),
+             shape = 19,
+             alpha = 0.75,
+             size = 1.2) + 
+  coord_fixed(ratio = 1, xlim = xlims, ylim = ylims) +
+  
+  theme(
+    plot.title = element_blank(),
+    legend.title = element_text(face = "bold"),
+    axis.title = element_text(face = "bold"),
+    panel.border = element_rect(colour = "black", fill = NA, linewidth = 1)
+  ) + 
+
+  labs(title = NULL,
+       x = paste0("PC1 (", round(eig.perc.w2[1], 2), "%)"),
+       y = paste0("PC2 (", round(eig.perc.w2[2], 2), "%)"),
+       colour = "Herd") + 
+    guides(colour = guide_legend(override.aes = list(size = 4, shape = 19)))
+
+pcaw2
+```
+
+### Arrange Plots together
+```{r}
+pcaw1_nl <- pcaw1 + theme(legend.position = "none")
+pcaw2_nl <- pcaw2 + theme(legend.position = "none")
+
+legend <- get_legend(pcaw1)
+
+wbnp_pcas <- grid.arrange(pcaw1_nl, legend, pcaw2_nl, # Set out grid
+                            ncol = 3, 
+                            widths = c(10, 2.5, 10)
+                            )
+                            
+# Save plot
+library(svglite)
+ggsave("./plots/wbnp_pcas.svg",
+       plot = wbnp_pcas, 
+       device = "svg", 
+       width = 16, 
+       height = 12, 
+       units = "in")
+```

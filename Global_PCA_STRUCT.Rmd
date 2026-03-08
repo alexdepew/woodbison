@@ -460,6 +460,21 @@ pop(temp2.str) <- as.numeric(as.factor(pop(temp2.str)))
 
 genind_to_structure(temp2.str,
                     output = "STRUCTURE_files/temp2.w_plains.structure.txt")
+
+# Temp1.noEINPP
+temp1.noEINPP.str <- temp1.noEINPP
+pop(temp1.noEINPP.str) <- as.numeric(as.factor(pop(temp1.noEINPP.str)))
+
+genind_to_structure(temp1.noEINPP.str,
+                    output = "STRUCTURE_files/temp1.no_plains.structure.txt")
+
+# Temp2.noEINPP
+temp2.noEINPP.str <- temp2.noEINPP
+pop(temp2.noEINPP.str) <- as.numeric(as.factor(pop(temp2.noEINPP.str)))
+
+genind_to_structure(temp2.noEINPP.str,
+                    output = "STRUCTURE_files/temp2.no_plains.structure.txt")
+
 ```
 
 #### Load Data

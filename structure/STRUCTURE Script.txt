@@ -1,98 +1,29 @@
-## Structure in Unix
-
-# Make project directory for structure runs in each temporal group
-mkdir STRUCTURE	
-cd STRUCTURE # change into new directory
-mkdir temp1
-mkdir temp2
-mkdir temp3
 
 # Setup modules within each subdirectory for structure runs
-cd temp1
 module load StdEnv/2020
 module load python/2.7
 module load structure/2.3.4
 
-cd ../temp2
-module load StdEnv/2020
-module load python/2.7
-module load structure/2.3.4
-
-cd ../temp3
-module load StdEnv/2020
-module load python/2.7
-module load structure/2.3.4
-
-
-#### First subdirectory
-cd ../temp1
-
-# Obtain necessary files for paralell structure runs
+# Obtain necessary files for parallel structure runs
 wget https://raw.githubusercontent.com/alexdepew/woodbison/refs/heads/main/structure/create_strauto_slurm_scripts.py # python script to make parameter files
 chmod u+x create_strauto_slurm_scripts.py
 
-wget https://github.com/alexdepew/woodbison/blob/main/structure/strauto_1.tar.gz # Strauto
-tar -xvzf strauto_1.tar.gz
-
-wget https://raw.githubusercontent.com/dentearl/structureHarvester/refs/heads/master/harvesterCore.py # Harvestercore
-wget https://raw.githubusercontent.com/dentearl/structureHarvester/refs/heads/master/structureHarvester.py # Structure harvesterCore
-
-#### Second subdirectory
-cd ../temp2
-
-# Obtain necessary files for paralell structure runs
-wget https://raw.githubusercontent.com/alexdepew/woodbison/refs/heads/main/structure/create_strauto_slurm_scripts.py # python script to make parameter files
-chmod u+x create_strauto_slurm_scripts.py
-
-wget https://github.com/alexdepew/woodbison/blob/main/structure/strauto_1.tar.gz # Strauto
-tar -xvzf strauto_1.tar.gz
-
-wget https://raw.githubusercontent.com/dentearl/structureHarvester/refs/heads/master/harvesterCore.py # Harvestercore
-wget https://raw.githubusercontent.com/dentearl/structureHarvester/refs/heads/master/structureHarvester.py # Structure harvesterCore
-
-#### Third subdirectory
-cd ../temp3
-# Obtain necessary files for paralell structure runs
-wget https://raw.githubusercontent.com/alexdepew/woodbison/refs/heads/main/structure/create_strauto_slurm_scripts.py # python script to make parameter files
-chmod u+x create_strauto_slurm_scripts.py
+# Obtain Strauto from Digital alliance canada
+# unzip 
+tar -xvf strauto_1.tar.gz
 
 wget https://raw.githubusercontent.com/dentearl/structureHarvester/refs/heads/master/harvesterCore.py # Harvestercore
 wget https://raw.githubusercontent.com/dentearl/structureHarvester/refs/heads/master/structureHarvester.py # Structure harvesterCore
 
 # Input files
 
-#### First subdirectory
-cd ../temp1
-wget https://raw.githubusercontent.com/alexdepew/woodbison/refs/heads/main/structure/temp1.structure.txt
-dos2unix -n temp1.structure.txt temp1.str # ensures data is clean and readable by structure in unix format
+# Temp1 global data with plains
+wget https://raw.githubusercontent.com/alexdepew/woodbison/refs/heads/main/STRUCTURE_files/temp1.w_plains.structure.txt
+dos2unix -n temp1.w_plains.structure.txt temp1.str # ensures data is clean and readable by structure in unix format
 
 # Now edit the parameters in the input.py for each temporal group using nano
 
 #### Begin structure runs (temp1)
-./strauto_1.py
-# press "enter" and then "a"
-# this will have generated mainparams file and extraparams file
-./create_strauto_slurm_scripts.py
-bash submit_strauto_jobs.sh # Now submit the jobs
-
-#### Second subdirectory
-cd ../temp2
-wget https://raw.githubusercontent.com/alexdepew/woodbison/refs/heads/main/structure/temp2.structure.txt
-dos2unix -n temp2.structure.txt temp2.str 
-
-#### Begin structure runs (temp2)
-./strauto_1.py
-# press "enter" and then "a"
-# this will have generated mainparams file and extraparams file
-./create_strauto_slurm_scripts.py
-bash submit_strauto_jobs.sh # Now submit the jobs
-
-#### Third subdirectory
-cd ../temp3
-wget https://raw.githubusercontent.com/alexdepew/woodbison/refs/heads/main/structure/temp3.structure.txt
-dos2unix -n temp3.structure.txt temp3.str
-
-#### Begin structure runs (temp3)
 ./strauto_1.py
 # press "enter" and then "a"
 # this will have generated mainparams file and extraparams file

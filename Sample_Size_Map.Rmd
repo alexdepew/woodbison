@@ -36,8 +36,6 @@ can_subset <-
   subset(can, PRENAME == "Alberta" | PRENAME == "Manitoba" | 
            PRENAME == "Northwest Territories" | PRENAME == "Saskatchewan" | 
            PRENAME == "British Columbia" | PRENAME == "Yukon")
-
-can_subset <- ms_simplify(can_subset, keep = 0.05)
 ```
  
  
@@ -87,22 +85,18 @@ herd_centroids <- herd_centroids %>%
 ```
 ### Sample Sizes
 ```{r}
-t1 <- bison.genind[bison.genind@other$YEAR.ASSIGN <=1999]
+t1 <- analysis.gen[analysis.gen@other$YEAR.ASSIGN <=2015]
 table(t1@pop)
 
-t2 <- bison.genind[bison.genind@other$YEAR.ASSIGN %in% 2000:2015]
+t2 <- analysis.gen[analysis.gen@other$YEAR.ASSIGN >=2016]
 table(t2@pop)
 
-t3 <- bison.genind[bison.genind@other$YEAR.ASSIGN >=2016]
-table(t3@pop)
-
 sample_counts <- data.frame(
-    POPULATION = bison.genind@pop,
-    YEAR = bison.genind@other$YEAR.ASSIGN
+    POPULATION = analysis.gen@pop,
+    YEAR = analysis.gen@other$YEAR.ASSIGN
   ) %>%
   mutate(`Collection Year`= case_when(
-    YEAR <= 1999 ~ "1986 - 1999",
-    YEAR >= 2000 & YEAR <= 2015 ~ "2000 - 2015",
+    YEAR <= 2015 ~ "1986 - 2015",
     YEAR >= 2016 ~ "2016 - 2025"
   )) %>%
   # 3. Count samples per Herd per Era
@@ -120,8 +114,7 @@ map_data <- herd_centroids %>%
   st_transform(st_crs(can_subset)) %>% # THIS IS THE KEY STEP
   left_join(sample_counts, by = "POPULATION")
 
-facet_names <- c("1986 - 1999",
-                 "2000 - 2015",
+facet_names <- c("1986 - 2015",
                  "2016 - 2025"
                  )
 
@@ -130,13 +123,34 @@ bbox <- sf::st_bbox(map_data)
 
 # Run this BEFORE your ggplot code
 map_data$`Collection Year` <- factor(map_data$`Collection Year`, 
-                                     levels = c("1986 - 1999", "2000 - 2015", "2016 - 2025"))
+                                     levels = c("1986 - 2015", "2016 - 2025"))
 p <- ggplot() +
   geom_sf(data = can_subset, fill = "gray95", color = "gray60") +
   geom_sf(data = woodbisonpop, fill = "gray80", alpha = 0.2) +
   geom_sf(data = map_data, aes(size = n, color = `Collection Year`), alpha = 0.7) +
-  geom_sf_text_repel(data = map_data, aes(label = POPULATION), 
-                     size = 4, max.overlaps = Inf) +
+  geom_sf_text_repel(
+  data = map_data, 
+  aes(label = POPULATION),
+  size = 4,
+  # 1. Increases the "repulsion" force
+  force = 10, 
+  force_pull = 1,             # Prevents labels from being pulled back toward the dot
+  
+  # 2. Creates a large "no-fly zone" around the orange circles
+  box.padding = 1,          
+  point.padding = 0.4,        
+  
+  # 3. Ensures the line is always visible regardless of distance
+  min.segment.length = 0,     
+  segment.color = "gray30",
+  segment.alpha = 0.6,
+  
+  # 4. Optional: Gives them a starting push to the right/left 
+  # to help the algorithm clear the center map area
+  nudge_x = 1.5,
+  
+  max.overlaps = Inf
+) +
   # Fixed the closing parenthesis here:
   facet_wrap(~`Collection Year`) + 
   scale_size_continuous(range = c(0.5, 12)) +
@@ -149,11 +163,13 @@ p <- ggplot() +
   # Added a small buffer (expand = TRUE helps, but manual limits are safer)
   coord_sf(xlim = c(bbox["xmin"] - 1, bbox["xmax"] + 1), 
            ylim = c(bbox["ymin"] - 1, bbox["ymax"] + 1), 
-           expand = TRUE)
+           expand = TRUE) + 
+  scale_color_manual(values = c("1986 - 2015" = "steelblue", 
+                                "2016 - 2025" = "darkorange"))
 
 # Save image
-ggsave("./plots/Sample_size_map.png", plot = p,
-       height = 7, width = 17)
+ggsave("./plots/Sample_size_map_v2.png", plot = p,
+       height = 8, width = 14)
 ```
  
 

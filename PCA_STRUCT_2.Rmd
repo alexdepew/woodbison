@@ -13,7 +13,7 @@ This script is used to evaluate temporal patterns in population structure in all
 
 Files used described below:
 
-- `Cleaned_locus_data_20.02.2026.csv`
+- `Revised_cleandata_07.03.2026.csv`
    - Contains all samples for population genetic analyses, post-filtering
    
 ## Load Required Packages
@@ -28,11 +28,13 @@ library(tidyverse)
 library(gridExtra)
 library(factoextra)
 library(ggplot2)
+library(ggpubr)
+library(grid)
 ```
 
 ## Load Required Data
 ```{r}
-cleaned.data <- read.csv("./datafiles/Cleaned_locus_data_20.02.2026.csv",
+cleaned.data <- read.csv("./datafiles/Revised_cleandata_07.03.2026.csv",
                          check.names = F)
 ```
 
@@ -67,30 +69,14 @@ temp2 <- bison.genind[bison.genind@other$YEAR.ASSIGN >=2016,]
 temp2.sum <- summary(temp2)
 ```
 
-Remove Elk Island Plains for Structure Analyses
-```{r}
-#temp1 <- temp1[temp1@pop != "EINPP"]
-#temp1.sum <- summary(temp1)
-
-#temp2 <- temp2[temp2@pop != "EINPP"]
-#temp2.sum <- summary(temp2)
-```
-
 # Principal Coordinate Analysis (PCA)
 Visualize population structure without assumptions of HWE or LD, to identify clusters in the data. 
 
 ```{r}
-library(Polychrome)
-
-# 1. Get a unique list of all possible herds across the entire project
+# List of all herds
 all_herds <- sort(unique(cleaned.data$HERD))
 
-# 2. Create a palette with a seed for reproducibility
-set.seed(675588585) # Using a fixed seed ensures the same colors are generated every time
-herd_palette <- createPalette(length(all_herds), 
-                              seedcolors = c("#5F4690", "#1D6996", "#38A6A5", "#CC503E"),
-                              range = c(30, 100)) # Controls brightness/saturation
-
+# Colour Palette selection for PCA
 herd_palette <- c("#800000", 
                   "#469990", 
                   "#ffe119", 
@@ -151,9 +137,9 @@ ylims <- c(-2, 2.1)
 ```{r}
 temp1@pop <- factor(temp1@pop, levels = sort(unique(as.character(temp1@pop))))
 levels_temp1 <- levels(temp1@pop)
-sorted_cols <- herd_cols[sorted_levels]
-
 temp1_cols <- herd_cols[levels_temp1]
+
+
 # Plot PCA object
 pca1 <- fviz_pca_ind(pca.temp1,
              axes = c(1, 2),
@@ -190,9 +176,11 @@ pca1
 ```{r}
 temp2@pop <- factor(temp2@pop, levels = sort(unique(as.character(temp2@pop))))
 levels_temp2 <- levels(temp2@pop)
-sorted_cols <- herd_cols[sorted_levels]
-
 temp2_cols <- herd_cols[levels_temp2]
+
+# Invert Y axis
+pca.temp2$li[ , 2] <- pca.temp2$li[ , 2] * -1
+
 # Plot PCA object
 pca2 <- fviz_pca_ind(pca.temp2,
              axes = c(1, 2),
@@ -281,6 +269,183 @@ ggsave("./plots/global_pcas.svg",
        height = 12, 
        units = "in")
 ```
+Remove Elk Island Plains for Structure Analyses
+```{r}
+temp1.noEINPP <- temp1[temp1@pop != "EINPP"]
+
+temp2.noEINPP <- temp2[temp2@pop != "EINPP"]
+
+bison.genind.noEINPP <- bison.genind[bison.genind@pop != "EINPP"]
+```
+
+
+### Perform PCA on both datasets (No EINPP)
+```{r}
+# Perform PCA
+x.temp1.noEINPP <- tab(temp1.noEINPP, freq = TRUE, NA.method = "mean")
+pca.temp1.noEINPP <- dudi.pca(x.temp1.noEINPP, center = T, scale = F, scannf = F, nf = 2)
+
+# Axes % Variance
+eig.perc.temp1.noEINPP <- 100*pca.temp1.noEINPP$eig/sum(pca.temp1.noEINPP$eig)
+
+x.temp2.noEINPP <- tab(temp2.noEINPP, freq = TRUE, NA.method = "mean")
+pca.temp2.noEINPP <- dudi.pca(x.temp2.noEINPP, center = T, scale = F, scannf = F, nf = 2)
+
+# Axes % Variance
+eig.perc.temp2.noEINPP <- 100*pca.temp2.noEINPP$eig/sum(pca.temp2.noEINPP$eig)
+
+##### -------
+# Strictly for plotting (legend)
+x.global.noEINPP <- tab(bison.genind.noEINPP, freq = TRUE, NA.method = "mean")
+pca.global.noEINPP <- dudi.pca(x.global.noEINPP, center = T, scale = F, scannf = F, nf =2)
+# Axes % Variance
+eig.perc.global.noEINPP <- 100*pca.global.noEINPP$eig/sum(pca.global.noEINPP$eig)
+```
+
+#### Reset xlim and ylim
+```{r}
+xlims.noEINPP = c(-2.5, 2.5)
+ylims.noEINPP = c(-3, 2)
+```
+
+
+#### Temp1 (No EINPP)
+```{r}
+temp1.noEINPP@pop <- factor(temp1.noEINPP@pop, levels = sort(unique(as.character(temp1.noEINPP@pop))))
+levels_temp1.noEINPP <- levels(temp1.noEINPP@pop)
+temp1.noEINPP_cols <- herd_cols[levels_temp1.noEINPP]
+
+
+# Plot PCA object
+pca1.noEINPP <- fviz_pca_ind(pca.temp1.noEINPP,
+             axes = c(1, 2),
+             geom = "blank",
+             habillage = temp1.noEINPP@pop,
+             repel = TRUE,
+             palette = temp1.noEINPP_cols,
+             alpha.ind = 1,) + 
+  stat_ellipse(aes(color = temp1.noEINPP@pop), type = "norm", level = 0.68) + 
+  geom_point(aes(colour = temp1.noEINPP@pop),
+             shape = 19,
+             alpha = 0.75,
+             size = 1.2) + 
+coord_fixed(ratio = 1, xlim = xlims.noEINPP, ylim = ylims.noEINPP) +
+  
+theme(
+    plot.title = element_blank(),
+    legend.title = element_text(face = "bold"), # Kept bold but removed blank
+    axis.title = element_text(face = "bold"),
+    panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
+
+  labs(title = NULL,
+       # Fixed the placement of closing parentheses and commas below
+       x = paste0("PC1 (", round(eig.perc.temp1.noEINPP[1], 2), "%)"),
+       y = paste0("PC2 (", round(eig.perc.temp1.noEINPP[2], 2), "%)"),
+       colour = "Herd") + 
+    guides(colour = guide_legend(override.aes = list(size = 4, shape = 19)))
+
+       
+
+pca1.noEINPP
+```
+
+#### Temp2 (No EINPP)
+```{r}
+temp2.noEINPP@pop <- factor(temp2.noEINPP@pop, levels = sort(unique(as.character(temp2.noEINPP@pop))))
+levels_temp2.noEINPP <- levels(temp2.noEINPP@pop)
+temp2.noEINPP_cols <- herd_cols[levels_temp2.noEINPP]
+
+pca.temp2.noEINPP$li[ ,2] <- pca.temp2.noEINPP$li[ , 2] *-1
+
+# Plot PCA object
+pca2.noEINPP <- fviz_pca_ind(pca.temp2.noEINPP,
+             axes = c(1, 2),
+             geom = "blank",
+             habillage = temp2.noEINPP@pop,
+             repel = TRUE,
+             palette = temp2.noEINPP_cols,
+             alpha.ind = 1,) + 
+  stat_ellipse(aes(color = temp2.noEINPP@pop), type = "norm", level = 0.68) + 
+  geom_point(aes(colour = temp2.noEINPP@pop),
+             shape = 19,
+             alpha = 0.75,
+             size = 1.2) + 
+coord_fixed(ratio = 1, xlim = xlims.noEINPP, ylim = ylims.noEINPP) +
+  
+theme(
+    plot.title = element_blank(),
+    legend.title = element_text(face = "bold"), # Kept bold but removed blank
+    axis.title = element_text(face = "bold"),
+    panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
+
+  labs(title = NULL,
+       # Fixed the placement of closing parentheses and commas below
+       x = paste0("PC1 (", round(eig.perc.temp2.noEINPP[1], 2), "%)"),
+       y = paste0("PC2 (", round(eig.perc.temp2.noEINPP[2], 2), "%)"),
+       colour = "Herd") + 
+    guides(colour = guide_legend(override.aes = list(size = 4, shape = 19)))
+
+       
+
+pca2.noEINPP
+```
+
+#### Global Dataset (No EINPP)
+```{r}
+bison.genind.noEINPP@pop <- factor(bison.genind.noEINPP@pop, levels = sort(unique(as.character(bison.genind.noEINPP@pop))))
+sorted_levels.noEINPP <- levels(bison.genind.noEINPP@pop)
+sorted_cols.noEINPP <- herd_cols[sorted_levels.noEINPP]
+
+global_cols.noEINPP <- herd_cols[sorted_levels.noEINPP]
+
+# Plot PCA object
+pcag.noEINPP <- fviz_pca_ind(pca.global.noEINPP,
+             axes = c(1, 2),
+             geom = "blank",
+             habillage = bison.genind.noEINPP@pop,
+             repel = TRUE,
+             palette = global_cols,
+             alpha.ind = 1,) + 
+  stat_ellipse(aes(color = bison.genind.noEINPP@pop), type = "norm", level = 0.68) + 
+  geom_point(aes(colour = bison.genind.noEINPP@pop),
+             shape = 19,
+             alpha = 0.75,
+             size = 1.2) + 
+  coord_fixed(ratio = 1) +
+  
+theme(
+    plot.title = element_blank(),
+    legend.title = element_text(face = "bold"), # Kept bold but removed blank
+    axis.title = element_text(face = "bold")) + 
+  labs(title = NULL,
+       # Fixed the placement of closing parentheses and commas below
+       x = paste0("PC1 (", round(eig.perc.global.noEINPP[1], 2), "%)"),
+       y = paste0("PC2 (", round(eig.perc.global.noEINPP[2], 2), "%)"),
+       colour = "Herd") + 
+    guides(colour = guide_legend(override.aes = list(size = 2, shape = 19)))
+
+```
+
+### Arrange Plots together (No EINPP)
+```{r}
+pca1_nl.noEINPP <- pca1.noEINPP + theme(legend.position = "none")
+pca2_nl.noEINPP <- pca2.noEINPP + theme(legend.position = "none")
+
+legend <- get_legend(pcag.noEINPP)
+
+global_pcas.noEINPP <- grid.arrange(pca1_nl.noEINPP, legend, pca2_nl.noEINPP, # Set out grid
+                            ncol = 3, 
+                            widths = c(10, 2.5, 10)
+                            )
+                            
+# Save plot
+ggsave("./plots/global_pcas.noEINPP.svg",
+       plot = global_pcas.noEINPP, 
+       device = "svg", 
+       width = 16, 
+       height = 12, 
+       units = "in")
+```
 # STRUCTURE Analysis 
 ```{r}
 # Temp1 structure
@@ -296,7 +461,6 @@ pop(temp2.str) <- as.numeric(as.factor(pop(temp2.str)))
 genind_to_structure(temp2.str,
                     output = "STRUCTURE_files/temp2.w_plains.structure.txt")
 ```
-
 
 #### Load Data
 ```{r}
@@ -325,8 +489,7 @@ p1 <- evannoMethodStructure(data = struct_sum_temp1, exportplot = T,
 p_lik <- p1$grobs[[1]]
 p_dk <- p1$grobs[[4]]
 
-library(gridExtra)
-library(grid)
+
 # Label Likelihood as 'a'
 panel_a <- arrangeGrob(p_lik, top = textGrob("a)", x = unit(0.5, "line"), y = unit(1, "npc"), 
                                              just = c("left", "top"), 

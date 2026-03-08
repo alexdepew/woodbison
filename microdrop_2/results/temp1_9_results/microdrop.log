@@ -1,0 +1,45 @@
+=========================================================================
+======                     MicroDrop version 1.01                   =====
+=========================================================================
+Started at: Sat Mar  7 12:26:11 2026
+
+Parameter values used in execution:
+
+DATA_FILE	./input/temp1_9.microdrop.txt	 # Data file name (-d)
+INDS	30	 # Number of individuals (-i)
+LOCI	49	 # Number of loci (-l)
+NON_DATA_ROWS	1	 # Number of non-data rows (-u)
+NON_DATA_COLS	2	 # Number of non-data columns (-v)
+OUT_FOLDER	temp1_9_results	 # Output folder name (-o)
+TOLERANCE	0.001	 # Tolerance for assessing the convergence (-s)
+MAX_ITER	10000	 # Maximum number of EM iterations (-t)
+MAX_ALLELES	100	 # Maximum number of distinct alleles (-k)
+N_PERMU	100	 # Number of permutations (-x)
+N_REPS	3	 # Number of EM replications (-r)
+N_IMPT	4	 # Number of imputed datasets (-m)
+ASMPT	0	 # Population genetic assumption (-a)
+FCTR	0	 # Dropout factor assumption (-f)
+
+Step 1: checking correlation bewteen missing data and homozygotes
+
+Pearson correlation across individuals:
+	 R=-nan	 P-value<0.01
+Pearson correlation across loci:
+	 R=-nan	 P-value<0.01
+
+Step 2: estimating parameters using EM algorithm
+
+EM	t	rho(t-1)	rho(t)  	logL(t-1)	logL(t)
+rep-1	60	0.000055	0.000049	-1233.112	-1233.111
+rep-2	57	0.000046	0.000040	-1233.115	-1233.114
+rep-3	53	0.000038	0.000033	-1233.115	-1233.114
+
+Results from rep-1 have been picked as MLEs.
+MLEs have been output to files in folder 'temp1_9_results'.
+
+Step 3: generating imputed datasets based on MLEs from step 2
+
+4 imputed datasets have been output to folder 'temp1_9_results/Imputed_Data'.
+
+Finished at: Sat Mar  7 12:26:11 2026
+=========================================================================

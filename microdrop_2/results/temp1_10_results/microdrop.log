@@ -1,0 +1,22 @@
+=========================================================================
+======                     MicroDrop version 1.01                   =====
+=========================================================================
+Started at: Sat Mar  7 12:26:08 2026
+
+Parameter values used in execution:
+
+DATA_FILE	./input/temp1_10.microdrop.txt	 # Data file name (-d)
+INDS	39	 # Number of individuals (-i)
+LOCI	49	 # Number of loci (-l)
+NON_DATA_ROWS	1	 # Number of non-data rows (-u)
+NON_DATA_COLS	2	 # Number of non-data columns (-v)
+OUT_FOLDER	temp1_10_results	 # Output folder name (-o)
+TOLERANCE	0.001	 # Tolerance for assessing the convergence (-s)
+MAX_ITER	10000	 # Maximum number of EM iterations (-t)
+MAX_ALLELES	100	 # Maximum number of distinct alleles (-k)
+N_PERMU	100	 # Number of permutations (-x)
+N_REPS	3	 # Number of EM replications (-r)
+N_IMPT	4	 # Number of imputed datasets (-m)
+ASMPT	0	 # Population genetic assumption (-a)
+FCTR	0	 # Dropout factor assumption (-f)
+Error: incorrect number of locusIDs in the datafile.

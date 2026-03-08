@@ -31,7 +31,27 @@ dos2unix -n temp1.no_plains.structure.txt temp1_np.str # ensures data is clean a
 
 # Temp2 global data with NO plains
 wget https://raw.githubusercontent.com/alexdepew/woodbison/refs/heads/main/STRUCTURE_files/temp2.no_plains.structure.txt
-dos2unix -n temp2.no_plains.structure.txt temp2_np.str # ensures data is clean and readable by structure in unix format
+dos2unix -n temp2.no_plains.structure.txt temp2_np.str # ensures data is clean and readable by structure in unix format?
+
+# WBNP1
+wget https://raw.githubusercontent.com/alexdepew/woodbison/refs/heads/main/STRUCTURE_files/w1.structure.txt
+dos2unix -n w1.structure.txt w1.str
+
+# WBNP2
+wget https://raw.githubusercontent.com/alexdepew/woodbison/refs/heads/main/STRUCTURE_files/w2.structure.txt
+dos2unix -n w2.structure.txt w2.str
+
+
+# WBNP ADMIX1
+wget https://raw.githubusercontent.com/alexdepew/woodbison/refs/heads/main/STRUCTURE_files/a1.structure.txt
+dos2unix -n a1.structure.txt a1.str
+
+
+# WBNP ADMIX2
+wget https://raw.githubusercontent.com/alexdepew/woodbison/refs/heads/main/STRUCTURE_files/a2.structure.txt
+dos2unix -n a2.structure.txt a2.str
+
+
 
 # Now edit the parameters in the input.py for each temporal group using nano
 

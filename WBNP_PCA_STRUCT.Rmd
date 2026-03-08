@@ -211,3 +211,360 @@ ggsave("./plots/wbnp_pcas.svg",
        height = 12, 
        units = "in")
 ```
+## Add EINPW AND EINPP
+#### Subset data 
+Data is subset into two temporal groups. Temporal groups are: 1: pre-2016, and 3: post-2016
+```{r}
+# Create datasets containing samples of interest for temporal comparisons
+a1 <- bison.genind[bison.genind@pop %in% c("EINPP", "EINPW", "WBNPGR", "WBNPHC", 
+                                           "WBNPLB", "WBNPNY", "WBNPPAD", "WENT") &
+                   bison.genind@other$YEAR.ASSIGN <=2015,]
+
+a2 <- bison.genind[bison.genind@pop %in% c("EINPP", "EINPW", "WBNPGR", "WBNPHC", 
+                                           "WBNPLB", "WBNPNY", "WBNPPAD", "WENT") &
+                   bison.genind@other$YEAR.ASSIGN >=2016,]
+```
+
+# Principal Coordinate Analysis (PCA)
+Visualize population structure without assumptions of HWE or LD, to identify clusters in the data.
+```{r}
+admix_subherds <- c("EINPP", "EINPW", "WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD", "WENT")
+
+admix_palette <- c("#FF00FF",
+                   "#005000",
+                   "#cecece", 
+                   "#a559aa", 
+                   "#59a89c", 
+                   "#f0c571", 
+                   "#e02b35", 
+                   "#082a54"
+                  )
+
+admix_cols <- setNames(as.character(admix_palette), admix_subherds)
+```
+
+# PCA
+### Perform PCA on both datasets
+```{r}
+# Perform PCA
+x.a1 <- tab(a1, freq = TRUE, NA.method = "mean")
+pca.a1 <- dudi.pca(x.a1, center = T, scale = F, scannf = F, nf = 2)
+
+# Axes % Variance
+eig.perc.a1 <- 100*pca.a1$eig/sum(pca.a1$eig)
+
+x.a2 <- tab(a2, freq = TRUE, NA.method = "mean")
+pca.a2 <- dudi.pca(x.a2, center = T, scale = F, scannf = F, nf = 2)
+
+# Axes % Variance
+eig.perc.a2 <- 100*pca.a2$eig/sum(pca.a2$eig)
+
+#### axis limits
+xlims <- c(-2.5, 3.5)
+ylims <- c(-2, 2.1)
+```
+
+## PCA plot with ggplot
+#### WBNP Temp1 (a1: With EINP)
+```{r}
+a1@pop <- factor(a1@pop, levels = sort(unique(as.character(a1@pop))))
+levels_a1 <- levels(a1@pop)
+a1_cols <- admix_cols[levels_a1]
+
+pca.a1$li[ ,2] <- pca.a1$li[ ,2] * -1
+
+# Plot PCA object
+pcaa1 <- fviz_pca_ind(pca.a1,
+             axes = c(1, 2),
+             geom = "blank",
+             habillage = a1@pop,
+             repel = TRUE,
+             palette = a1_cols,
+             alpha.ind = 1,) + 
+  stat_ellipse(aes(color = a1@pop), type = "norm", level = 0.68) + 
+  geom_point(aes(colour = a1@pop),
+             shape = 19,
+             alpha = 0.75,
+             size = 1.2) + 
+coord_fixed(ratio = 1, xlim = xlims, ylim = ylims) +
+  
+theme(
+    plot.title = element_blank(),
+    legend.title = element_text(face = "bold"), # Kept bold but removed blank
+    axis.title = element_text(face = "bold"),
+    panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
+
+  labs(title = NULL,
+       # Fixed the placement of closing parentheses and commas below
+       x = paste0("PC1 (", round(eig.perc.a1[1], 2), "%)"),
+       y = paste0("PC2 (", round(eig.perc.a1[2], 2), "%)"),
+       colour = "Herd") + 
+    guides(colour = guide_legend(override.aes = list(size = 4, shape = 19)))
+
+       
+
+pcaa1
+```
+
+
+## PCA plot with ggplot
+#### WBNP Temp1 (a2: With EINP)
+```{r}
+a2@pop <- factor(a2@pop, levels = sort(unique(as.character(a2@pop))))
+levels_a2 <- levels(a2@pop)
+a2_cols <- admix_cols[levels_a2]
+
+pca.a2$li[ ,2] <- pca.a2$li[ ,2] * -1
+
+# Plot PCA object
+pcaa2 <- fviz_pca_ind(pca.a2,
+             axes = c(1, 2),
+             geom = "blank",
+             habillage = a2@pop,
+             repel = TRUE,
+             palette = a2_cols,
+             alpha.ind = 1,) + 
+  stat_ellipse(aes(color = a2@pop), type = "norm", level = 0.68) + 
+  geom_point(aes(colour = a2@pop),
+             shape = 19,
+             alpha = 0.75,
+             size = 1.2) + 
+coord_fixed(ratio = 1, xlim = xlims, ylim = ylims) +
+  
+theme(
+    plot.title = element_blank(),
+    legend.title = element_text(face = "bold"), # Kept bold but removed blank
+    axis.title = element_text(face = "bold"),
+    panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
+
+  labs(title = NULL,
+       # Fixed the placement of closing parentheses and commas below
+       x = paste0("PC1 (", round(eig.perc.a2[1], 2), "%)"),
+       y = paste0("PC2 (", round(eig.perc.a2[2], 2), "%)"),
+       colour = "Herd") + 
+    guides(colour = guide_legend(override.aes = list(size = 4, shape = 19)))
+
+       
+
+pcaa2
+```
+
+### Arrange Plots together
+```{r}
+pcaa1_nl <- pcaa1 + theme(legend.position = "none")
+pcaa2_nl <- pcaa2 + theme(legend.position = "none")
+
+legend <- get_legend(pcaa1)
+
+admix_pcas <- grid.arrange(pcaa1_nl, legend, pcaa2_nl, # Set out grid
+                            ncol = 3, 
+                            widths = c(10, 2.5, 10)
+                            )
+                            
+# Save plot
+library(svglite)
+ggsave("./plots/wbnp_admix_pcas.svg",
+       plot = admix_pcas, 
+       device = "svg", 
+       width = 16, 
+       height = 12, 
+       units = "in")
+```
+# STRUCTURE Analysis
+```{r}
+# W1 structure (92 individuals, 6 pops)
+w1.str <- w1 
+pop(w1.str) <- as.numeric(as.factor(pop(w1.str)))
+
+genind_to_structure(w1.str,
+                    output = "STRUCTURE_files/w1.structure.txt")
+
+# W2 structure (146 individuals, 6 pops)
+w2.str <- w2
+pop(w2.str) <- as.numeric(as.factor(pop(w2.str)))
+
+genind_to_structure(w2.str,
+                    output = "STRUCTURE_files/w2.structure.txt")
+
+# A1 structure (161 individuals, 8 pops)
+a1.str <- a1
+pop(a1.str) <- as.numeric(as.factor(pop(a1.str)))
+
+genind_to_structure(a1.str,
+                    output = "STRUCTURE_files/a1.structure.txt")
+
+# A2 structure (200 individuals, 8 pops)
+a2.str <- a2
+pop(a2.str) <- as.numeric(as.factor(pop(a2.str)))
+
+genind_to_structure(a2.str,
+                    output = "STRUCTURE_files/a2.structure.txt")
+
+```
+## Load Files
+```{r}
+# List files
+# Full datasets
+sfiles_w1 <- list.files("./STRUCTURE_files/results/wbnp1/", full.names = TRUE)
+sfiles_w2 <- list.files("./STRUCTURE_files/results/wbnp2/", full.names = TRUE)
+
+# Qlist (pophelper)
+slist_w1 <- readQ(files = sfiles_w1, filetype = "structure")
+slist_w2 <- readQ(files = sfiles_w2, filetype = "structure")
+
+# Summarise runs
+struct_sum_w1 <- summariseQ(tabulateQ(slist_w1))
+struct_sum_w2 <- summariseQ(tabulateQ(slist_w2))
+
+# And for admixed -----
+# List files
+# Full datasets
+sfiles_a1 <- list.files("./STRUCTURE_files/results/admix1/", full.names = TRUE)
+sfiles_a2 <- list.files("./STRUCTURE_files/results/admix2/", full.names = TRUE)
+
+# Qlist (pophelper)
+slist_a1 <- readQ(files = sfiles_a1, filetype = "structure")
+slist_a2 <- readQ(files = sfiles_a2, filetype = "structure")
+
+# Summarise runs
+struct_sum_a1 <- summariseQ(tabulateQ(slist_a1))
+struct_sum_a2 <- summariseQ(tabulateQ(slist_a2))
+```
+
+
+## Likelihood Plots
+```{r}
+## WBNP1 ----
+# K plots
+w1 <- evannoMethodStructure(data = struct_sum_w1, exportplot = T,
+                           returnplot = T, returndata = F,
+                           basesize = 25, linesize = 0.7,
+                           height = 25, width = 25, units = "cm",
+                           outputfilename = "w1_K",
+                           exportpath = "./STRUCTURE_files/",
+                           imgtype = "pdf")
+
+p_lik <- w1$grobs[[1]]
+p_dk <- w1$grobs[[4]]
+
+
+# Label Likelihood as 'a'
+panel_a <- arrangeGrob(p_lik, top = textGrob("A", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+# Label Delta K as 'b'
+panel_b <- arrangeGrob(p_dk, top = textGrob("B", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+evanno_wbnp1 <- grid.arrange(panel_a, panel_b, 
+                         ncol = 2, 
+                         widths = c(1, 1))
+
+ggsave("./STRUCTURE_files/w1.k.svg", 
+       plot = evanno_wbnp1, 
+       width = 27, 
+       height = 11)
+
+# WBNP2 ----
+# K plots
+w2 <- evannoMethodStructure(data = struct_sum_w2, exportplot = T,
+                           returnplot = T, returndata = F,
+                           basesize = 25, linesize = 0.7,
+                           height = 25, width = 25, units = "cm",
+                           outputfilename = "w2_K",
+                           exportpath = "./STRUCTURE_files/",
+                           imgtype = "pdf")
+
+p_lik <- w2$grobs[[1]]
+p_dk <- w2$grobs[[4]]
+
+
+# Label Likelihood as 'a'
+panel_a <- arrangeGrob(p_lik, top = textGrob("A", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+# Label Delta K as 'b'
+panel_b <- arrangeGrob(p_dk, top = textGrob("B", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+evanno_wbnp2 <- grid.arrange(panel_a, panel_b, 
+                         ncol = 2, 
+                         widths = c(1, 1))
+
+ggsave("./STRUCTURE_files/w2.k.svg", 
+       plot = evanno_wbnp2, 
+       width = 27, 
+       height = 11)
+
+## ADMIX1 ----
+# K plots
+a1 <- evannoMethodStructure(data = struct_sum_a1, exportplot = T,
+                           returnplot = T, returndata = F,
+                           basesize = 25, linesize = 0.7,
+                           height = 25, width = 25, units = "cm",
+                           outputfilename = "a1_K",
+                           exportpath = "./STRUCTURE_files/",
+                           imgtype = "pdf")
+
+p_lik <- a1$grobs[[1]]
+p_dk <- a1$grobs[[4]]
+
+
+# Label Likelihood as 'a'
+panel_a <- arrangeGrob(p_lik, top = textGrob("A", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+# Label Delta K as 'b'
+panel_b <- arrangeGrob(p_dk, top = textGrob("B", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+evanno_admix1 <- grid.arrange(panel_a, panel_b, 
+                         ncol = 2, 
+                         widths = c(1, 1))
+
+ggsave("./STRUCTURE_files/a1.k.svg", 
+       plot = evanno_admix1, 
+       width = 27, 
+       height = 11)
+
+## ADMIX2 ----
+# K plots
+a2 <- evannoMethodStructure(data = struct_sum_a2, exportplot = T,
+                           returnplot = T, returndata = F,
+                           basesize = 25, linesize = 0.7,
+                           height = 25, width = 25, units = "cm",
+                           outputfilename = "a2_K",
+                           exportpath = "./STRUCTURE_files/",
+                           imgtype = "pdf")
+
+p_lik <- a2$grobs[[1]]
+p_dk <- a2$grobs[[4]]
+
+
+# Label Likelihood as 'a'
+panel_a <- arrangeGrob(p_lik, top = textGrob("A", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+# Label Delta K as 'b'
+panel_b <- arrangeGrob(p_dk, top = textGrob("B", x = unit(0.5, "line"), y = unit(1, "npc"), 
+                                             just = c("left", "top"), 
+                                             gp = gpar(fontsize = 18, fontface = "bold")))
+
+evanno_admix2 <- grid.arrange(panel_a, panel_b, 
+                         ncol = 2, 
+                         widths = c(1, 1))
+
+ggsave("./STRUCTURE_files/a2.k.svg", 
+       plot = evanno_admix2, 
+       width = 27, 
+       height = 11)
+```
+
+

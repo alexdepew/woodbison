@@ -201,11 +201,42 @@ fst2 <- data.frame(round(temp2_fst.mat, 3))
 write.csv(fst2, "./tables/fst2.csv", row.names = T)
 ```
 
-## Bootstraps of Fst
+#### Reorder FST Tables
+```{r}
+# Reorder
+current_names <- colnames(temp1_fst.mat)
+
+# 2. Define the new order manually (swapping the last two)
+new_order <- c("WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD", "WENT", "WBNPC1", "WBNPC2",
+                "EINPW", "HZ", "MBS", "RL", "WAB", "EINPP") 
+
+# 3. Apply the swap to both rows and columns
+temp1_fst.ordered <- temp1_fst.mat[new_order, new_order]
+
+# View the result
+round(temp1_fst.ordered, 3)
+write.csv(temp1_fst.ordered, "./tables/fst1.csv", row.names = T)
+
+# Reorder
+current_names2 <- colnames(temp2_fst.mat)
+current_names2
+
+# 2. Define the new order manually (swapping the last two)
+new_order2 <- c("WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD", "WENT", "WBNPC1", "WBNPC2", "AISH","CL", "EINPW", "ETH", "HZ", "NAH", "NORD", "RL", "WAB", "EINPP")
+
+# 3. Apply the swap to both rows and columns
+temp2_fst.ordered <- temp2_fst.mat[new_order2, new_order2]
+
+# View the result
+round(temp2_fst.ordered, 3)
+write.csv(temp2_fst.ordered, "./tables/fst2.csv", row.names = T)
+```
+
+
+#### Bootstraps of Fst - Test for significance (Null hypothesis Fst = 0)
 ```{r}
 boot1.mat <- boot.ppfst(temp1, nboot = 1000, quant=c(0.025,0.975))
 boot1.mat$ll
-
 boot2.mat <- boot.ppfst(temp2, nboot = 1000, quant=c(0.025,0.975))
 boot2.mat$ll
 ```
@@ -213,40 +244,39 @@ boot2.mat$ll
 ## Fis Sig
 ```{r}
 temp1_fis_boot <- boot.ppfis(dat=temp1,nboot=1000,quant=c(0.025,0.975))
-temp1_fis_boot$fis.ci
+temp1_fis_boot$fis.ci$ll # EINPW is the only herd with a significant FIS value
 
-temp1_merge.stat <- basic.stats(temp1)
-colMeans(temp1.stat$Fis)
+temp1.stat <- basic.stats(temp1)
+colMeans(temp1.stats$Fis)
 
 temp2_fis_boot <- boot.ppfis(dat=temp2,nboot=1000,quant=c(0.025,0.975))
-temp2_fis_boot$fis.ci
+temp2_fis_boot$fis.ci$ll # WBNPPAD, WBNPC2
 
-temp2_merge.stat <- basic.stats(temp2)
+temp2.stat <- basic.stats(temp2)
 colMeans(temp2.stat$Fis)
 ```
 
 
 
-
+### He
 ```{r}
-# HE
-# Put your objects into a named list
+# Both T1 and T2 hierfstat objects into list
 all_temps <- list("T1" = temp1.stats, "T2" = temp2.stats)
 
-# Define the metric to compare (Hs is Expected Heterozygosity)
+# Metric to compare (Hs/He)
 metric <- "Hs"
 
-# Define the possible pairs of time periods
+# Comparison time periods
 period_pairs <- list(c("T1", "T2"))
 
-# List to store results
+# List to store results of comparison tests
 wilcox_results <- list()
 
 for (pair in period_pairs) {
   p1 <- pair[1]
   p2 <- pair[2]
   
-  # Find herds common to both time periods
+  # Both time periods have different herds - this identifies which are alike
   common_herds <- intersect(colnames(all_temps[[p1]][[metric]]), 
                             colnames(all_temps[[p2]][[metric]]))
   
@@ -255,13 +285,12 @@ for (pair in period_pairs) {
     v1 <- all_temps[[p1]][[metric]][, herd]
     v2 <- all_temps[[p2]][[metric]][, herd]
     
-    # Run the paired test
+    # Run test
     test <- wilcox.test(v1, v2, paired = TRUE)
     
-    # Store results in a data frame
-    wilcox_results[[paste(herd, p1, p2, sep="_")]] <- data.frame(
+    # df output
+    wilcox_results[[paste(herd)]] <- data.frame(
       Herd = herd,
-      Comparison = paste(p1, "vs", p2),
       V_stat = test$statistic,
       p_value = round(test$p.value, 5),
       Significant = ifelse(test$p.value < 0.05, "Yes", "No")
@@ -269,8 +298,192 @@ for (pair in period_pairs) {
   }
 }
 
-# Combine into one master table
+# Combine results
 temporal_summary_table <- do.call(rbind, wilcox_results)
-print(temporal_summary_table)
+temporal_summary_table
+```
+
+
+### Ho
+```{r}
+# Both T1 and T2 hierfstat objects into list
+all_temps <- list("T1" = temp1.stats, "T2" = temp2.stats)
+
+# Metric to compare (Hs/He)
+metric <- "Ho"
+
+# Comparison time periods
+period_pairs <- list(c("T1", "T2"))
+
+# List to store results of comparison tests
+wilcox_results <- list()
+
+for (pair in period_pairs) {
+  p1 <- pair[1]
+  p2 <- pair[2]
+  
+  # Both time periods have different herds - this identifies which are alike
+  common_herds <- intersect(colnames(all_temps[[p1]][[metric]]), 
+                            colnames(all_temps[[p2]][[metric]]))
+  
+  for (herd in common_herds) {
+    # Extract per-locus values
+    v1 <- all_temps[[p1]][[metric]][, herd]
+    v2 <- all_temps[[p2]][[metric]][, herd]
+    
+    # Run test
+    test <- wilcox.test(v1, v2, paired = TRUE)
+    
+    # df output
+    wilcox_results[[paste(herd)]] <- data.frame(
+      Herd = herd,
+      V_stat = test$statistic,
+      p_value = round(test$p.value, 5),
+      Significant = ifelse(test$p.value < 0.05, "Yes", "No")
+    )
+  }
+}
+
+# Combine results
+temporal_summary_table <- do.call(rbind, wilcox_results)
+temporal_summary_table
+```
+
+# Allelic Richness
+```{r}
+temp1.Ar <- allelic.richness(temp1, min.n = 10, diploid = TRUE)
+temp2.Ar <- allelic.richness(temp2, min.n = 10, diploid = TRUE)
+
+# Put each temporal cohort into list form
+all_temps_ar <- list("T1" = temp1.Ar, "T2" = temp2.Ar)
+
+# Metric (Ar)
+metric_ar <- "Ar"
+
+# Cohort comparisons
+period_pairs <- list(c("T1", "T2"))
+
+# Results list
+wilcox_results_ar <- list()
+
+for (pair in period_pairs) {
+  p1 <- pair[1]
+  p2 <- pair[2]
+  
+  # Herds present in both periods
+  common_herds <- intersect(colnames(all_temps_ar[[p1]][[metric_ar]]), 
+                            colnames(all_temps_ar[[p2]][[metric_ar]]))
+  
+  for (herd in common_herds) {
+    # Per-locus Ar
+    v1 <- all_temps_ar[[p1]][[metric_ar]][, herd]
+    v2 <- all_temps_ar[[p2]][[metric_ar]][, herd]
+    
+    # Run test
+    test <- wilcox.test(v1, v2, paired = TRUE)
+    
+    # df output
+    wilcox_results_ar[[paste(herd)]] <- data.frame(
+      Herd = herd,
+      V_stat = test$statistic,
+      p_value = round(test$p.value, 5),
+      Significant = ifelse(test$p.value < 0.05, "Yes", "No")
+    )
+  }
+}
+
+temporal_summary_ar <- do.call(rbind, wilcox_results_ar)
+temporal_summary_ar
+```
+
+
+```{r}
+# Temp1 He comparisons
+current_obj <- temp1
+herd_list <- levels(pop(current_obj))
+
+# List results
+one_vs_all_results <- list()
+
+for (target_herd in herd_list) {
+  
+  temp_genind <- current_obj
+  
+  # Remove the target herd to compare against others
+  new_pop_vector <- ifelse(pop(temp_genind) == target_herd, target_herd, "Others")
+  pop(temp_genind) <- as.factor(new_pop_vector)
+  
+  # Split the genind
+  split_gen <- seppop(temp_genind)
+  
+  # Run Hs.test
+  test_out <- Hs.test(split_gen[[target_herd]], split_gen[["Others"]], n.sim = 999)
+  
+  # Results
+  one_vs_all_results[[target_herd]] <- data.frame(
+    Herd = target_herd,
+    Observed_Diff = test_out$obs, # Negative means herd is LESS diverse than others
+    P_Value = test_out$pvalue
+  )
+}
+
+# make df and apply BH correction (permutation test requires)
+final_one_vs_all <- do.call(rbind, one_vs_all_results)
+final_one_vs_all$adj_p_value <- p.adjust(final_one_vs_all$P_Value, method = "fdr")
+
+print(final_one_vs_all)
+
+write.csv(final_one_vs_all, "./tables/temp1_sig_hs_v2.csv", row.names = F)
+```
+```{r}
+# Temp2 He comparisons
+current_obj <- temp2
+herd_list <- levels(pop(current_obj))
+
+# List results
+one_vs_all_results <- list()
+
+for (target_herd in herd_list) {
+  
+    temp_genind <- current_obj
+  
+  # Remove the target herd to compare against others
+  new_pop_vector <- ifelse(pop(temp_genind) == target_herd, target_herd, "Others")
+  pop(temp_genind) <- as.factor(new_pop_vector)
+  
+  # Split the genind
+  split_gen <- seppop(temp_genind)
+  
+  # Run Hs.test
+  test_out <- Hs.test(split_gen[[target_herd]], split_gen[["Others"]], n.sim = 999)
+  
+  # Results
+  one_vs_all_results[[target_herd]] <- data.frame(
+    Herd = target_herd,
+    Observed_Diff = test_out$obs, # Negative means herd is LESS diverse than others
+    P_Value = test_out$pvalue
+  )
+}
+
+# make df and apply BH correction (permutation test requires)
+final_one_vs_all <- do.call(rbind, one_vs_all_results)
+final_one_vs_all$adj_p_value <- p.adjust(final_one_vs_all$P_Value, method = "fdr")
+
+print(final_one_vs_all)
+
+write.csv(final_one_vs_all, "./tables/temp2_sig_hs_v2.csv", row.names = F)
+```
+
+```{r}
+btlneck <- mRatio(temp1.g, by.strata = T)
+
+btlneck.sum <- btlneck %>% 
+  group_by(stratum) %>% 
+  summarize(
+    avg.m = mean(m.ratio, na.rm = TRUE),
+    sd.m = sd(m.ratio, na.rm = TRUE),
+    n_loci = sum(!is.na(m.ratio))
+  )
 
 ```
+

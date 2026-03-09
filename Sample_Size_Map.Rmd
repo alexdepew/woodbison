@@ -83,6 +83,8 @@ herd_centroids <- herd_centroids %>%
   ))
 
 ```
+
+
 ### Sample Sizes
 ```{r}
 t1 <- analysis.gen[analysis.gen@other$YEAR.ASSIGN <=2015]
@@ -115,11 +117,11 @@ map_data <- herd_centroids %>%
   left_join(sample_counts, by = "POPULATION")
 
 facet_names <- c("1986 - 2015",
-                 "2016 - 2025"
-                 )
+                 "2016 - 2025")
 
 bbox <- sf::st_bbox(map_data)
 
+# Factor data to ensure T1 comes before T2
 map_data$`Collection Year` <- factor(map_data$`Collection Year`, 
                                      levels = c("1986 - 2015", "2016 - 2025"))
 p <- ggplot() +
@@ -132,18 +134,16 @@ p <- ggplot() +
   size = 4,
   force = 10, 
   force_pull = 1,            
-  
   box.padding = 1,          
   point.padding = 0.4,        
-  
   min.segment.length = 0,     
   segment.color = "gray30",
   segment.alpha = 0.6,
-  
   nudge_x = 1.5,
-  
   max.overlaps = Inf
 ) +
+  
+  # Split maps into both temporal cohorts, and scale sample sizes
   facet_wrap(~`Collection Year`) + 
   scale_size_continuous(range = c(0.5, 12)) +
   guides(color = "none") +
@@ -153,11 +153,11 @@ p <- ggplot() +
         axis.title.y = element_blank(), 
         strip.text = element_text(face = "bold", size = 16)) + 
   
-  # define x and y lims to "zoom" in on map
+  # Define x and y lims to "zoom" in on map
   coord_sf(xlim = c(bbox["xmin"] - 1, bbox["xmax"] + 1), 
            ylim = c(bbox["ymin"] - 1, bbox["ymax"] + 1), 
            expand = TRUE) + 
-  scale_color_manual(values = c("1986 - 2015" = "steelblue", 
+  scale_color_manual(values = c("1986 - 2015" = "steelblue", # Set plot colours
                                 "2016 - 2025" = "darkorange"))
 
 # Export to PNG - SVG file too large

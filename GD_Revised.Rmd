@@ -1,0 +1,276 @@
+---
+title: "GD_Revised"
+author: "Alex Depew"
+date: "2026-03-09"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Required Packages
+```{r}
+rm(list = ls())
+library(PopGenReport)
+library(adegenet)
+library(hierfstat)
+library(strataG)
+library(tidyverse)
+library(poppr)
+```
+
+
+## Load Required Data
+```{r}
+cleaned.data <- read.csv("./datafiles/Revised_cleandata_07.03.2026.csv",
+                         check.names = F)
+
+
+# Merge WBNP Subherds
+mod.data <- cleaned.data %>% 
+  mutate(HERD = case_when(
+    grepl("WBNPLB|WBNPNY", HERD) ~ "WBNPC1",
+    grepl("WBNPPAD|WBNPGR|WENT", HERD) ~ "WBNPC2",
+    TRUE                         ~ HERD  
+  )) %>% 
+  relocate(HERD, .after = YEAR)
+
+# Merge new WBNP clusters back onto the dataset
+wbnp.data <- mod.data %>% 
+  filter(HERD %in% c("WBNPC1", "WBNPC2"))
+
+merged.data <- rbind(cleaned.data, wbnp.data)
+
+```
+
+#### Convert data to Genind object
+```{r}
+# Make genind object
+merge.genind <- df2genind(X=merged.data[,c(19:ncol(merged.data))],
+                              sep = "/",
+                              ind.names = merged.data$Spreadsheet_ID,
+                              loc.names = NULL,
+                              pop = merged.data$HERD,
+                              NA.char = "NA",
+                              ploidy = 2,
+                              type = "codom",
+                              strata = NULL,
+                              hierarchy = NULL)
+
+merge.genind@other$YEAR.ASSIGN <- merged.data$YEAR.ASSIGN
+```
+
+
+#### Subset data 
+Data is subset into two temporal groups. Temporal groups are: 1: pre-2016, and 2: post-2016
+```{r}
+# Create datasets containing samples of interest for temporal comparisons
+temp1 <- merge.genind[merge.genind@other$YEAR.ASSIGN <=2015,]
+temp1.sum <- summary(temp1) # Create summary of genind object
+
+temp2 <- merge.genind[merge.genind@other$YEAR.ASSIGN >=2016,]
+temp2.sum <- summary(temp2)
+```
+
+# Descriptive Statistics 
+Functions requiring the package *strataG* require inputs to be in "gtypes" objects. Programs such as HP-RARE require data to be in GENEPOP file format. 
+```{r}
+# Convert genind to gtypes
+temp1.g <- genind2gtypes(temp1)
+temp2.g <- genind2gtypes(temp2)
+
+# Convert genind to genepop
+library(graph4lg)
+genind_to_genepop(temp1, output = "genepop_files/temp1_revised.genepop.txt")
+genind_to_genepop(temp2, output = "genepop_files/temp2_revised.genepop.txt")
+
+# Hierfstat summary format
+temp1.stats <- basic.stats(temp1, diploid = TRUE, digits = 3)
+temp2.stats <- basic.stats(temp2, diploid = TRUE, digits = 3)
+```
+
+## Temporal Group 1
+```{r}
+# Number of samples per population
+temp1.N = temp1.sum$n.by.pop
+temp1.N
+
+# Heterozygosity
+temp1.Ho <- round(colMeans(temp1.stats$Ho), 2) # Observed (Ho)
+# HO SD
+temp1.Ho.sd <- round(apply(temp1.stats$Ho, 2, sd, na.rm = TRUE), 2) # SD Ho
+
+temp1.He <- round(colMeans(temp1.stats$Hs), 2) # Expected (He)
+# HE SD
+temp1.He.sd <- round(apply(temp1.stats$Hs, 2, sd, na.rm = TRUE), 2) # SD Ho
+
+
+# Allelic Richness
+temp1.Ar <- allelic.richness(temp1, min.n = 10, diploid = TRUE)
+temp1.Ar.mean <- round(colMeans(temp1.Ar$Ar), 2)
+# AR SD
+temp1.Ar.sd <- round(apply(temp1.Ar$Ar, 2, sd, na.rm = TRUE), 2)
+
+# FIS
+temp1.Fis <- round(colMeans(temp1.stats$Fis, na.rm = TRUE), 2)
+
+# Create Table
+descr.df1 <- enframe(temp1.N, name = "Population", value = "N") %>%
+  mutate(
+        HE = paste(temp1.He[Population], "±", temp1.He.sd[Population]), # Combine SD with ±
+        HO = paste(temp1.Ho[Population], "±", temp1.Ho.sd[Population]), # Combine SD with ±
+        AR = paste(temp1.Ar.mean[Population], "±", temp1.Ar.sd[Population]), # Combine with ±
+        FIS = temp1.Fis
+        )
+
+print(descr.df1)
+```
+
+## Temporal Group 2
+```{r}
+# Number of samples per population
+temp2.N = temp2.sum$n.by.pop
+temp2.N
+
+# Heterozygosity
+temp2.Ho <- round(colMeans(temp2.stats$Ho), 2) # Observed (Ho)
+# HO SD
+temp2.Ho.sd <- round(apply(temp2.stats$Ho, 2, sd, na.rm = TRUE), 2) # SD Ho
+
+temp2.He <- round(colMeans(temp2.stats$Hs), 2) # Expected (He)
+# HE SD
+temp2.He.sd <- round(apply(temp2.stats$Hs, 2, sd, na.rm = TRUE), 2) # SD Ho
+
+
+# Allelic Richness
+temp2.Ar <- allelic.richness(temp2, min.n = 10, diploid = TRUE)
+temp2.Ar.mean <- round(colMeans(temp2.Ar$Ar), 2)
+# AR SD
+temp2.Ar.sd <- round(apply(temp2.Ar$Ar, 2, sd, na.rm = TRUE), 2)
+
+# FIS
+temp2.Fis <- round(colMeans(temp2.stats$Fis, na.rm = TRUE), 2)
+
+# Create Table
+descr.df2 <- enframe(temp2.N, name = "Population", value = "N") %>%
+  mutate(
+        HE = paste(temp2.He[Population], "±", temp2.He.sd[Population]), # Combine SD with ±
+        HO = paste(temp2.Ho[Population], "±", temp2.Ho.sd[Population]), # Combine SD with ±
+        AR = paste(temp2.Ar.mean[Population], "±", temp2.Ar.sd[Population]), # Combine with ±
+        FIS = temp2.Fis
+        )
+
+print(descr.df2)
+```
+
+
+Join Tables (Long)
+```{r}
+df1_v <- descr.df1 %>% mutate(Period = "T1")
+df2_v <- descr.df2 %>% mutate(Period = "T2")
+
+full.descr.long <- bind_rows(df1_v, df2_v) %>% 
+  arrange(Population == "EINPP", Population) %>% 
+  relocate(Period, .after = Population)
+
+# Write to csv
+write.table(full.descr.long, "./tables/Temporal_GD_Table.csv", 
+            sep = ",",
+            fileEncoding = "UTF-8", 
+            row.names = FALSE)
+```
+
+# Genetic Distance 
+
+#### Weir and Cockerham (1984) Fst
+```{r}
+# Temporal group 1
+## Order herds 
+temp1_fst.mat <- as.matrix(pairwise.WCfst(temp1,
+                                        diploid = TRUE))
+
+fst1 <- data.frame(round(temp1_fst.mat, 3))
+write.csv(fst1, "./tables/fst1.csv", row.names = T)
+
+# Temporal group 2
+temp2_fst.mat <- as.matrix(pairwise.WCfst(temp2,
+                                          diploid = TRUE))
+
+fst2 <- data.frame(round(temp2_fst.mat, 3))
+write.csv(fst2, "./tables/fst2.csv", row.names = T)
+```
+
+## Bootstraps of Fst
+```{r}
+boot1.mat <- boot.ppfst(temp1, nboot = 1000, quant=c(0.025,0.975))
+boot1.mat$ll
+
+boot2.mat <- boot.ppfst(temp2, nboot = 1000, quant=c(0.025,0.975))
+boot2.mat$ll
+```
+
+## Fis Sig
+```{r}
+temp1_fis_boot <- boot.ppfis(dat=temp1,nboot=1000,quant=c(0.025,0.975))
+temp1_fis_boot$fis.ci
+
+temp1_merge.stat <- basic.stats(temp1)
+colMeans(temp1.stat$Fis)
+
+temp2_fis_boot <- boot.ppfis(dat=temp2,nboot=1000,quant=c(0.025,0.975))
+temp2_fis_boot$fis.ci
+
+temp2_merge.stat <- basic.stats(temp2)
+colMeans(temp2.stat$Fis)
+```
+
+
+
+
+```{r}
+# HE
+# Put your objects into a named list
+all_temps <- list("T1" = temp1.stats, "T2" = temp2.stats)
+
+# Define the metric to compare (Hs is Expected Heterozygosity)
+metric <- "Hs"
+
+# Define the possible pairs of time periods
+period_pairs <- list(c("T1", "T2"))
+
+# List to store results
+wilcox_results <- list()
+
+for (pair in period_pairs) {
+  p1 <- pair[1]
+  p2 <- pair[2]
+  
+  # Find herds common to both time periods
+  common_herds <- intersect(colnames(all_temps[[p1]][[metric]]), 
+                            colnames(all_temps[[p2]][[metric]]))
+  
+  for (herd in common_herds) {
+    # Extract per-locus values
+    v1 <- all_temps[[p1]][[metric]][, herd]
+    v2 <- all_temps[[p2]][[metric]][, herd]
+    
+    # Run the paired test
+    test <- wilcox.test(v1, v2, paired = TRUE)
+    
+    # Store results in a data frame
+    wilcox_results[[paste(herd, p1, p2, sep="_")]] <- data.frame(
+      Herd = herd,
+      Comparison = paste(p1, "vs", p2),
+      V_stat = test$statistic,
+      p_value = round(test$p.value, 5),
+      Significant = ifelse(test$p.value < 0.05, "Yes", "No")
+    )
+  }
+}
+
+# Combine into one master table
+temporal_summary_table <- do.call(rbind, wilcox_results)
+print(temporal_summary_table)
+
+```

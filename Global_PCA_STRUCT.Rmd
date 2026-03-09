@@ -59,7 +59,7 @@ bison.genind@other$YEAR.ASSIGN <- cleaned.data$YEAR.ASSIGN[idx]
 ```
 
 #### Subset data 
-Data is subset into three temporal groups. Temporal groups are: 1: pre-1999, 2: pre-2016, and 3: post-2016
+Data is subset into two temporal groups. Temporal groups are: 1: pre-1999, 2: pre-2016, and 3: post-2016
 ```{r}
 # Create datasets containing samples of interest for temporal comparisons
 temp1 <- bison.genind[bison.genind@other$YEAR.ASSIGN <=2015,]

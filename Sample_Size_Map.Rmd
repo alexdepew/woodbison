@@ -41,6 +41,7 @@ can_subset <-
  
 ### Extract General Latitude and Longitude for Herds
 ```{r, warning = FALSE}
+# Herd Centroids
 herd_centroids <- 
   st_centroid(woodbisonpop) %>% 
   mutate(latlong = st_transform(geometry, 4326))
@@ -56,12 +57,12 @@ herd_centroids <-
 
 herd_centroids <- st_centroid(woodbisonpop)
 
-# 2. Add a 'label' column (since your ggplot calls for 'label')
-# We will use the 'POPULATION' column as the label
 herd_centroids <- herd_centroids %>%
-  # Change labels
+
+  
+  # Update Herd names
     mutate(POPULATION = case_when(
-    # "Old Name from Shapefile" ~ "New Name for Map"
+    # Name from NWT shapefile to name consistent with study abbrev.
     POPULATION == "Aishihik Herd" ~ "AISH",
     POPULATION == "Chitek Lake Herd"    ~ "CL",
     POPULATION == "Delta"   ~ "WBNPPAD",
@@ -78,7 +79,6 @@ herd_centroids <- herd_centroids %>%
     POPULATION == "Ronald Lake"   ~ "RL",
     POPULATION == "Wentzel"   ~ "WENT",
     POPULATION == "Mack Bison CH-Range 2012_04"   ~ "MBS",
-    # This last line catches anything you didn't rename and makes it Title Case
     TRUE ~ str_to_title(gsub("_", " ", POPULATION))
   ))
 
@@ -99,8 +99,8 @@ sample_counts <- data.frame(
     YEAR <= 2015 ~ "1986 - 2015",
     YEAR >= 2016 ~ "2016 - 2025"
   )) %>%
-  # 3. Count samples per Herd per Era
-  count(POPULATION, `Collection Year`, name = "n")
+
+    count(POPULATION, `Collection Year`, name = "n") # Sample count per herd
 
 
 map_data <- herd_centroids %>%
@@ -111,17 +111,15 @@ map_data <- herd_centroids %>%
 ### Sample Map
 ```{r}
 map_data <- herd_centroids %>%
-  st_transform(st_crs(can_subset)) %>% # THIS IS THE KEY STEP
+  st_transform(st_crs(can_subset)) %>% 
   left_join(sample_counts, by = "POPULATION")
 
 facet_names <- c("1986 - 2015",
                  "2016 - 2025"
                  )
 
-# Now calculate the bbox from the correctly projected data
 bbox <- sf::st_bbox(map_data)
 
-# Run this BEFORE your ggplot code
 map_data$`Collection Year` <- factor(map_data$`Collection Year`, 
                                      levels = c("1986 - 2015", "2016 - 2025"))
 p <- ggplot() +
@@ -132,42 +130,37 @@ p <- ggplot() +
   data = map_data, 
   aes(label = POPULATION),
   size = 4,
-  # 1. Increases the "repulsion" force
   force = 10, 
-  force_pull = 1,             # Prevents labels from being pulled back toward the dot
+  force_pull = 1,            
   
-  # 2. Creates a large "no-fly zone" around the orange circles
   box.padding = 1,          
   point.padding = 0.4,        
   
-  # 3. Ensures the line is always visible regardless of distance
   min.segment.length = 0,     
   segment.color = "gray30",
   segment.alpha = 0.6,
   
-  # 4. Optional: Gives them a starting push to the right/left 
-  # to help the algorithm clear the center map area
   nudge_x = 1.5,
   
   max.overlaps = Inf
 ) +
-  # Fixed the closing parenthesis here:
   facet_wrap(~`Collection Year`) + 
   scale_size_continuous(range = c(0.5, 12)) +
   guides(color = "none") +
   theme_minimal() +
   theme(legend.position = "bottom",
-        axis.title.x = element_blank(), # Removes the 'X'
-        axis.title.y = element_blank(), # Removes the 'Y'
-        strip.text = element_text(face = "bold", size = 16)) + # Optional: makes custom labels bold
-  # Added a small buffer (expand = TRUE helps, but manual limits are safer)
+        axis.title.x = element_blank(), 
+        axis.title.y = element_blank(), 
+        strip.text = element_text(face = "bold", size = 16)) + 
+  
+  # define x and y lims to "zoom" in on map
   coord_sf(xlim = c(bbox["xmin"] - 1, bbox["xmax"] + 1), 
            ylim = c(bbox["ymin"] - 1, bbox["ymax"] + 1), 
            expand = TRUE) + 
   scale_color_manual(values = c("1986 - 2015" = "steelblue", 
                                 "2016 - 2025" = "darkorange"))
 
-# Save image
+# Export to PNG - SVG file too large
 ggsave("./plots/Sample_size_map_v2.png", plot = p,
        height = 8, width = 14)
 ```

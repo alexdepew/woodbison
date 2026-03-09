@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # File information
-This script is used to create descriptive statistic tables for population genetic analyses of all wood bison herds in Canada. 
+This script is used to assess genetic diversity for wood bison herds in Canada. 
 
 ## Load Required Packages
 ```{r}

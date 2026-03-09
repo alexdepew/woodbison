@@ -250,9 +250,9 @@ theme(
 pca1_nl <- pca1 + theme(legend.position = "none")
 pca2_nl <- pca2 + theme(legend.position = "none")
 
-legend <- get_legend(pcag)
+legend1 <- get_legend(pcag)
 
-global_pcas <- grid.arrange(pca1_nl, legend, pca2_nl, # Set out grid
+global_pcas <- grid.arrange(pca1_nl, legend1, pca2_nl, # Set out grid
                             ncol = 3, 
                             widths = c(10, 2.5, 10)
                             )
@@ -428,9 +428,9 @@ theme(
 pca1_nl.noEINPP <- pca1.noEINPP + theme(legend.position = "none")
 pca2_nl.noEINPP <- pca2.noEINPP + theme(legend.position = "none")
 
-legend <- get_legend(pcag.noEINPP)
+legend2 <- get_legend(pcag.noEINPP)
 
-global_pcas.noEINPP <- grid.arrange(pca1_nl.noEINPP, legend, pca2_nl.noEINPP, # Set out grid
+global_pcas.noEINPP <- grid.arrange(pca1_nl.noEINPP, legend2, pca2_nl.noEINPP, # Set out grid
                             ncol = 3, 
                             widths = c(10, 2.5, 10)
                             )
@@ -1164,7 +1164,7 @@ pca2_tight <- pca2_nl + m
 # 2. Re-assemble the Bottom Section (PCAs)
 # Using a slightly larger width for the legend to prevent crowding
 bottom_section <- grid.arrange(
-  pca1_tight, legend, pca2_tight, 
+  pca1_tight, legend1, pca2_tight, 
   ncol = 3, 
   widths = c(5, 1, 5)
 )
@@ -1323,7 +1323,7 @@ pca2_no_plains_tight <- pca2_nl.noEINPP + m
 # 2. Re-assemble the Bottom Section (PCAs)
 # Using a slightly larger width for the legend to prevent crowding
 bottom_section <- grid.arrange(
-  pca1_no_plains_tight, legend, pca2_no_plains_tight, 
+  pca1_no_plains_tight, legend2, pca2_no_plains_tight, 
   ncol = 3, 
   widths = c(5, 1, 5)
 )

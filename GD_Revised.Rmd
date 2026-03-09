@@ -485,5 +485,6 @@ btlneck.sum <- btlneck %>%
     n_loci = sum(!is.na(m.ratio))
   )
 
+btlneck.sum
 ```
 

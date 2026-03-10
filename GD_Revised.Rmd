@@ -299,8 +299,11 @@ for (pair in period_pairs) {
 }
 
 # Combine results
-temporal_summary_table <- do.call(rbind, wilcox_results)
-temporal_summary_table
+temporal_summary_table_He <- do.call(rbind, wilcox_results)
+temporal_summary_table_He
+
+write.csv(temporal_summary_table_He, 
+          "./tables/He_over_time.csv")
 ```
 
 
@@ -345,8 +348,11 @@ for (pair in period_pairs) {
 }
 
 # Combine results
-temporal_summary_table <- do.call(rbind, wilcox_results)
-temporal_summary_table
+temporal_summary_table_Ho <- do.call(rbind, wilcox_results)
+temporal_summary_table_Ho
+
+write.csv(temporal_summary_table_Ho, 
+          "./tables/Ho_over_time.csv")
 ```
 
 # Allelic Richness
@@ -394,6 +400,9 @@ for (pair in period_pairs) {
 
 temporal_summary_ar <- do.call(rbind, wilcox_results_ar)
 temporal_summary_ar
+
+write.csv(temporal_summary_ar, 
+          "./tables/Ar_over_time.csv")
 ```
 
 

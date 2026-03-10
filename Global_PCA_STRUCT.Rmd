@@ -595,7 +595,7 @@ locations_temp1 <- left_join(ind_label_temp1, temp1.data, by = "ID")
 loc_labels_temp1 <- locations_temp1$HERD %>% as.data.frame()
 
 herd_order_temp1 <- c("EINPW", "HZ", "MBS", "RL", "WAB", "WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD", "WENT","EINPP")
-struct_temp1_cols <- c("#ee964c", "#3b96cf", "#e39bc1", "#e73f4e", "#4b9b46", "#7d2a7c", "#f5df93","#858434", "#ba552b", "#81c7c7",  "#2d4a5e", "#44c29a")
+struct_temp1_cols <- c("#ee964c", "#3b96cf", "#7d2a7c","#e39bc1", "#e73f4e", "#4b9b46",  "#f5df93","#858434", "#ba552b", "#81c7c7",  "#2d4a5e", "#44c29a")
 
 plotQ(temp1.merged.list, 
       imgoutput = "join",
@@ -691,8 +691,8 @@ loc_labels_temp2 <- locations_temp2$HERD %>% as.data.frame()
 herd_order_temp2 <- c("AISH", "CL", "EINPW", "ETH", "HZ", "NAH", "NORD", "RL", "WAB", "WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD", "WENT", "EINPP")
 
 struct_temp2_cols <- c(
-  "#ee964c", "#3b96cf", "#e39bc1", "#e73f4e", 
-  "#4b9b46", "#7d2a7c", "#f5df93","#858434", "#ba552b", 
+  "#ee964c", "#3b96cf", "#7d2a7c","#e39bc1", "#e73f4e", 
+  "#4b9b46",  "#f5df93","#858434", "#ba552b", 
   "#81c7c7",  "#2d4a5e", "#44c29a",
   "#542e44", "#ff7f32", "#607d8b", "#1b4332"
 )
@@ -876,8 +876,8 @@ loc_labels_temp1_no_plains <- locations_temp1_no_plains$HERD %>% as.data.frame()
 
 herd_order_temp1_no_plains <- c("EINPW", "HZ", "MBS", "RL", "WAB", "WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD", "WENT")
 struct_temp1_no_plains_cols <- c(
-  "#ee964c", "#3b96cf", "#e39bc1", "#e73f4e", 
-  "#4b9b46", "#7d2a7c", "#f5df93", "#858434", "#ba552b", 
+  "#ee964c", "#3b96cf", "#7d2a7c", "#e39bc1", "#e73f4e", 
+  "#4b9b46", "#f5df93", "#858434", "#ba552b", 
   "#81c7c7", "#2d4a5e"
 )
 
@@ -980,8 +980,8 @@ loc_labels_temp2_no_plains <- locations_temp2_no_plains$HERD %>% as.data.frame()
 herd_order_temp2_no_plains <- c("AISH", "CL", "EINPP", "EINPW", "ETH", "HZ", "NAH", "NORD", "RL", "WAB", "WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD", "WENT")
 
 struct_temp2_no_plains_cols <- c(
-  "#ee964c", "#3b96cf", "#e39bc1", "#e73f4e", 
-  "#4b9b46", "#7d2a7c", "#f5df93", "#858434", "#ba552b", 
+  "#ee964c", "#3b96cf", "#7d2a7c","#e39bc1", "#e73f4e", 
+  "#4b9b46",  "#f5df93", "#858434", "#ba552b", 
   "#81c7c7", "#2d4a5e", "#44c29a",
   "#542e44", "#ff7f32", "#607d8b"
 )

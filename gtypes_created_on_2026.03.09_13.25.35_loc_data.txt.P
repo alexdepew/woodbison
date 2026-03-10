@@ -1,0 +1,86 @@
+Genepop 4.8.5: Hardy-Weinberg test
+
+File: gtypes_created_on_2026.03.09_13.25.35_loc_data.txt (gtypes created on 2026-03-09 13:25:35)
+
+Number of populations detected:    1
+Number of loci detected:           49
+
+
+Estimation of exact P-Values by the Markov chain method. 
+---------------------------------------------
+Markov chain parameters for all tests:
+Dememorization:              10000
+Batches:                     500
+Iterations per batch:        5000
+Hardy Weinberg: Probability test
+        ************************
+
+
+
+==========================================
+     Results by population
+==========================================
+
+
+Pop : Default 2271 
+-----------------------------------------
+                             Fis estimates
+                            ---------------
+locus       P-val   S.E.    W&C     R&H     Steps 
+----------- ------- ------- ------- ------- ------
+LOC1        0.3684  0.0027   0.1176  0.0391 344669 switches
+LOC2        0.8571  0.0005   0.0098 -0.0368 859226 switches
+LOC3        0.5181  0.0028   0.1235  0.0396 367906 switches
+LOC4        0.4911  0.0017   0.0574  0.0408 644162 switches
+LOC5        0.6389  0.0025   0.0136 -0.0258 337259 switches
+LOC6        0.1195  0.0014   0.2120  0.0946 536609 switches
+LOC7        0.2384  0.0018  -0.0216 -0.0895 828377 switches
+LOC8        0.9555  0.0008  -0.1903 -0.0742 265820 switches
+LOC9        0.8533  0.0018   0.0672  0.0349 269706 switches
+LOC10       0.6415  0.0013  -0.0317 -0.0431 1048455 switches
+LOC11       0.0965  0.0011   0.1575  0.1125 958536 switches
+LOC12       0.6899  0.0009   0.0694  0.0170 1247144 switches
+LOC13       1.0000  0.0000  -0.0270 -0.0274  97622 switches
+LOC14       1.0000  0.0000  -0.0440 -0.0215  77857 switches
+LOC15       0.1041  0.0014   0.1564  0.1390 719971 switches
+LOC16       0.4097  0.0011   0.0747  0.0197 1318416 switches
+LOC17       0.2354  0.0015   0.0544  0.0285 661111 switches
+LOC18       0.1063  0.0007   0.2245  0.2257 1372398 switches
+LOC19       0.5186  0.0017   0.0803  0.0751 691711 switches
+LOC20       0.7599  0.0008  -0.1035 -0.0790 853707 switches
+LOC21       0.3406  0.0011  -0.2471 -0.1280 406989 switches
+LOC22       0.5342  0.0014   0.1239  0.1001 874601 switches
+LOC23       0.7000  0.0010  -0.0423 -0.0726 617166 switches
+LOC24       1.0000  0.0000   0.0046 -0.0245 991355 switches
+LOC25       0.0571  0.0009   0.0250  0.0960 444072 switches
+LOC26       0.9892  0.0002  -0.0097 -0.0165 677633 switches
+LOC27       0.4027  0.0027   0.0460  0.0160 489571 switches
+LOC28       0.6206  0.0022  -0.0505 -0.0277 590736 switches
+LOC29       0.9555  0.0007  -0.0825 -0.0476 476990 switches
+LOC30       0.4860  0.0028   0.0179  0.0200 356792 switches
+LOC31       0.7813  0.0006  -0.1721 -0.1441 908733 switches
+LOC32       0.3306  0.0014   0.1419  0.1257 917784 switches
+LOC33       0.1461  0.0011   0.0266  0.1039 1081539 switches
+LOC34       0.6829  0.0016  -0.0022 -0.0219 635036 switches
+LOC35       0.7296  0.0027  -0.0899 -0.0366 251373 switches
+LOC36       1.0000  0.0000  -0.0248 -0.0194 605778 switches
+LOC37       0.9088  0.0006  -0.0149 -0.0262 807882 switches
+LOC38       0.2697  0.0010  -0.0470 -0.0639 657089 switches
+LOC39       0.5261  0.0033   0.1002  0.0298 277277 switches
+LOC40        No information. 
+LOC41       0.8722  0.0009  -0.1141 -0.0572 460462 switches
+LOC42       1.0000  0.0000  -0.0181 -0.0439 858927 switches
+LOC43       0.6655  0.0028   0.0162  0.0623 352059 switches
+LOC44       0.6615  0.0025  -0.1176 -0.0464 355014 switches
+LOC45       0.0590  0.0013   0.0851  0.0638 180307 switches
+LOC46       0.0988  0.0007   0.1281  0.1938 1217158 switches
+LOC47       0.4455  0.0028   0.0688  0.0302 327908 switches
+LOC48       0.1404  0.0011   0.2306  0.1757 778343 switches
+LOC49       0.4385  0.0013  -0.0600 -0.0213 1269097 switches
+
+All (Fisher's method):
+ Chi2 :    80.9360
+ Df   :    96
+ Prob :    0.864566
+
+Normal ending

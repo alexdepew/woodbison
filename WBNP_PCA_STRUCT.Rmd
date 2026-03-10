@@ -595,7 +595,7 @@ locations_w1 <- left_join(ind_label_w1, w1.data, by = "ID")
 loc_labels_w1 <- locations_w1$HERD %>% as.data.frame()
 
 herd_order_w1 <- c("WBNPLB", "WBNPNY", "WBNPHC", "WBNPPAD", "WBNPGR","WENT")
-struct_w1_cols <- c("#ee964c", "#3b96cf", "#4b9b46", "#e39bc1", "#e73f4e", "#7d2a7c")
+struct_w1_cols <- c("#ee964c", "#3b96cf", "#4b9b46", "#7d2a7c", "#e39bc1", "#e73f4e")
 
 plotQ(w1.merged.list, 
       imgoutput = "join",
@@ -678,7 +678,7 @@ locations_w2 <- left_join(ind_label_w2, w2.data, by = "ID")
 loc_labels_w2 <- locations_w2$HERD %>% as.data.frame()
 
 herd_order_w2 <- c("WBNPLB", "WBNPNY", "WBNPHC", "WBNPPAD", "WBNPGR","WENT")
-struct_w2_cols <- c("#ee964c", "#3b96cf", "#4b9b46", "#e39bc1", "#e73f4e", "#7d2a7c")
+struct_w2_cols <- c("#ee964c", "#3b96cf", "#4b9b46", "#7d2a7c", "#e39bc1", "#e73f4e")
 
 plotQ(w2.merged.list, 
       imgoutput = "join",
@@ -764,7 +764,7 @@ locations_a1 <- left_join(ind_label_a1, a1.data, by = "ID")
 loc_labels_a1 <- locations_a1$HERD %>% as.data.frame()
 
 herd_order_a1 <- c("WBNPLB", "WBNPNY", "WBNPHC", "WBNPPAD", "WBNPGR","WENT", "EINPW", "EINPP")
-struct_a1_cols <- c("#ee964c", "#3b96cf", "#4b9b46", "#e39bc1", "#e73f4e", "#7d2a7c", "#f5df93","#858434")
+struct_a1_cols <- c("#ee964c", "#3b96cf", "#4b9b46", "#7d2a7c", "#e39bc1", "#e73f4e", "#f5df93","#858434")
 
 plotQ(a1.merged.list, 
       imgoutput = "join",
@@ -851,7 +851,7 @@ locations_a2 <- left_join(ind_label_a2, a2.data, by = "ID")
 loc_labels_a2 <- locations_a2$HERD %>% as.data.frame()
 
 herd_order_a2 <- c("WBNPLB", "WBNPNY", "WBNPHC", "WBNPPAD", "WBNPGR","WENT", "EINPW", "EINPP")
-struct_a2_cols <- c("#ee964c", "#3b96cf", "#4b9b46", "#e39bc1", "#e73f4e", "#7d2a7c", "#f5df93","#858434")
+struct_a2_cols <- c("#ee964c", "#3b96cf", "#4b9b46", "#7d2a7c", "#e39bc1", "#e73f4e", "#f5df93","#858434")
 
 plotQ(a2.merged.list, 
       imgoutput = "join",
@@ -1237,7 +1237,7 @@ ggsave("./plots/WBNP_noplains_structure.svg",
 grp1 <- find.clusters(w1, max.n.clust = 8, n.pca = (nInd(w1) -1))
 
 # Print BIC plot
-pdf(file = "./plots/WBNP1_v2_BIC.pdf", width = 7, height = 5)
+svg(file = "./plots/WBNP1_v2_BIC.svg", width = 7, height = 5)
 plot(grp1$Kstat, type = "o", xlab = "Number of clusters (K)", 
      ylab = "BIC", main = "Value of BIC \n versus number of clusters \n WBNP: 1986 - 2015" ,
      col = "blue", pch = 1)
@@ -1267,7 +1267,7 @@ dapc1
 grp2 <- find.clusters(w2, max.n.clust = 8, n.pca = (nInd(w2) -1))
 
 # Print BIC plot
-pdf(file = "./plots/WBNP2_v2_BIC.pdf", width = 7, height = 5)
+svg(file = "./plots/WBNP2_v2_BIC.svg", width = 7, height = 5)
 plot(grp2$Kstat, type = "o", xlab = "Number of clusters (K)", 
      ylab = "BIC", main = "Value of BIC \n versus number of clusters \n WBNP: 2016 - 2025" ,
      col = "blue", pch = 1)
@@ -1290,6 +1290,30 @@ numpc2 <- as.numeric(pramx2$`Number of PCs Achieving Highest Mean Success`)
 dapc2 <- dapc(w2, pop(w2), n.pca = numpc2, n.da = (length(pop(w2))-1))
 dapc2
 ```
+
+#### Plots BIC plots
+```{r}
+####### Plot ----
+# Plot
+svg(file = "./plots/wbnp_BIC_merged_v2.svg", width = 10, height = 5) 
+
+# Set up  grid 1 row, 2 columns
+par(mfrow = c(1, 2)) 
+
+# Temp1
+plot(grp1$Kstat, type = "o", xlab = "Number of clusters (K)", 
+     ylab = "BIC", main = "Value of BIC \n versus number of clusters \n WBNP: 1986 - 2015" ,
+     col = "blue", pch = 1)
+
+# Temp2
+plot(grp2$Kstat, type = "o", xlab = "Number of clusters (K)", 
+     ylab = "BIC", main = "Value of BIC \n versus number of clusters \n WBNP: 2016 - 2025" ,
+     col = "blue", pch = 1)
+
+
+dev.off()
+```
+
 
 ```{r}
 ####### Plot ----

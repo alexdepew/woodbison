@@ -81,7 +81,7 @@ library(tidyverse)
 NE_header <- c("Population", "n", "Weighted.Mean", "Ind.Alleles","r^2", "Exp(r^2)", "Ne", "par_Low", "par_High", "jack_Low", "jack_High", "Eff.df")
 
 # First Temporal Group
-temp1_Ne_0.05 <- read.table("./NeEstimator/temp1_NE_0.05",
+temp1_Ne_0.05 <- read.table("./NeEstimator/temp1_revised_NE_0.05.txt",
                             sep = "\t",
                             col.names = NE_header) %>% 
                  mutate(jack_Low = as.character(jack_Low)) %>%
@@ -89,28 +89,21 @@ temp1_Ne_0.05 <- read.table("./NeEstimator/temp1_NE_0.05",
                  select(-c(par_Low, par_High)) # Removes parametric CIs
 
 # Second Temporal Group
-temp2_Ne_0.05 <- read.table("./NeEstimator/temp2_NE_0.05",
+temp2_Ne_0.05 <- read.table("./NeEstimator/temp2_revised_NE_0.05.txt",
                             sep = "\t",
                             col.names = NE_header) %>% 
                  mutate(jack_Low = as.character(jack_Low)) %>%
                  mutate(Population = str_remove_all(Population, "^\\d+:|_\\d+\\s*$")) %>% 
                  select(-c(par_Low, par_High))
 
-# Third Temporal Group
-temp3_Ne_0.05 <- read.table("./NeEstimator/temp3_NE_0.05",
-                            sep = "\t",
-                            col.names = NE_header) %>% 
-                 mutate(jack_Low = as.character(jack_Low)) %>%
-                 mutate(Population = str_remove_all(Population, "^\\d+:|_\\d+\\s*$")) %>% 
-                 select(-c(par_Low, par_High))
 
 
 # Combine into one Ne dataframe
 Ne_table <- temp1_Ne_0.05 %>% 
-  bind_rows(temp2_Ne_0.05, temp3_Ne_0.05)
+  bind_rows(temp2_Ne_0.05)
 
 # Write to csv
-write.csv(Ne_table, "./tables/Ne_estimation.csv", row.names = F)
+write.csv(Ne_table, "./tables/Ne_estimation_v2.csv", row.names = F)
 ```
 
 

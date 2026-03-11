@@ -730,7 +730,8 @@ comb_dropout <- temp1.loc.avg %>%
          mean_dropout_temp2 = mean_dropout.y,
          sd_temp2 = sd_dropout.y)
 
-
+# Write out to csv
+write.csv(comb_dropout, "./tables/LOC_DROPOUT_RATES.csv")
 
 # Prepare and Truncate Data
 locus_plot_data <- comb_dropout %>%
@@ -824,8 +825,8 @@ analysis.gen
 analysis.data <- bison.data %>% 
   select(-BMS601, -BM4028) %>% # Remove locus with nulls (BMS601) and missing data (BM4028)
     filter(!(HERD %in% c("ETH", "NORD") & # Insufficient sample sizes
-           YEAR.ASSIGN <=2015)) %>% 
-    filter(!(HERD == "WBNP" & YEAR.ASSIGN >= 2016)) # No subherd designation
+           YEAR.ASSIGN <=2015)) #%>% 
+   # filter(!(HERD == "WBNP" & YEAR.ASSIGN >= 2016)) # No subherd designation
 
 # Write out to csv
 write.csv(analysis.data, "./datafiles/Revised_cleandata_07.03.2026.csv", row.names = F)

@@ -361,7 +361,7 @@ temp1.Ar <- allelic.richness(temp1, min.n = 10, diploid = TRUE)
 temp2.Ar <- allelic.richness(temp2, min.n = 10, diploid = TRUE)
 
 # Put each temporal cohort into list form
-all_temps_ar <- list("T1" = temp1.Ar, "T2" = temp2.Ar)
+all_temps_ar <- list("T1" = temp1.Ar, "T2" = temp2.Ar) 
 
 # Metric (Ar)
 metric_ar <- "Ar"
@@ -405,10 +405,17 @@ write.csv(temporal_summary_ar,
           "./tables/Ar_over_time.csv")
 ```
 
+## Comparison of Genetic Diversity
+```{r}
+# Remove EINPP from He Wood Bison Assessment
+temp1.no.plains <- temp1[temp1@pop != "EINPP", ]
+temp2.no.plains <- temp2[temp2@pop != "EINPP", ]
+```
+
 
 ```{r}
 # Temp1 He comparisons
-current_obj <- temp1
+current_obj <- temp1.no.plains
 herd_list <- levels(pop(current_obj))
 
 # List results
@@ -446,7 +453,7 @@ write.csv(final_one_vs_all, "./tables/temp1_sig_hs_v2.csv", row.names = F)
 ```
 ```{r}
 # Temp2 He comparisons
-current_obj <- temp2
+current_obj <- temp2.no.plains
 herd_list <- levels(pop(current_obj))
 
 # List results

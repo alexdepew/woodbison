@@ -1028,6 +1028,8 @@ m <- theme(plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), "cm"))
 pcaa1_tight <- pcaa1_nl + m
 pcaa2_tight <- pcaa2_nl + m
 
+pca.a2$li[ ,2] <- pca.a2[,2]$li * -1
+
 # 2. Re-assemble the Bottom Section (PCAs)
 # Using a slightly larger width for the legend to prevent crowding
 bottom_section <- grid.arrange(

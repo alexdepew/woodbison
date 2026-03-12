@@ -825,11 +825,13 @@ analysis.gen
 analysis.data <- bison.data %>% 
   select(-BMS601, -BM4028) %>% # Remove locus with nulls (BMS601) and missing data (BM4028)
     filter(!(HERD %in% c("ETH", "NORD") & # Insufficient sample sizes
-           YEAR.ASSIGN <=2015)) #%>% 
-   # filter(!(HERD == "WBNP" & YEAR.ASSIGN >= 2016)) # No subherd designation
+           YEAR.ASSIGN <=2015)) %>% 
+    filter(!(HERD == "WBNP" & YEAR.ASSIGN >= 2016)) %>% # No subherd designation
+    filter(!(HERD %in% c("WBNPGR", "WBNPHC", "WBNPNY", "WBNPLB", "WBNP") & YEAR.ASSIGN %in% 2000:2015))
 
+  
 # Write out to csv
-write.csv(analysis.data, "./datafiles/Revised_cleandata_07.03.2026.csv", row.names = F)
+write.csv(analysis.data, "./datafiles/Revised_cleandata_11.03.2026.csv", row.names = F)
 ```
 
 

@@ -99,6 +99,12 @@ herd_palette <- c("#0026FF",
 # 3. Assign names to the colors so they are "locked" to the herd ID
 herd_cols <- setNames(as.character(herd_palette), all_herds)
 
+
+# STRUCTURE colours
+master_cols <- c("#ee964c", "#3b96cf", "#7d2a7c", "#e39bc1", "#e73f4e", 
+                 "#4b9b46", "#f5df93", "#858434", "#ba552b", "#81c7c7", 
+                 "#2d4a5e", "#44c29a", "#542e44", "#ff7f32", "#607d8b", "#1b4332")
+
 ```
 
 # PCA
@@ -596,7 +602,7 @@ locations_temp1 <- left_join(ind_label_temp1, temp1.data, by = "ID")
 
 loc_labels_temp1 <- locations_temp1$HERD %>% as.data.frame()
 
-herd_order_temp1 <- c("EINPW", "HZ", "MBS", "RL", "WAB", "WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD", "WENT","EINPP")
+herd_order_temp1 <- c("EINPP", "EINPW", "HZ", "MBS", "RL", "WAB", "WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD", "WENT")
 struct_temp1_cols <- c("#ee964c", "#3b96cf", "#7d2a7c","#e39bc1", "#e73f4e", "#4b9b46",  "#f5df93","#858434", "#ba552b", "#81c7c7",  "#2d4a5e", "#44c29a")
 
 plotQ(temp1.merged.list, 
@@ -604,7 +610,7 @@ plotQ(temp1.merged.list,
             basesize = 10, 
             grplab = loc_labels_temp1, 
             subsetgrp = herd_order_temp1, 
-            clustercol = struct_temp1_cols,
+            clustercol = master_cols,
             ordergrp = TRUE,
       
       # Side "K" Labels
@@ -660,7 +666,7 @@ temp2.data <- cleaned.data %>%
   rename(ID = Spreadsheet_ID) %>% 
   mutate(ID = as.character(ID))
 # Align runs
-slist_temp2 <- alignK(slist_temp2, "auto")
+slist_temp2 <- alignK(slist_temp2, type = "across")
 
 # Merge runs (average over 10 replicates)
 temp2.mk2 <- mergeQ(slist_temp2[11:20])
@@ -690,7 +696,7 @@ locations_temp2 <- left_join(ind_label_temp2, temp2.data, by = "ID")
 
 loc_labels_temp2 <- locations_temp2$HERD %>% as.data.frame()
 
-herd_order_temp2 <- c("AISH", "CL", "EINPW", "ETH", "HZ", "NAH", "NORD", "RL", "WAB", "WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD", "WENT", "EINPP")
+herd_order_temp2 <- c("EINPP", "AISH", "CL", "EINPW", "ETH", "HZ", "NAH", "NORD", "RL", "WAB", "WBNPGR", "WBNPHC", "WBNPLB", "WBNPNY", "WBNPPAD", "WENT")
 
 struct_temp2_cols <- c("#3b96cf", 
   "#ee964c", "#7d2a7c","#e39bc1", "#e73f4e", 
@@ -699,12 +705,12 @@ struct_temp2_cols <- c("#3b96cf",
   "#542e44", "#ff7f32", "#607d8b", "#1b4332"
 )
 
-plotQ(temp2.merged.list, 
+plotQ(alignK(temp2.merged.list), 
       imgoutput = "join",
             basesize = 10, 
             grplab = loc_labels_temp2, 
             subsetgrp = herd_order_temp2, 
-            clustercol = struct_temp2_cols,
+            clustercol = master_cols,
             ordergrp = TRUE,
       
       # Side "K" Labels
@@ -750,7 +756,7 @@ plotQ(temp2.merged.list,
       
       # File settings
             imgtype = "tiff",
-            outputfilename = "Temp2_w_plains",
+            outputfilename = "Temp2_with_plains",
             exportpath = "./plots/STRUCTURE_PLOTS")
 ```
 
@@ -888,7 +894,7 @@ plotQ(temp1.merged.list,
             basesize = 10, 
             grplab = loc_labels_temp1_no_plains, 
             subsetgrp = herd_order_temp1_no_plains, 
-            clustercol = struct_temp1_no_plains_cols,
+            clustercol = master_cols,
             ordergrp = TRUE,
       
       # Side "K" Labels
@@ -993,7 +999,7 @@ plotQ(temp2_no_plains.merged.list,
             basesize = 10, 
             grplab = loc_labels_temp2_no_plains, 
             subsetgrp = herd_order_temp2_no_plains, 
-            clustercol = struct_temp2_no_plains_cols,
+            clustercol = master_cols,
             ordergrp = TRUE,
       
       # Side "K" Labels
@@ -1061,7 +1067,7 @@ plot1 <- plotQ(c(temp1.mk2, temp1.mk3, temp1.mk4, temp1.mk5, temp1.mk6),
             basesize = 10, 
             grplab = loc_labels_temp1, 
             subsetgrp = herd_order_temp1, 
-            clustercol = struct_temp1_cols,
+            clustercol = master_cols,
             ordergrp = TRUE,
 
       # Side "K" Labels
@@ -1138,7 +1144,7 @@ plot2 <- plotQ(c(temp2.mk2, temp2.mk3, temp2.mk4, temp2.mk5, temp2.mk6),
             basesize = 10, 
             grplab = loc_labels_temp2, 
             subsetgrp = herd_order_temp2, 
-            clustercol = struct_temp2_cols,
+            clustercol = master_cols,
             ordergrp = TRUE,
 
       # Side "K" Labels
@@ -1216,7 +1222,7 @@ plot1_no_plains <- plotQ(c(temp1_no_plains.mk2, temp1_no_plains.mk3, temp1_no_pl
             basesize = 10, 
             grplab = loc_labels_temp1_no_plains, 
             subsetgrp = herd_order_temp1_no_plains, 
-            clustercol = struct_temp1_no_plains_cols,
+            clustercol = master_cols,
             ordergrp = TRUE,
 
       # Side "K" Labels
@@ -1291,7 +1297,7 @@ plot2_no_plains <- plotQ(c(temp2_no_plains.mk2, temp2_no_plains.mk3, temp2_no_pl
             basesize = 10, 
             grplab = loc_labels_temp2_no_plains, 
             subsetgrp = herd_order_temp2_no_plains, 
-            clustercol = struct_temp2_no_plains_cols,
+            clustercol = master_cols,
             ordergrp = TRUE,
 
       # Side "K" Labels
@@ -1385,9 +1391,45 @@ comb <- grid.arrange(A_labeled, B_labeled, C_labeled, D_labeled,
                      padding = unit(-2, "line"))
 
 
-ggsave("./plots/combined_global.svg",
-       plot = comb,
+pcag_horizontal <- pcag + 
+  theme(legend.direction = "horizontal", 
+        legend.position = "top",
+        # Force the legend box to the left within its own grob
+        legend.justification = "left",
+        legend.box.just = "left",
+        legend.text = element_text(size = 10, face = "bold"), 
+        legend.title = element_text(size = 14, face = "bold"),
+        # Remove any lingering margins that might push it right
+        legend.margin = margin(l = 0)) + 
+  guides(color = guide_legend(
+    title = "Herd",
+    
+    nrow = 3, 
+    byrow = TRUE,
+    override.aes = list(size = 3, alpha = 1) 
+  ))
+
+# 2. Extract the legend
+legend_bottom <- get_legend(pcag_horizontal)
+
+# 3. Use viewport with x=0 and just="left"
+# This pins the left side of the legend box to the left side of the canvas
+legend_shifted <- arrangeGrob(legend_bottom, 
+                              vp = viewport(x = 0.08, just = "left", width = 0.8)) 
+
+#### 4. Final Assembly
+comb_leg <- grid.arrange(
+  comb, 
+  legend_shifted,
+  ncol = 1, 
+  heights = c(46, 4), 
+  padding = unit(0, "line")
+)
+
+ggsave("./plots/combined_global_leg.svg",
+       plot = comb_leg,
        height = 25,
        width = 25,
+       bg = "white",
        units = "in")
 ```

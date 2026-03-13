@@ -125,8 +125,8 @@ pca.global <- dudi.pca(x.global, center = T, scale = F, scannf = F, nf =2)
 eig.perc.global <- 100*pca.global$eig/sum(pca.global$eig)
 
 #### axis limits
-xlims <- c(-2, 3.5)
-ylims <- c(-2, 2.1)
+xlims <- c(-2.5, 3.5)
+ylims <- c(-3, 2.1)
 ```
 
 
@@ -159,8 +159,7 @@ theme(
     axis.title = element_text(face = "bold", size = 12),
     panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
 
-  labs(title = "(1986 - 2015)",
-       # Fixed the placement of closing parentheses and commas below
+  labs(title = "(1986 - 2015) w/ EINPP",
        x = paste0("PC1 (", round(eig.perc.temp1[1], 2), "%)"),
        y = paste0("PC2 (", round(eig.perc.temp1[2], 2), "%)"),
        colour = "Herd") + 
@@ -199,7 +198,7 @@ theme(
     axis.title = element_text(face = "bold", size = 12),
     panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
 
-  labs(title = "(2016 - 2025)",
+  labs(title = "(2016 - 2025) w/ EINPP",
        # Fixed the placement of closing parentheses and commas below
        x = paste0("PC1 (", round(eig.perc.temp2[1], 2), "%)"),
        y = paste0("PC2 (", round(eig.perc.temp2[2], 2), "%)"),
@@ -303,8 +302,8 @@ eig.perc.global.noEINPP <- 100*pca.global.noEINPP$eig/sum(pca.global.noEINPP$eig
 
 #### Reset xlim and ylim
 ```{r}
-xlims.noEINPP = c(-2.5, 2.5)
-ylims.noEINPP = c(-3, 2)
+xlims.noEINPP <- c(-2.5, 3.5)
+ylims.noEINPP <- c(-3, 2.1)
 ```
 
 
@@ -334,11 +333,10 @@ theme(
     plot.title = element_text(hjust = 0.5, face = "bold", size = 15),
     legend.title = element_text(face = "bold", size = 15),
     legend.text = element_text(size = 12),
-    axis.title = element_text(face = "bold"),
+    axis.title = element_text(face = "bold", size = 12),
     panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
 
-  labs(title = "(1986 - 2015)",
-       # Fixed the placement of closing parentheses and commas below
+  labs(title = "(1986 - 2015) w/o EINPP",
        x = paste0("PC1 (", round(eig.perc.temp1.noEINPP[1], 2), "%)"),
        y = paste0("PC2 (", round(eig.perc.temp1.noEINPP[2], 2), "%)"),
        colour = "Herd") + 
@@ -376,11 +374,10 @@ theme(
     plot.title = element_text(hjust = 0.5, face = "bold", size = 15),
     legend.title = element_text(face = "bold", size = 15),
     legend.text = element_text(size = 12),
-    axis.title = element_text(face = "bold"),
+    axis.title = element_text(face = "bold", size = 12),
     panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
 
-  labs(title = "(2016 - 2025)",
-       # Fixed the placement of closing parentheses and commas below
+  labs(title = "(2016 - 2025) w/o EINPP",
        x = paste0("PC1 (", round(eig.perc.temp2.noEINPP[1], 2), "%)"),
        y = paste0("PC2 (", round(eig.perc.temp2.noEINPP[2], 2), "%)"),
        colour = "Herd") + 
@@ -1049,29 +1046,18 @@ plotQ(temp2_no_plains.merged.list,
 # Combined Plots
 #### Including EINPP 
 ```{r}
+#### Set slimmer margins for all PCAs
+#m <- theme(plot.margin = unit(c(1.2, 0.2, 0.2, 0.2), "cm")) # Tighten borders around PCAs
+
 ### PCA w/ plains bison outgroup
-m <- theme(plot.margin = unit(c(1.2, 0.2, 0.2, 0.2), "cm")) # Tighten borders around PCAs
 
-# PCA w/ plains
-pca1_tight <- pca1_nl + m
-pca2_tight <- pca2_nl + m
+# PCA w/ plains T1
+pca1_tight <- pca1_nl 
 
-row_1 <- grid.arrange(pca1_tight, legend1, pca2_tight, 
-  ncol = 3, 
-  widths = c(5, 1, 5)
-)
 
-# PCA w/o plains
-pca1.noEINPP_tight <- pca1_nl.noEINPP + m
-pca2.noEINPP_tight <- pca2_nl.noEINPP + m
-
-row_2 <- grid.arrange(pca1.noEINPP_tight, legend2, pca2.noEINPP_tight, 
-  ncol = 3, 
-  widths = c(5, 1, 5)
-)
-
-## T1 K=2 w/plains
-plot1 <- plotQ(temp1.mk2, 
+# STRUCTURE T1 w/ plains
+plot1 <- plotQ(c(temp1.mk2, temp1.mk3, temp1.mk4, temp1.mk5, temp1.mk6),
+            imgout = "join",
             basesize = 10, 
             grplab = loc_labels_temp1, 
             subsetgrp = herd_order_temp1, 
@@ -1079,8 +1065,8 @@ plot1 <- plotQ(temp1.mk2,
             ordergrp = TRUE,
 
       # Side "K" Labels
-            splab = "K = 2",
-            splabsize = 20,
+            splab = c("K = 2", "K = 3", "K = 4", "K = 5", "K = 6"),
+            splabsize = 14,
             sppos = "left",
             splabcol = "black",
             splabangle = 0,
@@ -1117,34 +1103,47 @@ plot1 <- plotQ(temp1.mk2,
            titlehjust = 0.5,
            titlevjust = 0.5,
            titlesize = 15,
+           titlecol = "black",
+      titleface = "bold",
       
       # Plot settings
             height = 5,             
             width = 50,
-            panelspacer = 0,
+            panelspacer = 0.2,
             panelratio = c(1,2),
       
       # File settings
             imgtype = "tiff",
             returnplot = TRUE,
-            outputfilename = "plottemp1.k2",
-            exportpath = "./STRUCTURE_files/")
+            outputfilename = "plottemp1.k2-6",
+            exportpath = "./plots/temp")
 
 # Pull STRUCTURE Plot from object
 t1 <- plot1$plot[[1]]
 
+# Combine Global w/ plains T1
+row_1 <- grid.arrange(pca1_tight, t1,
+                      ncol = 2,
+                      widths = c(10, 15))
 
-## T2 K=2 w/plains
-plot2 <- plotQ(temp2.mk2, 
+
+
+# PCA w/ plains T2
+pca2_tight <- pca2_nl 
+
+
+# STRUCTURE T1 w/ plains
+plot2 <- plotQ(c(temp2.mk2, temp2.mk3, temp2.mk4, temp2.mk5, temp2.mk6),
+            imgout = "join",
             basesize = 10, 
             grplab = loc_labels_temp2, 
             subsetgrp = herd_order_temp2, 
             clustercol = struct_temp2_cols,
             ordergrp = TRUE,
-            
+
       # Side "K" Labels
-            splab = "K = 2",
-            splabsize = 20,
+            splab = c("K = 2", "K = 3", "K = 4", "K = 5", "K = 6"),
+            splabsize = 14,
             sppos = "left",
             splabcol = "black",
             splabangle = 0,
@@ -1159,7 +1158,7 @@ plot2 <- plotQ(temp2.mk2,
             grplabsize = 5, 
             grplabangle = 45,
             grplabpos = 0.85,
-            grplabheight = 0.15,      
+            grplabheight = 0.6,      
             grplabspacer = 0,
             grplabcol = "black",
       
@@ -1181,34 +1180,48 @@ plot2 <- plotQ(temp2.mk2,
            titlehjust = 0.5,
            titlevjust = 0.5,
            titlesize = 15,
+           titlecol = "black",
+      titleface = "bold",
       
       # Plot settings
             height = 5,             
             width = 50,
-            panelspacer = 1,
+            panelspacer = 0.2,
             panelratio = c(1,2),
       
       # File settings
             imgtype = "tiff",
             returnplot = TRUE,
-            outputfilename = "plottemp2.k2",
-            exportpath = "./STRUCTURE_files/")
+            outputfilename = "plottemp2.k2-6",
+            exportpath = "./plots/temp")
 
 # Pull STRUCTURE Plot from object
 t2 <- plot2$plot[[1]]
 
-#### Global Structure of Wood Bison (not including plains)
-## T1 K=4 w/o plains
-plot3<- plotQ(temp1_no_plains.mk4,
+
+# Combine Global w/ plains T1
+row_2 <- grid.arrange(pca2_tight, t2,
+                      ncol = 2,
+                      widths = c(10, 15))
+
+################ Without Plains from Elk Island
+
+# PCA w/ plains T1
+pca1.noEINPP_tight <- pca1_nl.noEINPP 
+
+
+# STRUCTURE T1 w/ plains
+plot1_no_plains <- plotQ(c(temp1_no_plains.mk2, temp1_no_plains.mk3, temp1_no_plains.mk4, temp1_no_plains.mk5, temp1_no_plains.mk6),
+            imgout = "join",
             basesize = 10, 
             grplab = loc_labels_temp1_no_plains, 
             subsetgrp = herd_order_temp1_no_plains, 
             clustercol = struct_temp1_no_plains_cols,
             ordergrp = TRUE,
-            
+
       # Side "K" Labels
-            splab = "K = 4",
-            splabsize = 20,
+            splab = c("K = 2", "K = 3", "K = 4", "K = 5", "K = 6"),
+            splabsize = 14,
             sppos = "left",
             splabcol = "black",
             splabangle = 0,
@@ -1223,7 +1236,7 @@ plot3<- plotQ(temp1_no_plains.mk4,
             grplabsize = 5, 
             grplabangle = 45,
             grplabpos = 0.85,
-            grplabheight = 0.15,      
+            grplabheight = 0.6,      
             grplabspacer = 0,
             grplabcol = "black",
       
@@ -1238,41 +1251,52 @@ plot3<- plotQ(temp1_no_plains.mk4,
       
             useindlab = TRUE, 
             returndata = TRUE,
-
+      
       # Add title
            showtitle = TRUE,
            titlelab = "(1986 - 2015) w/o EINPP",
            titlehjust = 0.5,
            titlevjust = 0.5,
            titlesize = 15,
+           titlecol = "black",
+      titleface = "bold",
       
       # Plot settings
             height = 5,             
             width = 50,
-            panelspacer = 0.1,
+            panelspacer = 0.2,
             panelratio = c(1,2),
       
       # File settings
             imgtype = "tiff",
             returnplot = TRUE,
-            outputfilename = "plottemp1_no_plains.k4",
-            exportpath = "./STRUCTURE_files/")
+            outputfilename = "plottemp1_no_plains.k2-6",
+            exportpath = "./plots/temp")
 
 # Pull STRUCTURE Plot from object
-t3 <- plot3$plot[[1]]
+t1_no_plains <- plot1_no_plains$plot[[1]]
+
+# Combine Global w/ plains T1
+row_3 <- grid.arrange(pca1.noEINPP_tight, t1_no_plains,
+                      ncol = 2,
+                      widths = c(10, 15))
+
+# PCA w/o plains T2
+pca2.noEINPP_tight <- pca2_nl.noEINPP 
 
 
-## T2 K=2-6 w/o plains
-plot4<- plotQ(temp2_no_plains.mk5, 
+# STRUCTURE T1 w/ plains
+plot2_no_plains <- plotQ(c(temp2_no_plains.mk2, temp2_no_plains.mk3, temp2_no_plains.mk4, temp2_no_plains.mk5, temp2_no_plains.mk6),
+            imgout = "join",
             basesize = 10, 
             grplab = loc_labels_temp2_no_plains, 
             subsetgrp = herd_order_temp2_no_plains, 
             clustercol = struct_temp2_no_plains_cols,
             ordergrp = TRUE,
-            
+
       # Side "K" Labels
-            splab = c("K = 5"),
-            splabsize = 20,
+            splab = c("K = 2", "K = 3", "K = 4", "K = 5", "K = 6"),
+            splabsize = 14,
             sppos = "left",
             splabcol = "black",
             splabangle = 0,
@@ -1287,7 +1311,7 @@ plot4<- plotQ(temp2_no_plains.mk5,
             grplabsize = 5, 
             grplabangle = 45,
             grplabpos = 0.85,
-            grplabheight = 0.15,      
+            grplabheight = 0.6,      
             grplabspacer = 0,
             grplabcol = "black",
       
@@ -1309,22 +1333,32 @@ plot4<- plotQ(temp2_no_plains.mk5,
            titlehjust = 0.5,
            titlevjust = 0.5,
            titlesize = 15,
+           titlecol = "black",
+      titleface = "bold",
       
       # Plot settings
             height = 5,             
             width = 50,
-            panelspacer = 0.1,
+            panelspacer = 0.2,
             panelratio = c(1,2),
       
       # File settings
             imgtype = "tiff",
             returnplot = TRUE,
-            outputfilename = "plottemp2_no_plains.k5",
-            exportpath = "./STRUCTURE_files/")
-
+            outputfilename = "plottemp2_no_plains.k2-6",
+            exportpath = "./plots/temp")
 
 # Pull STRUCTURE Plot from object
-t4 <- plot4$plot[[1]]
+t2_no_plains <- plot2_no_plains$plot[[1]]
+
+# Combine Global w/ plains T1
+row_4 <- grid.arrange(pca2.noEINPP_tight, t2_no_plains,
+                      ncol = 2,
+                      widths = c(10, 15))
+
+
+
+
 
 #### Label Sections
 # 3. Apply the 'A' Label
@@ -1332,45 +1366,22 @@ A_labeled <- arrangeGrob(row_1,
                          top = textGrob("A", x = unit(0.02, "npc"), just = "left", 
                                         gp = gpar(fontsize = 28, fontface = "bold")))
 
-# 4. Apply 'B' and 'C' to STRUCTURE (Using your existing t1/t2 grobs)
 B_labeled <- arrangeGrob(row_2, 
                          top = textGrob("B", x = unit(0.02, "npc"), just = "left", 
                                         gp = gpar(fontsize = 28, fontface = "bold")))
 
-top_panel <- grid.arrange(A_labeled, B_labeled, ncol = 1)
-
-#### STRUCTURE Neighbor columns
-## LEFT
-
-C_labeled <- arrangeGrob(t1, 
+C_labeled <- arrangeGrob(row_3, 
                          top = textGrob("C", x = unit(0.02, "npc"), just = "left", 
                                         gp = gpar(fontsize = 28, fontface = "bold")))
 
-E_labeled <- arrangeGrob(t3, 
-                         top = textGrob("E", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 28, fontface = "bold")))
-
-left_col <- grid.arrange(C_labeled, E_labeled, ncol = 1)
-
-## RIGHT
-
-D_labeled <- arrangeGrob(t2, 
+D_labeled <- arrangeGrob(row_4, 
                          top = textGrob("D", x = unit(0.02, "npc"), just = "left", 
                                         gp = gpar(fontsize = 28, fontface = "bold"))) 
 
-F_labeled <- arrangeGrob(t4, 
-                         top = textGrob("F", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 28, fontface = "bold")))
-
-right_col <- grid.arrange(D_labeled, F_labeled, ncol = 1)
-
-#### Bottom STRUCTURE panels
-bottom_panel <- grid.arrange(left_col, right_col, ncol = 2)
-
 #### Combine plots
-comb <- grid.arrange(top_panel, bottom_panel,  
+comb <- grid.arrange(A_labeled, B_labeled, C_labeled, D_labeled,
                      ncol = 1, 
-                     heights = c(2,2,1,1),
+                     heights = c(10,10,10,10),
                      padding = unit(-2, "line"))
 
 
@@ -1379,40 +1390,4 @@ ggsave("./plots/combined_global.svg",
        height = 25,
        width = 25,
        units = "in")
-```
-
-
-
-```{r}
-library(cowplot)
-left_col <- plot_grid(
-  t1, t3, 
-  ncol = 1, 
-  labels = c("C", "E"), 
-  label_size = 28, 
-  rel_heights = c(1, 4) # Adjusts for more K-rows in E
-)
-
-# 3. Assemble the Right Column (D and F)
-right_col <- plot_grid(
-  t2, t4, 
-  ncol = 1, 
-  labels = c("D", "F"), 
-  label_size = 28, 
-  rel_heights = c(1, 5) # Adjusts for even more K-rows in F
-)
-
-# 4. Final Layout
-# Combine your existing top_panel (PCAs) with the new STRUCTURE columns
-bottom_panel <- plot_grid(left_col, right_col, ncol = 2)
-
-final_figure <- plot_grid(
-  top_panel, # Your existing PCA stack (A and B)
-  bottom_panel, 
-  ncol = 1, 
-  rel_heights = c(1, 2)
-)
-
-save_plot("./plots/combined_global_V2.svg", final_figure, base_height = 25, base_width = 14)
-
 ```

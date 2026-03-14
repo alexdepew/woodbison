@@ -87,6 +87,12 @@ wbnp_palette <- c("#cecece",
                   )
 
 wbnp_cols <- setNames(as.character(wbnp_palette), wbnp_subherds)
+
+# STRUCTURE colours
+master_cols <- c("#ee964c", "#3b96cf", "#7d2a7c", "#e39bc1", "#e73f4e", 
+                 "#4b9b46", "#f5df93", "#858434", "#ba552b", "#81c7c7", 
+                 "#2d4a5e", "#44c29a", "#542e44", "#ff7f32", "#607d8b", "#1b4332")
+
 ```
 
 # PCA
@@ -763,7 +769,7 @@ locations_a1 <- left_join(ind_label_a1, a1.data, by = "ID")
 
 loc_labels_a1 <- locations_a1$HERD %>% as.data.frame()
 
-herd_order_a1 <- c("WBNPLB", "WBNPNY", "WBNPHC", "WBNPPAD", "WBNPGR","WENT", "EINPW", "EINPP")
+herd_order_a1 <- c("EINPP", "EINPW", "WBNPLB", "WBNPNY", "WBNPHC", "WBNPPAD", "WBNPGR","WENT")
 struct_a1_cols <- c("#ee964c", "#3b96cf", "#4b9b46", "#7d2a7c", "#e39bc1", "#e73f4e", "#f5df93","#858434")
 
 plotQ(a1.merged.list, 
@@ -850,7 +856,7 @@ locations_a2 <- left_join(ind_label_a2, a2.data, by = "ID")
 
 loc_labels_a2 <- locations_a2$HERD %>% as.data.frame()
 
-herd_order_a2 <- c("WBNPLB", "WBNPNY", "WBNPHC", "WBNPPAD", "WBNPGR","WENT", "EINPW", "EINPP")
+herd_order_a2 <- c("EINPP", "EINPW", "WBNPLB", "WBNPNY", "WBNPHC", "WBNPPAD", "WBNPGR","WENT")
 struct_a2_cols <- c("#ee964c", "#3b96cf", "#4b9b46", "#7d2a7c", "#e39bc1", "#e73f4e", "#f5df93","#858434")
 
 plotQ(a2.merged.list, 
@@ -909,19 +915,21 @@ plotQ(a2.merged.list,
 
 
 # Combined Plots
-#### No EINP outgroups
 ```{r}
-## WBNP - Wood bison only
-plota1 <- plotQ(a1.mk3, 
+### PCA w/ plains bison outgroup
+
+# STRUCTURE A1 w/ plains
+plota1 <- plotQ(c(a1.mk2, a1.mk3, a1.mk4, a1.mk5, a1.mk6),
+            imgout = "join",
             basesize = 10, 
             grplab = loc_labels_a1, 
             subsetgrp = herd_order_a1, 
-            clustercol = struct_a1_cols,
+            clustercol = master_cols,
             ordergrp = TRUE,
-      
+
       # Side "K" Labels
-            splab = "K = 3",
-            splabsize = 20,
+            splab = c("K=2", "K=3*", "K=4", "K=5", "K=6"),
+            splabsize = 14,
             sppos = "left",
             splabcol = "black",
             splabangle = 0,
@@ -952,138 +960,48 @@ plota1 <- plotQ(a1.mk3,
             useindlab = TRUE, 
             returndata = TRUE,
       
+      # Add title
+           showtitle = TRUE,
+           titlelab = NULL,
+           titlehjust = 0.5,
+           titlevjust = 0.5,
+           titlesize = 15,
+           titlecol = "black",
+      titleface = "bold",
+      
       # Plot settings
             height = 5,             
             width = 50,
-            panelspacer = 0,
-            panelratio = c(1,1),
+            panelspacer = 0.2,
+            panelratio = c(1,2),
       
       # File settings
             imgtype = "tiff",
             returnplot = TRUE,
-            outputfilename = "A1_temp",
-            exportpath = "./STRUCTURE_files/")
+            outputfilename = "plota1.k2-6",
+            exportpath = "./plots/temp")
 
 # Pull STRUCTURE Plot from object
 ta1 <- plota1$plot[[1]]
 
+# Combine Global w/ plains T1
+row_1 <- grid.arrange(pcaa1_nl, ta1,
+                      ncol = 2,
+                      widths = c(10, 15))
 
-## Temp1 STRUCTURE
-plota2 <- plotQ(a2.mk4, 
+
+# STRUCTURE T1 w/ plains
+plota2 <- plotQ(c(a2.mk2, a2.mk3, a2.mk4, a2.mk5, a2.mk6),
+            imgout = "join",
             basesize = 10, 
             grplab = loc_labels_a2, 
             subsetgrp = herd_order_a2, 
-            clustercol = struct_a2_cols,
+            clustercol = master_cols,
             ordergrp = TRUE,
-      
+
       # Side "K" Labels
-            splab = "K = 4",
-            splabsize = 20,
-            sppos = "left",
-            splabcol = "black",
-            splabangle = 0,
-      
-      # Individual Label Settings
-            showindlab = F, 
-            indlabsize = 0,        
-            indlabangle = 90,
-            indlabheight = 0,
-      
-      # Group Label settings
-            grplabsize = 5, 
-            grplabangle = 45,
-            grplabpos = 0.85,
-            grplabheight = 0.15,      
-            grplabspacer = 0,
-            grplabcol = "black",
-      
-            linesize = 1,          
-            pointsize = 8,
-            linepos = 0.95,
-      
-      # Divider Line Settings
-            divcol = "white",
-            divsize = 1, 
-            divtype = NULL,
-      
-            useindlab = TRUE, 
-            returndata = TRUE,
-      
-      # Plot settings
-            height = 5,             
-            width = 50,
-            panelspacer = 1,
-            panelratio = c(1,1),
-      
-      # File settings
-            imgtype = "tiff",
-            returnplot = TRUE,
-            outputfilename = "A2_temp",
-            exportpath = "./STRUCTURE_files/")
-
-# Pull STRUCTURE Plot from object
-ta2 <- plota2$plot[[1]]
-
-m <- theme(plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), "cm"))
-pcaa1_tight <- pcaa1_nl + m
-pcaa2_tight <- pcaa2_nl + m
-
-pca.a2$li[ ,2] <- pca.a2[,2]$li * -1
-
-# 2. Re-assemble the Bottom Section (PCAs)
-# Using a slightly larger width for the legend to prevent crowding
-bottom_section <- grid.arrange(
-  pcaa1_tight, legenda1, pcaa2_tight, 
-  ncol = 3, 
-  widths = c(5, 1, 5)
-)
-
-# 3. Apply the 'A' Label
-A_labeled <- arrangeGrob(bottom_section, 
-                         top = textGrob("A", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 28, fontface = "bold")))
-
-# 4. Apply 'B' and 'C' to STRUCTURE (Using your existing t1/t2 grobs)
-B_labeled <- arrangeGrob(ta1, 
-                         top = textGrob("B", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 28, fontface = "bold")))
-
-C_labeled <- arrangeGrob(ta2, 
-                         top = textGrob("C", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 28, fontface = "bold")))
-
-# 5. Final Assembly with Reduced Vertical Gaps
-# We combine Structure plots first to keep them tight together
-top_section_labeled <- grid.arrange(B_labeled, C_labeled, ncol = 1, padding = unit(-2, "line"))
-
-# Stack everything and use padding to pull A closer to B
-WBNP_with_plains <- grid.arrange(A_labeled, top_section_labeled, 
-                             ncol = 1, 
-                             heights = c(1.3, 1.2), # Adjusts the ratio of PCA vs Structure
-                             padding = unit(-6, "line"))
-
-# 6. Save
-ggsave("./plots/WBNP_with_plains_structure.svg", 
-       plot = WBNP_with_plains, 
-       width = 18, 
-       height = 14, # Dropped height from 16 to 14 to force elements together
-       units = "in")
-```
-
-
-#### WBNP No plains
-```{r}
-## WBNP - Wood bison only
-plot1 <- plotQ(w1.mk2, 
-            basesize = 10, 
-            grplab = loc_labels_w1, 
-            subsetgrp = herd_order_w1, 
-            clustercol = struct_w1_cols,
-            ordergrp = TRUE,
-      
-      # Side "K" Labels
-            splab = "K = 2",
-            splabsize = 20,
+            splab = c("K=2", "K=3", "K=4*", "K=5", "K=6"),
+            splabsize = 14,
             sppos = "left",
             splabcol = "black",
             splabangle = 0,
@@ -1114,33 +1032,50 @@ plot1 <- plotQ(w1.mk2,
             useindlab = TRUE, 
             returndata = TRUE,
       
+      # Add title
+           showtitle = TRUE,
+           titlelab = NULL,
+           titlehjust = 0.5,
+           titlevjust = 0.5,
+           titlesize = 15,
+           titlecol = "black",
+      titleface = "bold",
+      
       # Plot settings
             height = 5,             
             width = 50,
-            panelspacer = 0,
-            panelratio = c(1,1),
+            panelspacer = 0.2,
+            panelratio = c(1,2),
       
       # File settings
             imgtype = "tiff",
             returnplot = TRUE,
-            outputfilename = "W1_temp",
-            exportpath = "./STRUCTURE_files/")
+            outputfilename = "plota2.k2-6",
+            exportpath = "./plots/temp")
 
 # Pull STRUCTURE Plot from object
-t1 <- plot1$plot[[1]]
+ta2 <- plota2$plot[[1]]
 
 
-## Temp1 STRUCTURE
-plot2 <- plotQ(w2.mk2, 
+# Combine Global w/ plains T1
+row_2 <- grid.arrange(pcaa2_nl, ta2,
+                      ncol = 2,
+                      widths = c(10, 15))
+
+################ Without Plains from Elk Island
+
+# STRUCTURE W1 w/o plains
+plotw1 <- plotQ(c(w1.mk2, w1.mk3, w1.mk4, w1.mk5, w1.mk6),
+            imgout = "join",
             basesize = 10, 
-            grplab = loc_labels_w2, 
-            subsetgrp = herd_order_w2, 
-            clustercol = struct_w2_cols,
+            grplab = loc_labels_w1, 
+            subsetgrp = herd_order_w1, 
+            clustercol = master_cols,
             ordergrp = TRUE,
-      
+
       # Side "K" Labels
-            splab = "K = 2",
-            splabsize = 20,
+            splab = c("K=2", "K=3", "K=4", "K=5", "K=6"),
+            splabsize = 14,
             sppos = "left",
             splabcol = "black",
             splabangle = 0,
@@ -1155,7 +1090,7 @@ plot2 <- plotQ(w2.mk2,
             grplabsize = 5, 
             grplabangle = 45,
             grplabpos = 0.85,
-            grplabheight = 0.15,      
+            grplabheight = 0.6,      
             grplabspacer = 0,
             grplabcol = "black",
       
@@ -1171,62 +1106,189 @@ plot2 <- plotQ(w2.mk2,
             useindlab = TRUE, 
             returndata = TRUE,
       
+      # Add title
+           showtitle = TRUE,
+           titlelab = NULL,
+           titlehjust = 0.5,
+           titlevjust = 0.5,
+           titlesize = 15,
+           titlecol = "black",
+      titleface = "bold",
+      
       # Plot settings
             height = 5,             
             width = 50,
-            panelspacer = 1,
-            panelratio = c(1,1),
+            panelspacer = 0.2,
+            panelratio = c(1,2),
       
       # File settings
             imgtype = "tiff",
             returnplot = TRUE,
-            outputfilename = "W2_temp",
-            exportpath = "./STRUCTURE_files/")
+            outputfilename = "plotw1.k2-6",
+            exportpath = "./plots/temp")
 
 # Pull STRUCTURE Plot from object
-t2 <- plot2$plot[[1]]
+tw1 <- plotw1$plot[[1]]
 
-m <- theme(plot.margin = unit(c(0.2, 0.2, 0.2, 0.2), "cm"))
-pcaw1_tight <- pcaw1_nl + m
-pcaw2_tight <- pcaw2_nl + m
+# Combine Global w/ plains T1
+row_3 <- grid.arrange(pcaw1_nl, tw1,
+                      ncol = 2,
+                      widths = c(10, 15))
 
-# 2. Re-assemble the Bottom Section (PCAs)
-# Using a slightly larger width for the legend to prevent crowding
-bottom_section <- grid.arrange(
-  pcaw1_tight, legendw1, pcaw2_tight, 
-  ncol = 3, 
-  widths = c(5, 1, 5)
+# STRUCTURE W2 w/o plains
+plotw2<- plotQ(c(w2.mk2, w2.mk3, w2.mk4, w2.mk5, w2.mk6),
+            imgout = "join",
+            basesize = 10, 
+            grplab = loc_labels_w2, 
+            subsetgrp = herd_order_w2, 
+            clustercol = master_cols,
+            ordergrp = TRUE,
+
+      # Side "K" Labels
+            splab = c("K=2*", "K=3", "K=4", "K=5", "K=6"),
+            splabsize = 14,
+            sppos = "left",
+            splabcol = "black",
+            splabangle = 0,
+      
+      # Individual Label Settings
+            showindlab = F, 
+            indlabsize = 0,        
+            indlabangle = 90,
+            indlabheight = 0,
+      
+      # Group Label settings
+            grplabsize = 5, 
+            grplabangle = 45,
+            grplabpos = 0.85,
+            grplabheight = 0.6,      
+            grplabspacer = 0,
+            grplabcol = "black",
+      
+            linesize = 1,          
+            pointsize = 8,
+            linepos = 0.95,
+      
+      # Divider Line Settings
+            divcol = "white",
+            divsize = 1, 
+            divtype = NULL,
+      
+            useindlab = TRUE, 
+            returndata = TRUE,
+      
+      # Add title
+           showtitle = TRUE,
+           titlelab = NULL,
+           titlehjust = 0.5,
+           titlevjust = 0.5,
+           titlesize = 15,
+           titlecol = "black",
+      titleface = "bold",
+      
+      # Plot settings
+            height = 5,             
+            width = 50,
+            panelspacer = 0.2,
+            panelratio = c(1,2),
+      
+      # File settings
+            imgtype = "tiff",
+            returnplot = TRUE,
+            outputfilename = "plotw2.k2-6",
+            exportpath = "./plots/temp")
+
+# Pull STRUCTURE Plot from object
+tw2<- plotw2$plot[[1]]
+
+# Combine Global w/ plains T1
+row_4 <- grid.arrange(pcaw2_nl, tw2,
+                      ncol = 2,
+                      widths = c(10, 15))
+
+
+#### Label Sections
+# 3. Apply the 'A' Label
+A_labeled <- arrangeGrob(row_1, 
+                         top = textGrob("A", x = unit(0.02, "npc"), just = "left", 
+                                        gp = gpar(fontsize = 25, fontface = "bold")))
+
+B_labeled <- arrangeGrob(row_2, 
+                         top = textGrob("B", x = unit(0.02, "npc"), just = "left", 
+                                        gp = gpar(fontsize = 25, fontface = "bold")))
+
+top_half <- arrangeGrob(A_labeled, B_labeled, 
+                        ncol = 1, 
+                        heights = c(10, 10),
+                        top = textGrob("Including EINP (Wood and Plains) Outgroup", 
+                                       gp = gpar(fontsize = 25, fontface = "bold")))
+
+C_labeled <- arrangeGrob(row_3, 
+                         top = textGrob("C", x = unit(0.02, "npc"), just = "left", 
+                                        gp = gpar(fontsize = 25, fontface = "bold")))
+
+D_labeled <- arrangeGrob(row_4, 
+                         top = textGrob("D", x = unit(0.02, "npc"), just = "left", 
+                                        gp = gpar(fontsize = 25, fontface = "bold"))) 
+
+bottom_half <- arrangeGrob(C_labeled, D_labeled, 
+                           ncol = 1, 
+                           heights = c(10, 10),
+                           top = textGrob("Excluding EINP (Wood and Plains) Outgroup", 
+                                       gp = gpar(fontsize = 25, fontface = "bold")))
+
+#### Combine PCAs and STRUCTURE barplots
+comb <- arrangeGrob(top_half, 
+                    rectGrob(gp = gpar(col = NA)), # Blank space
+                    bottom_half,
+                    ncol = 1, 
+                    heights = c(20, 2, 20)) # Give the middle some space to account for the separating line
+
+
+#### Pull legend from global PCA
+pcaa1_horizontal <- pcaa1 + 
+  theme(legend.direction = "horizontal", 
+        legend.position = "top",
+
+        legend.justification = "left", 
+        legend.box.just = "top",
+        legend.text = element_text(size = 10, face = "bold"), 
+        legend.title = element_text(size = 14, face = "bold"),
+        legend.margin = margin(l = 0)) + 
+  guides(color = guide_legend(
+    title = "Herd", 
+    nrow = 3, 
+    byrow = TRUE,
+    override.aes = list(size = 3, alpha = 1) 
+  ))
+
+# Isolate legend
+legend_bottom <- get_legend(pcaa1_horizontal)
+
+# Legend move to left
+legend_shifted <- arrangeGrob(legend_bottom, 
+                              vp = viewport(x = 0.08, just = "left", width = 0.8)) 
+
+# Combine Structuring and legend
+comb_leg <- grid.arrange(
+  comb, 
+  legend_shifted,
+  ncol = 1, 
+  heights = c(46, 4), 
+  padding = unit(0, "line")
 )
 
-# 3. Apply the 'A' Label
-A_labeled <- arrangeGrob(bottom_section, 
-                         top = textGrob("A", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 28, fontface = "bold")))
+comb_leg_sep <-grobTree(comb_leg, linesGrob(x = unit(c(0, 1), "npc"), 
+                                       y = unit(0.543, "npc"), 
+                                       gp = gpar(col = "black", lwd = 2)))
+ 
 
-# 4. Apply 'B' and 'C' to STRUCTURE (Using your existing t1/t2 grobs)
-B_labeled <- arrangeGrob(t1, 
-                         top = textGrob("B", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 28, fontface = "bold")))
-
-C_labeled <- arrangeGrob(t2, 
-                         top = textGrob("C", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 28, fontface = "bold")))
-
-# 5. Final Assembly with Reduced Vertical Gaps
-# We combine Structure plots first to keep them tight together
-top_section_labeled <- grid.arrange(B_labeled, C_labeled, ncol = 1, padding = unit(-2, "line"))
-
-# Stack everything and use padding to pull A closer to B
-WBNP_no_plains <- grid.arrange(A_labeled, top_section_labeled, 
-                             ncol = 1, 
-                             heights = c(1.3, 1.2), # Adjusts the ratio of PCA vs Structure
-                             padding = unit(-6, "line"))
-
-# 6. Save
-ggsave("./plots/WBNP_noplains_structure.svg", 
-       plot = WBNP_no_plains, 
-       width = 18, 
-       height = 14, # Dropped height from 16 to 14 to force elements together
+# Save plots
+ggsave("./plots/WBNP_leg_sep.svg",
+       plot = comb_leg_sep,
+       height = 21,
+       width = 21,
+       bg = "white",
        units = "in")
 ```
 

@@ -11,11 +11,54 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Load Packages
 ```{r}
+rm(list = ls())
 library(tidyverse)
 library(sf)
 library(ggsflabel)
 ```
- 
+
+# Load Data
+```{r}
+# Datafile
+cleaned.data <- read.csv("./datafiles/Revised_cleandata_11.03.2026.csv")
+cleaned.data <- cleaned.data %>% 
+    mutate(HERD.2 = case_when(
+    HERD == "AISH"    ~ "Aishihik",
+    HERD == "CL"      ~ "Chitek Lake",
+    HERD == "EINPP"   ~ "Elk Island NP (Plains)",
+    HERD == "EINPW"   ~ "Elk Island NP (Wood)",
+    HERD == "ETH"     ~ "Etthithun",
+    HERD == "HZ"      ~ "Hay Zama",
+    HERD == "NAH"     ~ "Nahanni",
+    HERD == "NORD"    ~ "Nordquist",
+    HERD == "RL"      ~ "Ronald Lake",
+    HERD == "WAB"     ~ "Wabasca",
+    HERD == "WBNPGR"  ~ "WBNP-Garden River",
+    HERD == "WBNPHC"  ~ "WBNP-Hay Camp",
+    HERD == "WBNPNY"  ~ "WBNP-Nyarling",
+    HERD == "WBNPLB"  ~ "WBNP-Little Buffalo",
+    HERD == "WBNPPAD" ~ "WBNP-Peace Athabasca Delta",
+    HERD == "WENT"    ~ "Wentzel",
+    HERD == "MBS"     ~ "Mackenzie"
+    )) %>% 
+  relocate(HERD.2, .after = HERD)
+
+# Make genind object
+analysis.genind <- df2genind(X=cleaned.data[,c(20:ncol(cleaned.data))],
+                              sep = "/",
+                              ind.names = cleaned.data$Spreadsheet_ID,
+                              loc.names = NULL,
+                              pop = cleaned.data$HERD.2,
+                              NA.char = "NA",
+                              ploidy = 2,
+                              type = "codom",
+                              strata = NULL,
+                              hierarchy = NULL)
+
+# Attach collection year metadata
+analysis.genind@other$YEAR.ASSIGN <- cleaned.data$YEAR.ASSIGN
+```
+
 Code: 
  
 ## Create map of samples
@@ -63,22 +106,22 @@ herd_centroids <- herd_centroids %>%
   # Update Herd names
     mutate(POPULATION = case_when(
     # Name from NWT shapefile to name consistent with study abbrev.
-    POPULATION == "Aishihik Herd" ~ "AISH",
-    POPULATION == "Chitek Lake Herd"    ~ "CL",
-    POPULATION == "Delta"   ~ "WBNPPAD",
-    POPULATION == "Elk Island National Park"   ~ "EINPW",
-    POPULATION == "Etthithun Lake Herd"   ~ "ETH",
-    POPULATION == "Garden River"   ~ "WBNPGR",
-    POPULATION == "Hay-Zama Lakes Herd"   ~ "HZ",
-    POPULATION == "Hay Camp"   ~ "WBNPHC",
-    POPULATION == "Nahanni Population"   ~ "NAH",
-    POPULATION == "Nordquist Herd"   ~ "NORD",
-    POPULATION == "Nyarling"   ~ "WBNPNY",
-    POPULATION == "Slave River Lowlands"   ~ "WBNPLB",
-    POPULATION == "Wabesca"   ~ "WAB",
-    POPULATION == "Ronald Lake"   ~ "RL",
-    POPULATION == "Wentzel"   ~ "WENT",
-    POPULATION == "Mack Bison CH-Range 2012_04"   ~ "MBS",
+    POPULATION == "Aishihik Herd" ~ "Aishihik",
+    POPULATION == "Chitek Lake Herd"    ~ "Chitek Lake",
+    POPULATION == "Delta"   ~ "WBNP-Peace Athabasca Delta",
+    POPULATION == "Elk Island National Park"   ~ "Elk Island NP (Wood)",
+    POPULATION == "Etthithun Lake Herd"   ~ "Etthithun",
+    POPULATION == "Garden River"   ~ "WBNP-Garden River",
+    POPULATION == "Hay-Zama Lakes Herd"   ~ "Hay Zama",
+    POPULATION == "Hay Camp"   ~ "WBNP-Hay Camp",
+    POPULATION == "Nahanni Population"   ~ "Nahanni",
+    POPULATION == "Nordquist Herd"   ~ "Nordquist",
+    POPULATION == "Nyarling"   ~ "WBNP-Nyarling",
+    POPULATION == "Slave River Lowlands"   ~ "WBNP-Little Buffalo",
+    POPULATION == "Wabesca"   ~ "Wabasca",
+    POPULATION == "Ronald Lake"   ~ "Ronald Lake",
+    POPULATION == "Wentzel"   ~ "Wentzel",
+    POPULATION == "Mack Bison CH-Range 2012_04"   ~ "Mackenzie",
     TRUE ~ str_to_title(gsub("_", " ", POPULATION))
   ))
 
@@ -87,15 +130,15 @@ herd_centroids <- herd_centroids %>%
 
 ### Sample Sizes
 ```{r}
-t1 <- analysis.gen[analysis.gen@other$YEAR.ASSIGN <=2015]
+t1 <- analysis.genind[analysis.genind@other$YEAR.ASSIGN <=2015]
 table(t1@pop)
 
-t2 <- analysis.gen[analysis.gen@other$YEAR.ASSIGN >=2016]
+t2 <- analysis.genind[analysis.genind@other$YEAR.ASSIGN >=2016]
 table(t2@pop)
 
 sample_counts <- data.frame(
-    POPULATION = analysis.gen@pop,
-    YEAR = analysis.gen@other$YEAR.ASSIGN
+    POPULATION = analysis.genind@pop,
+    YEAR = analysis.genind@other$YEAR.ASSIGN
   ) %>%
   mutate(`Collection Year`= case_when(
     YEAR <= 2015 ~ "1986 - 2015",
@@ -124,23 +167,38 @@ bbox <- sf::st_bbox(map_data)
 # Factor data to ensure T1 comes before T2
 map_data$`Collection Year` <- factor(map_data$`Collection Year`, 
                                      levels = c("1986 - 2015", "2016 - 2025"))
+
+
 p <- ggplot() +
   geom_sf(data = can_subset, fill = "gray95", color = "gray60") +
   geom_sf(data = woodbisonpop, fill = "gray80", alpha = 0.2) +
   geom_sf(data = map_data, aes(size = n, color = `Collection Year`), alpha = 0.7) +
+
+  
+  # Sample size
+  geom_sf_text(
+    data = map_data,
+    aes(label = n),
+    size = 3,
+    color = "black",
+    fun.geometry = sf::st_centroid
+  ) +
+  
+  # Herd Labels (full names this time)
   geom_sf_text_repel(
   data = map_data, 
   aes(label = POPULATION),
-  size = 4,
-  force = 10, 
+  fontface = "bold",
+  size = 3.5,
+  force = 40, 
   force_pull = 1,            
-  box.padding = 1,          
+  box.padding = 1.2,   # label "hit-box"       
   point.padding = 0.4,        
   min.segment.length = 0,     
   segment.color = "gray30",
   segment.alpha = 0.6,
   nudge_x = 1.5,
-  max.overlaps = Inf
+  max.overlaps = Inf # show all labels regardless of overlaps
 ) +
   
   # Split maps into both temporal cohorts, and scale sample sizes
@@ -151,7 +209,8 @@ p <- ggplot() +
   theme(legend.position = "bottom",
         axis.title.x = element_blank(), 
         axis.title.y = element_blank(), 
-        strip.text = element_text(face = "bold", size = 16)) + 
+        strip.text = element_text(face = "bold", size = 16),
+        plot.margin = margin(0, 0, 0, 0, "pt")) + 
   
   # Define x and y lims to "zoom" in on map
   coord_sf(xlim = c(bbox["xmin"] - 1, bbox["xmax"] + 1), 
@@ -162,10 +221,9 @@ p <- ggplot() +
 
 # Export to PNG - SVG file too large
 ggsave("./plots/Sample_size_map_v2.png", plot = p,
-       height = 8, width = 14)
+       height = 8
+      , width = 12)
 ```
- 
-
 
 
 

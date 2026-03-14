@@ -85,7 +85,7 @@ herd_palette <- c("#0026FF",
                   "#660099", 
                   "#00E5FF", 
                   "#A52A2A", 
-                  "#FF1493", 
+                  "#DAA520", 
                   "#1E90FF", 
                   "#228B22", 
                   "#cecece", 
@@ -159,13 +159,13 @@ pca1 <- fviz_pca_ind(pca.temp1,
 coord_fixed(ratio = 1, xlim = xlims, ylim = ylims) +
   
 theme(
-    plot.title = element_text(hjust = 0.5, face = "bold", size = 15),
+    plot.title = element_blank(),
     legend.title = element_text(face = "bold", size = 10),
     legend.text = element_text(size = 10),
     axis.title = element_text(face = "bold", size = 12),
     panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
 
-  labs(title = "(1986 - 2015) w/ EINPP",
+  labs(title = "(1986 - 2015)",
        x = paste0("PC1 (", round(eig.perc.temp1[1], 2), "%)"),
        y = paste0("PC2 (", round(eig.perc.temp1[2], 2), "%)"),
        colour = "Herd") + 
@@ -199,12 +199,12 @@ pca2 <- fviz_pca_ind(pca.temp2,
              size = 1.2) + 
 coord_fixed(ratio = 1, xlim = xlims, ylim = ylims) +  
 theme(
-    plot.title = element_text(hjust = 0.5, face = "bold", size = 15),
+    plot.title = element_blank(),
     legend.title = element_text(face = "bold"),
     axis.title = element_text(face = "bold", size = 12),
     panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
 
-  labs(title = "(2016 - 2025) w/ EINPP",
+  labs(title = "(2016 - 2025)",
        # Fixed the placement of closing parentheses and commas below
        x = paste0("PC1 (", round(eig.perc.temp2[1], 2), "%)"),
        y = paste0("PC2 (", round(eig.perc.temp2[2], 2), "%)"),
@@ -239,7 +239,7 @@ pcag <- fviz_pca_ind(pca.global,
   coord_fixed(ratio = 1) +
   
 theme(
-    plot.title = element_blank(),
+    plot.title = element_text(face = "bold", size = 15),
     legend.title = element_text(face = "bold", size = 15),
     legend.text = element_text(size = 12),
     axis.title = element_text(face = "bold")) + 
@@ -336,13 +336,13 @@ pca1.noEINPP <- fviz_pca_ind(pca.temp1.noEINPP,
 coord_fixed(ratio = 1, xlim = xlims.noEINPP, ylim = ylims.noEINPP) +
   
 theme(
-    plot.title = element_text(hjust = 0.5, face = "bold", size = 15),
+    plot.title = element_blank(),
     legend.title = element_text(face = "bold", size = 15),
     legend.text = element_text(size = 12),
     axis.title = element_text(face = "bold", size = 12),
     panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
 
-  labs(title = "(1986 - 2015) w/o EINPP",
+  labs(title = "(1986 - 2015)",
        x = paste0("PC1 (", round(eig.perc.temp1.noEINPP[1], 2), "%)"),
        y = paste0("PC2 (", round(eig.perc.temp1.noEINPP[2], 2), "%)"),
        colour = "Herd") + 
@@ -377,13 +377,13 @@ pca2.noEINPP <- fviz_pca_ind(pca.temp2.noEINPP,
 coord_fixed(ratio = 1, xlim = xlims.noEINPP, ylim = ylims.noEINPP) +
   
 theme(
-    plot.title = element_text(hjust = 0.5, face = "bold", size = 15),
+    plot.title = element_blank(),
     legend.title = element_text(face = "bold", size = 15),
     legend.text = element_text(size = 12),
     axis.title = element_text(face = "bold", size = 12),
     panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
 
-  labs(title = "(2016 - 2025) w/o EINPP",
+  labs(title = "(2016 - 2025)",
        x = paste0("PC1 (", round(eig.perc.temp2.noEINPP[1], 2), "%)"),
        y = paste0("PC2 (", round(eig.perc.temp2.noEINPP[2], 2), "%)"),
        colour = "Herd") + 
@@ -1050,11 +1050,7 @@ plotQ(temp2_no_plains.merged.list,
 ```
 
 # Combined Plots
-#### Including EINPP 
 ```{r}
-#### Set slimmer margins for all PCAs
-#m <- theme(plot.margin = unit(c(1.2, 0.2, 0.2, 0.2), "cm")) # Tighten borders around PCAs
-
 ### PCA w/ plains bison outgroup
 
 # PCA w/ plains T1
@@ -1071,7 +1067,7 @@ plot1 <- plotQ(c(temp1.mk2, temp1.mk3, temp1.mk4, temp1.mk5, temp1.mk6),
             ordergrp = TRUE,
 
       # Side "K" Labels
-            splab = c("K = 2", "K = 3", "K = 4", "K = 5", "K = 6"),
+            splab = c("K=2", "K=3", "K=4", "K=5*", "K=6"),
             splabsize = 14,
             sppos = "left",
             splabcol = "black",
@@ -1105,7 +1101,7 @@ plot1 <- plotQ(c(temp1.mk2, temp1.mk3, temp1.mk4, temp1.mk5, temp1.mk6),
       
       # Add title
            showtitle = TRUE,
-           titlelab = "(1986 - 2015) w/ EINPP",
+           titlelab = NULL,
            titlehjust = 0.5,
            titlevjust = 0.5,
            titlesize = 15,
@@ -1148,7 +1144,7 @@ plot2 <- plotQ(c(temp2.mk2, temp2.mk3, temp2.mk4, temp2.mk5, temp2.mk6),
             ordergrp = TRUE,
 
       # Side "K" Labels
-            splab = c("K = 2", "K = 3", "K = 4", "K = 5", "K = 6"),
+            splab = c("K=2", "K=3", "K=4", "K=5*", "K=6"),
             splabsize = 14,
             sppos = "left",
             splabcol = "black",
@@ -1182,7 +1178,7 @@ plot2 <- plotQ(c(temp2.mk2, temp2.mk3, temp2.mk4, temp2.mk5, temp2.mk6),
       
       # Add title
            showtitle = TRUE,
-           titlelab = "(2016 - 2025) w/ EINPP",
+           titlelab = NULL,
            titlehjust = 0.5,
            titlevjust = 0.5,
            titlesize = 15,
@@ -1226,7 +1222,7 @@ plot1_no_plains <- plotQ(c(temp1_no_plains.mk2, temp1_no_plains.mk3, temp1_no_pl
             ordergrp = TRUE,
 
       # Side "K" Labels
-            splab = c("K = 2", "K = 3", "K = 4", "K = 5", "K = 6"),
+            splab = c("K=2", "K=3", "K=4*", "K=5", "K=6"),
             splabsize = 14,
             sppos = "left",
             splabcol = "black",
@@ -1260,7 +1256,7 @@ plot1_no_plains <- plotQ(c(temp1_no_plains.mk2, temp1_no_plains.mk3, temp1_no_pl
       
       # Add title
            showtitle = TRUE,
-           titlelab = "(1986 - 2015) w/o EINPP",
+           titlelab = NULL,
            titlehjust = 0.5,
            titlevjust = 0.5,
            titlesize = 15,
@@ -1290,7 +1286,6 @@ row_3 <- grid.arrange(pca1.noEINPP_tight, t1_no_plains,
 # PCA w/o plains T2
 pca2.noEINPP_tight <- pca2_nl.noEINPP 
 
-
 # STRUCTURE T1 w/ plains
 plot2_no_plains <- plotQ(c(temp2_no_plains.mk2, temp2_no_plains.mk3, temp2_no_plains.mk4, temp2_no_plains.mk5, temp2_no_plains.mk6),
             imgout = "join",
@@ -1301,7 +1296,7 @@ plot2_no_plains <- plotQ(c(temp2_no_plains.mk2, temp2_no_plains.mk3, temp2_no_pl
             ordergrp = TRUE,
 
       # Side "K" Labels
-            splab = c("K = 2", "K = 3", "K = 4", "K = 5", "K = 6"),
+            splab = c("K=2", "K=3", "K=4*", "K=5", "K=6"),
             splabsize = 14,
             sppos = "left",
             splabcol = "black",
@@ -1335,7 +1330,7 @@ plot2_no_plains <- plotQ(c(temp2_no_plains.mk2, temp2_no_plains.mk3, temp2_no_pl
       
       # Add title
            showtitle = TRUE,
-           titlelab = "(2016 - 2025) w/o EINPP",
+           titlelab = NULL,
            titlehjust = 0.5,
            titlevjust = 0.5,
            titlesize = 15,
@@ -1370,54 +1365,65 @@ row_4 <- grid.arrange(pca2.noEINPP_tight, t2_no_plains,
 # 3. Apply the 'A' Label
 A_labeled <- arrangeGrob(row_1, 
                          top = textGrob("A", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 28, fontface = "bold")))
+                                        gp = gpar(fontsize = 25, fontface = "bold")))
 
 B_labeled <- arrangeGrob(row_2, 
                          top = textGrob("B", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 28, fontface = "bold")))
+                                        gp = gpar(fontsize = 25, fontface = "bold")))
+
+top_half <- arrangeGrob(A_labeled, B_labeled, 
+                        ncol = 1, 
+                        heights = c(10, 10),
+                        top = textGrob("Including Plains Bison Outgroup", 
+                                       gp = gpar(fontsize = 25, fontface = "bold")))
 
 C_labeled <- arrangeGrob(row_3, 
                          top = textGrob("C", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 28, fontface = "bold")))
+                                        gp = gpar(fontsize = 25, fontface = "bold")))
 
 D_labeled <- arrangeGrob(row_4, 
                          top = textGrob("D", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 28, fontface = "bold"))) 
+                                        gp = gpar(fontsize = 25, fontface = "bold"))) 
 
-#### Combine plots
-comb <- grid.arrange(A_labeled, B_labeled, C_labeled, D_labeled,
-                     ncol = 1, 
-                     heights = c(10,10,10,10),
-                     padding = unit(-2, "line"))
+bottom_half <- arrangeGrob(C_labeled, D_labeled, 
+                           ncol = 1, 
+                           heights = c(10, 10),
+                           top = textGrob("Excluding Plains Bison Outgroup", 
+                                       gp = gpar(fontsize = 25, fontface = "bold")))
+
+#### Combine PCAs and STRUCTURE barplots
+comb <- arrangeGrob(top_half, 
+                    rectGrob(gp = gpar(col = NA)), # Blank space
+                    bottom_half,
+                    ncol = 1, 
+                    heights = c(20, 2, 20)) # Give the middle some space to account for the separating line
 
 
+#### Pull legend from global PCA
 pcag_horizontal <- pcag + 
   theme(legend.direction = "horizontal", 
         legend.position = "top",
-        # Force the legend box to the left within its own grob
-        legend.justification = "left",
-        legend.box.just = "left",
+
+        legend.justification = "left", 
+        legend.box.just = "top",
         legend.text = element_text(size = 10, face = "bold"), 
         legend.title = element_text(size = 14, face = "bold"),
-        # Remove any lingering margins that might push it right
         legend.margin = margin(l = 0)) + 
   guides(color = guide_legend(
-    title = "Herd",
-    
+    title = "Herd", 
     nrow = 3, 
     byrow = TRUE,
     override.aes = list(size = 3, alpha = 1) 
   ))
 
-# 2. Extract the legend
+# Isolate legend
 legend_bottom <- get_legend(pcag_horizontal)
 
-# 3. Use viewport with x=0 and just="left"
-# This pins the left side of the legend box to the left side of the canvas
+# Legend move to left
 legend_shifted <- arrangeGrob(legend_bottom, 
                               vp = viewport(x = 0.08, just = "left", width = 0.8)) 
 
-#### 4. Final Assembly
+# Combine Structuring and legend
 comb_leg <- grid.arrange(
   comb, 
   legend_shifted,
@@ -1426,10 +1432,25 @@ comb_leg <- grid.arrange(
   padding = unit(0, "line")
 )
 
-ggsave("./plots/combined_global_leg.svg",
-       plot = comb_leg,
-       height = 25,
-       width = 25,
+comb_leg_sep <-grobTree(comb_leg, linesGrob(x = unit(c(0, 1), "npc"), 
+                                       y = unit(0.543, "npc"), 
+                                       gp = gpar(col = "black", lwd = 2)))
+ 
+
+# Save plots
+ggsave("./plots/combined_global_leg_sep.svg",
+       plot = comb_leg_sep,
+       height = 21,
+       width = 21,
        bg = "white",
        units = "in")
 ```
+
+
+
+
+
+
+
+
+

@@ -1381,6 +1381,14 @@ dev.off()
 
 ```{r}
 ####### Plot ----
+dapc_palette <- c("#cecece", 
+                  "#a559aa", 
+                  "#59a89c", 
+                  "#f0c571", 
+                  "#e02b35", 
+                  "#082a54"
+                  )
+
 # Plot
 svg(file = "./plots/wbnp_DAPC_stacked_v2.svg", width = 20, height = 10) 
 
@@ -1389,14 +1397,14 @@ par(mfrow = c(1, 2))
 
 # Plot 1
 scatter(dapc1,posi.da="bottomright", bg="white",
-pch=17:22,cstar=0, col=struct_w1_cols,scree.pca=TRUE,
+pch=17:22,cstar=0, cex = 2, col=dapc_palette,scree.pca=TRUE,
 posi.pca = "topright", ratio.da = 0.20, ratio.pca = 0.13, csub = 2,
 sub = paste0("DA1: ", round(dapc1$eig[1], 1), "% | DA2: ", round(dapc1$eig[2], 1), "%"))
 mtext("A", side = 3, adj = -7.8, line = 2, cex = 2, font = 2)
 
 # Plot 2
 scatter(dapc2,posi.da="bottomright", bg="white",
-pch=17:22,cstar=0, col=struct_w1_cols,scree.pca=TRUE,
+pch=17:22,cstar=0, cex = 2,col=dapc_palette,scree.pca=TRUE,
 posi.pca = "topright", ratio.da = 0.20, ratio.pca = 0.13, csub = 2,
 sub = paste0("DA1: ", round(dapc2$eig[1], 1), "% | DA2: ", round(dapc2$eig[2], 1), "%"))
 mtext("B", side = 3, adj = -7.8, line = 2, cex = 2, font = 2)

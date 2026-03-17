@@ -200,19 +200,21 @@ pca2 <- fviz_pca_ind(pca.temp2,
              shape = 19,
              alpha = 0.75,
              size = 1.2) + 
-coord_fixed(ratio = 1, xlim = xlims, ylim = ylims) +  
+coord_fixed(ratio = 1, xlim = xlims, ylim = ylims) +
+  
 theme(
     plot.title = element_blank(),
-    legend.title = element_text(face = "bold"),
-    axis.title = element_text(face = "bold", size = 15),
+    legend.title = element_text(face = "bold", size = 15),
+    legend.text = element_text(size = 15),
+    axis.title = element_text(face = "bold", size = 20),
+    text = element_text(size = 20),
     panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
 
   labs(title = "(2016 - 2025)",
-       # Fixed the placement of closing parentheses and commas below
        x = paste0("PC1 (", round(eig.perc.temp2[1], 2), "%)"),
        y = paste0("PC2 (", round(eig.perc.temp2[2], 2), "%)"),
        colour = "Herd") + 
-    guides(colour = guide_legend(override.aes = list(size =6, shape = 19)))
+    guides(colour = guide_legend(override.aes = list(size = 4, shape = 19)))
 
        
 
@@ -242,10 +244,13 @@ pcag <- fviz_pca_ind(pca.global,
   coord_fixed(ratio = 1) +
   
 theme(
-    plot.title = element_text(face = "bold", size = 15),
+    plot.title = element_blank(),
     legend.title = element_text(face = "bold", size = 15),
     legend.text = element_text(size = 15),
-    axis.title = element_text(face = "bold", size = 15)) + 
+    axis.title = element_text(face = "bold", size = 20),
+    text = element_text(size = 20),
+    panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
+  
   labs(title = NULL,
        # Fixed the placement of closing parentheses and commas below
        x = paste0("PC1 (", round(eig.perc.global[1], 2), "%)"),
@@ -342,7 +347,8 @@ theme(
     plot.title = element_blank(),
     legend.title = element_text(face = "bold", size = 15),
     legend.text = element_text(size = 15),
-    axis.title = element_text(face = "bold", size = 15),
+    axis.title = element_text(face = "bold", size = 20),
+    text = element_text(size = 20),
     panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
 
   labs(title = "(1986 - 2015)",
@@ -383,7 +389,8 @@ theme(
     plot.title = element_blank(),
     legend.title = element_text(face = "bold", size = 15),
     legend.text = element_text(size = 15),
-    axis.title = element_text(face = "bold", size = 15),
+    axis.title = element_text(face = "bold", size = 20),
+    text = element_text(size = 20),
     panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
 
   labs(title = "(2016 - 2025)",
@@ -424,7 +431,10 @@ theme(
     plot.title = element_blank(),
     legend.title = element_text(face = "bold", size = 15),
     legend.text = element_text(size = 15),
-    axis.title = element_text(face = "bold")) + 
+    axis.title = element_text(face = "bold", size = 20),
+    text = element_text(size = 20),
+    panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
+  
   labs(title = NULL,
        # Fixed the placement of closing parentheses and commas below
        x = paste0("PC1 (", round(eig.perc.global.noEINPP[1], 2), "%)"),
@@ -1052,6 +1062,10 @@ plotQ(temp2_no_plains.merged.list,
             exportpath = "./plots/structure_plots/")
 ```
 
+
+
+
+
 # Combined Plots
 ```{r}
 ### PCA w/ plains bison outgroup
@@ -1087,8 +1101,8 @@ plot1 <- plotQ(c(temp1.mk2, temp1.mk3, temp1.mk4, temp1.mk5, temp1.mk6),
             indlabheight = 0,
       
       # Group Label settings
-            grplabsize = 8, 
-            grplabangle = 90,
+            grplabsize = 6.2, 
+            grplabangle = 45,
             grplabpos = 0.85,
             grplabheight = 0.6,      
             grplabspacer = 0,
@@ -1168,8 +1182,8 @@ plot2 <- plotQ(c(temp2.mk2, temp2.mk3, temp2.mk4, temp2.mk5, temp2.mk6),
             indlabheight = 0,
       
       # Group Label settings
-            grplabsize = 8, 
-            grplabangle = 90,
+            grplabsize = 6.2, 
+            grplabangle = 45,
             grplabpos = 0.85,
             grplabheight = 0.6,      
             grplabspacer = 0,
@@ -1250,8 +1264,8 @@ plot1_no_plains <- plotQ(c(temp1_no_plains.mk2, temp1_no_plains.mk3, temp1_no_pl
             indlabheight = 0,
       
       # Group Label settings
-            grplabsize = 8, 
-            grplabangle = 90,
+            grplabsize = 6.2, 
+            grplabangle = 45,
             grplabpos = 0.85,
             grplabheight = 0.6,      
             grplabspacer = 0,
@@ -1328,8 +1342,8 @@ plot2_no_plains <- plotQ(c(temp2_no_plains.mk2, temp2_no_plains.mk3, temp2_no_pl
             indlabheight = 0,
       
       # Group Label settings
-            grplabsize = 8, 
-            grplabangle = 90,
+            grplabsize = 6.2, 
+            grplabangle = 45,
             grplabpos = 0.85,
             grplabheight = 0.6,      
             grplabspacer = 0,
@@ -1387,9 +1401,11 @@ B_labeled <- arrangeGrob(row_2,
                          top = textGrob("B (2016 - 2025)", x = unit(0.02, "npc"), just = "left", 
                                         gp = gpar(fontsize = 35, fontface = "bold")))
 
-top_half <- arrangeGrob(A_labeled, B_labeled, 
+top_half <- arrangeGrob(A_labeled, 
+                        rectGrob(gp = gpar(col = NA)), # Spacer between Row 1 and 2
+                        B_labeled, 
                         ncol = 1, 
-                        heights = c(10, 10),
+                        heights = c(10, 1.5, 10), # Adjust 1.5 to your preferred gap size
                         top = textGrob("Including Plains Bison Outgroup", 
                                        gp = gpar(fontsize = 35, fontface = "bold")))
 
@@ -1401,11 +1417,13 @@ D_labeled <- arrangeGrob(row_4,
                          top = textGrob("D (2016 - 2025)", x = unit(0.02, "npc"), just = "left", 
                                         gp = gpar(fontsize = 35, fontface = "bold"))) 
 
-bottom_half <- arrangeGrob(C_labeled, D_labeled, 
+bottom_half <- arrangeGrob(C_labeled, 
+                           rectGrob(gp = gpar(col = NA)), # Spacer between Row 3 and 4
+                           D_labeled, 
                            ncol = 1, 
-                           heights = c(10, 10),
+                           heights = c(10, 1.5, 10), # Keep consistent with top_half
                            top = textGrob("Excluding Plains Bison Outgroup", 
-                                       gp = gpar(fontsize = 35, fontface = "bold")))
+                                          gp = gpar(fontsize = 35, fontface = "bold")))
 
 #### Combine PCAs and STRUCTURE barplots
 comb <- arrangeGrob(top_half, 
@@ -1422,8 +1440,8 @@ pcag_horizontal <- pcag +
 
         legend.justification = "left", 
         legend.box.just = "top",
-        legend.text = element_text(size = 25, face = "italic"), 
-        legend.title = element_text(size = 35, face = "bold"),
+        legend.text = element_text(size = 20), 
+        legend.title = element_text(size = 25, face = "bold"),
         legend.margin = margin(l = 0)) + 
   guides(color = guide_legend(
     title = "Herd", 

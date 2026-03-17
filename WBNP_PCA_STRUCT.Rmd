@@ -141,8 +141,10 @@ coord_fixed(ratio = 1, xlim = xlims, ylim = ylims) +
   
 theme(
     plot.title = element_blank(),
-    legend.title = element_text(face = "bold"), # Kept bold but removed blank
-    axis.title = element_text(face = "bold"),
+    legend.title = element_text(face = "bold", size = 15),
+    legend.text = element_text(size = 15),
+    axis.title = element_text(face = "bold", size = 20),
+    text = element_text(size = 20),
     panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
 
   labs(title = NULL,
@@ -180,12 +182,14 @@ pcaw2 <- fviz_pca_ind(pca.w2,
              size = 1.2) + 
   coord_fixed(ratio = 1, xlim = xlims, ylim = ylims) +
   
-  theme(
+theme(
     plot.title = element_blank(),
-    legend.title = element_text(face = "bold"),
-    axis.title = element_text(face = "bold"),
-    panel.border = element_rect(colour = "black", fill = NA, linewidth = 1)
-  ) + 
+    legend.title = element_text(face = "bold", size = 15),
+    legend.text = element_text(size = 15),
+    axis.title = element_text(face = "bold", size = 20),
+    text = element_text(size = 20),
+    panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
+
 
   labs(title = NULL,
        x = paste0("PC1 (", round(eig.perc.w2[1], 2), "%)"),
@@ -296,9 +300,12 @@ coord_fixed(ratio = 1, xlim = xlims, ylim = ylims) +
   
 theme(
     plot.title = element_blank(),
-    legend.title = element_text(face = "bold"), # Kept bold but removed blank
-    axis.title = element_text(face = "bold"),
+    legend.title = element_text(face = "bold", size = 15),
+    legend.text = element_text(size = 15),
+    axis.title = element_text(face = "bold", size = 20),
+    text = element_text(size = 20),
     panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
+
 
   labs(title = NULL,
        # Fixed the placement of closing parentheses and commas below
@@ -339,9 +346,12 @@ coord_fixed(ratio = 1, xlim = xlims, ylim = ylims) +
   
 theme(
     plot.title = element_blank(),
-    legend.title = element_text(face = "bold"), # Kept bold but removed blank
-    axis.title = element_text(face = "bold"),
+    legend.title = element_text(face = "bold", size = 15),
+    legend.text = element_text(size = 15),
+    axis.title = element_text(face = "bold", size = 20),
+    text = element_text(size = 20),
     panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
+
 
   labs(title = NULL,
        # Fixed the placement of closing parentheses and commas below
@@ -929,7 +939,8 @@ plota1 <- plotQ(c(a1.mk2, a1.mk3, a1.mk4, a1.mk5, a1.mk6),
 
       # Side "K" Labels
             splab = c("K=2", "K=3*", "K=4", "K=5", "K=6"),
-            splabsize = 14,
+            splabsize = 20,
+            splabface = "bold",
             sppos = "left",
             splabcol = "black",
             splabangle = 0,
@@ -941,7 +952,7 @@ plota1 <- plotQ(c(a1.mk2, a1.mk3, a1.mk4, a1.mk5, a1.mk6),
             indlabheight = 0,
       
       # Group Label settings
-            grplabsize = 5, 
+            grplabsize = 6.2, 
             grplabangle = 45,
             grplabpos = 0.85,
             grplabheight = 0.6,      
@@ -1001,7 +1012,8 @@ plota2 <- plotQ(c(a2.mk2, a2.mk3, a2.mk4, a2.mk5, a2.mk6),
 
       # Side "K" Labels
             splab = c("K=2", "K=3", "K=4*", "K=5", "K=6"),
-            splabsize = 14,
+            splabsize = 20,
+            splabface = "bold",
             sppos = "left",
             splabcol = "black",
             splabangle = 0,
@@ -1013,7 +1025,7 @@ plota2 <- plotQ(c(a2.mk2, a2.mk3, a2.mk4, a2.mk5, a2.mk6),
             indlabheight = 0,
       
       # Group Label settings
-            grplabsize = 5, 
+            grplabsize = 6.2, 
             grplabangle = 45,
             grplabpos = 0.85,
             grplabheight = 0.6,      
@@ -1075,7 +1087,8 @@ plotw1 <- plotQ(c(w1.mk2, w1.mk3, w1.mk4, w1.mk5, w1.mk6),
 
       # Side "K" Labels
             splab = c("K=2", "K=3", "K=4", "K=5", "K=6"),
-            splabsize = 14,
+            splabsize = 20,
+            splabface = "bold",
             sppos = "left",
             splabcol = "black",
             splabangle = 0,
@@ -1087,7 +1100,7 @@ plotw1 <- plotQ(c(w1.mk2, w1.mk3, w1.mk4, w1.mk5, w1.mk6),
             indlabheight = 0,
       
       # Group Label settings
-            grplabsize = 5, 
+            grplabsize = 6.2, 
             grplabangle = 45,
             grplabpos = 0.85,
             grplabheight = 0.6,      
@@ -1146,7 +1159,8 @@ plotw2<- plotQ(c(w2.mk2, w2.mk3, w2.mk4, w2.mk5, w2.mk6),
 
       # Side "K" Labels
             splab = c("K=2*", "K=3", "K=4", "K=5", "K=6"),
-            splabsize = 14,
+            splabsize = 20,
+            splabface = "bold",
             sppos = "left",
             splabcol = "black",
             splabangle = 0,
@@ -1158,7 +1172,7 @@ plotw2<- plotQ(c(w2.mk2, w2.mk3, w2.mk4, w2.mk5, w2.mk6),
             indlabheight = 0,
       
       # Group Label settings
-            grplabsize = 5, 
+            grplabsize = 6.2, 
             grplabangle = 45,
             grplabpos = 0.85,
             grplabheight = 0.6,      
@@ -1217,11 +1231,13 @@ B_labeled <- arrangeGrob(row_2,
                          top = textGrob("B", x = unit(0.02, "npc"), just = "left", 
                                         gp = gpar(fontsize = 25, fontface = "bold")))
 
-top_half <- arrangeGrob(A_labeled, B_labeled, 
+top_half <- arrangeGrob(A_labeled, 
+                        rectGrob(gp = gpar(col = NA)), # Spacer between rows
+                        B_labeled, 
                         ncol = 1, 
-                        heights = c(10, 10),
+                        heights = c(10, 1.5, 10),
                         top = textGrob("Including EINP (Wood and Plains) Outgroup", 
-                                       gp = gpar(fontsize = 25, fontface = "bold")))
+                                       gp = gpar(fontsize = 35, fontface = "bold")))
 
 C_labeled <- arrangeGrob(row_3, 
                          top = textGrob("C", x = unit(0.02, "npc"), just = "left", 
@@ -1231,11 +1247,13 @@ D_labeled <- arrangeGrob(row_4,
                          top = textGrob("D", x = unit(0.02, "npc"), just = "left", 
                                         gp = gpar(fontsize = 25, fontface = "bold"))) 
 
-bottom_half <- arrangeGrob(C_labeled, D_labeled, 
+bottom_half <- arrangeGrob(C_labeled, 
+                           rectGrob(gp = gpar(col = NA)), # Spacer between rows
+                           D_labeled, 
                            ncol = 1, 
-                           heights = c(10, 10),
+                           heights = c(10, 1.5, 10), 
                            top = textGrob("Excluding EINP (Wood and Plains) Outgroup", 
-                                       gp = gpar(fontsize = 25, fontface = "bold")))
+                                          gp = gpar(fontsize = 35, fontface = "bold")))
 
 #### Combine PCAs and STRUCTURE barplots
 comb <- arrangeGrob(top_half, 
@@ -1250,16 +1268,16 @@ pcaa1_horizontal <- pcaa1 +
   theme(legend.direction = "horizontal", 
         legend.position = "top",
 
-        legend.justification = "left", 
+       legend.justification = "left", 
         legend.box.just = "top",
-        legend.text = element_text(size = 10, face = "bold"), 
-        legend.title = element_text(size = 14, face = "bold"),
+        legend.text = element_text(size = 20), 
+        legend.title = element_text(size = 25, face = "bold"),
         legend.margin = margin(l = 0)) + 
   guides(color = guide_legend(
     title = "Herd", 
     nrow = 3, 
     byrow = TRUE,
-    override.aes = list(size = 3, alpha = 1) 
+    override.aes = list(size = 7, alpha = 1) 
   ))
 
 # Isolate legend
@@ -1286,8 +1304,8 @@ comb_leg_sep <-grobTree(comb_leg, linesGrob(x = unit(c(0, 1), "npc"),
 # Save plots
 ggsave("./plots/WBNP_leg_sep.svg",
        plot = comb_leg_sep,
-       height = 21,
-       width = 21,
+       height = 25,
+       width = 20,
        bg = "white",
        units = "in")
 ```

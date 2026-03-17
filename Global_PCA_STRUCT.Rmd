@@ -3,6 +3,8 @@ title: "PCA_STRUCT_2"
 author: "Alex Depew"
 date: "2026-03-05"
 output: html_document
+editor_options: 
+  chunk_output_type: inline
 ---
 
 ```{r setup, include=FALSE}
@@ -160,9 +162,10 @@ coord_fixed(ratio = 1, xlim = xlims, ylim = ylims) +
   
 theme(
     plot.title = element_blank(),
-    legend.title = element_text(face = "bold", size = 10),
-    legend.text = element_text(size = 10),
-    axis.title = element_text(face = "bold", size = 12),
+    legend.title = element_text(face = "bold", size = 15),
+    legend.text = element_text(size = 15),
+    axis.title = element_text(face = "bold", size = 20),
+    text = element_text(size = 20),
     panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
 
   labs(title = "(1986 - 2015)",
@@ -201,7 +204,7 @@ coord_fixed(ratio = 1, xlim = xlims, ylim = ylims) +
 theme(
     plot.title = element_blank(),
     legend.title = element_text(face = "bold"),
-    axis.title = element_text(face = "bold", size = 12),
+    axis.title = element_text(face = "bold", size = 15),
     panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
 
   labs(title = "(2016 - 2025)",
@@ -209,7 +212,7 @@ theme(
        x = paste0("PC1 (", round(eig.perc.temp2[1], 2), "%)"),
        y = paste0("PC2 (", round(eig.perc.temp2[2], 2), "%)"),
        colour = "Herd") + 
-    guides(colour = guide_legend(override.aes = list(size = 4, shape = 19)))
+    guides(colour = guide_legend(override.aes = list(size =6, shape = 19)))
 
        
 
@@ -241,14 +244,14 @@ pcag <- fviz_pca_ind(pca.global,
 theme(
     plot.title = element_text(face = "bold", size = 15),
     legend.title = element_text(face = "bold", size = 15),
-    legend.text = element_text(size = 12),
-    axis.title = element_text(face = "bold")) + 
+    legend.text = element_text(size = 15),
+    axis.title = element_text(face = "bold", size = 15)) + 
   labs(title = NULL,
        # Fixed the placement of closing parentheses and commas below
        x = paste0("PC1 (", round(eig.perc.global[1], 2), "%)"),
        y = paste0("PC2 (", round(eig.perc.global[2], 2), "%)"),
        colour = "Herd") + 
-    guides(colour = guide_legend(override.aes = list(size = 4, shape = 19)))
+    guides(colour = guide_legend(override.aes = list(size = 6, shape = 19)))
 
 ```
 
@@ -338,15 +341,15 @@ coord_fixed(ratio = 1, xlim = xlims.noEINPP, ylim = ylims.noEINPP) +
 theme(
     plot.title = element_blank(),
     legend.title = element_text(face = "bold", size = 15),
-    legend.text = element_text(size = 12),
-    axis.title = element_text(face = "bold", size = 12),
+    legend.text = element_text(size = 15),
+    axis.title = element_text(face = "bold", size = 15),
     panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
 
   labs(title = "(1986 - 2015)",
        x = paste0("PC1 (", round(eig.perc.temp1.noEINPP[1], 2), "%)"),
        y = paste0("PC2 (", round(eig.perc.temp1.noEINPP[2], 2), "%)"),
        colour = "Herd") + 
-    guides(colour = guide_legend(override.aes = list(size = 4, shape = 19)))
+    guides(colour = guide_legend(override.aes = list(size = 6, shape = 19)))
 
        
 
@@ -379,15 +382,15 @@ coord_fixed(ratio = 1, xlim = xlims.noEINPP, ylim = ylims.noEINPP) +
 theme(
     plot.title = element_blank(),
     legend.title = element_text(face = "bold", size = 15),
-    legend.text = element_text(size = 12),
-    axis.title = element_text(face = "bold", size = 12),
+    legend.text = element_text(size = 15),
+    axis.title = element_text(face = "bold", size = 15),
     panel.border = element_rect(colour = "black", fill = NA, linewidth = 1),  ) + 
 
   labs(title = "(2016 - 2025)",
        x = paste0("PC1 (", round(eig.perc.temp2.noEINPP[1], 2), "%)"),
        y = paste0("PC2 (", round(eig.perc.temp2.noEINPP[2], 2), "%)"),
        colour = "Herd") + 
-    guides(colour = guide_legend(override.aes = list(size = 4, shape = 19)))
+    guides(colour = guide_legend(override.aes = list(size = 6, shape = 19)))
 
        
 
@@ -420,14 +423,14 @@ pcag.noEINPP <- fviz_pca_ind(pca.global.noEINPP,
 theme(
     plot.title = element_blank(),
     legend.title = element_text(face = "bold", size = 15),
-    legend.text = element_text(size = 12),
+    legend.text = element_text(size = 15),
     axis.title = element_text(face = "bold")) + 
   labs(title = NULL,
        # Fixed the placement of closing parentheses and commas below
        x = paste0("PC1 (", round(eig.perc.global.noEINPP[1], 2), "%)"),
        y = paste0("PC2 (", round(eig.perc.global.noEINPP[2], 2), "%)"),
        colour = "Herd") + 
-    guides(colour = guide_legend(override.aes = list(size = 4, shape = 19)))
+    guides(colour = guide_legend(override.aes = list(size = 6, shape = 19)))
 
 ```
 
@@ -515,12 +518,12 @@ p_dk <- p1$grobs[[4]]
 
 
 # Label Likelihood as 'a'
-panel_a <- arrangeGrob(p_lik, top = textGrob("a)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+panel_a <- arrangeGrob(p_lik, top = textGrob("A", x = unit(0.5, "line"), y = unit(1, "npc"), 
                                              just = c("left", "top"), 
                                              gp = gpar(fontsize = 18, fontface = "bold")))
 
 # Label Delta K as 'b'
-panel_b <- arrangeGrob(p_dk, top = textGrob("b)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+panel_b <- arrangeGrob(p_dk, top = textGrob("B", x = unit(0.5, "line"), y = unit(1, "npc"), 
                                              just = c("left", "top"), 
                                              gp = gpar(fontsize = 18, fontface = "bold")))
 
@@ -548,12 +551,12 @@ p_dk <- p2$grobs[[4]]
 
 
 # Label Likelihood as 'a'
-panel_a <- arrangeGrob(p_lik, top = textGrob("a)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+panel_a <- arrangeGrob(p_lik, top = textGrob("A", x = unit(0.5, "line"), y = unit(1, "npc"), 
                                              just = c("left", "top"), 
                                              gp = gpar(fontsize = 18, fontface = "bold")))
 
 # Label Delta K as 'b'
-panel_b <- arrangeGrob(p_dk, top = textGrob("b)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+panel_b <- arrangeGrob(p_dk, top = textGrob("B", x = unit(0.5, "line"), y = unit(1, "npc"), 
                                              just = c("left", "top"), 
                                              gp = gpar(fontsize = 18, fontface = "bold")))
 
@@ -794,12 +797,12 @@ p_dk <- t1$grobs[[4]]
 
 
 # Label Likelihood as 'a'
-panel_a <- arrangeGrob(p_lik, top = textGrob("a)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+panel_a <- arrangeGrob(p_lik, top = textGrob("A", x = unit(0.5, "line"), y = unit(1, "npc"), 
                                              just = c("left", "top"), 
                                              gp = gpar(fontsize = 18, fontface = "bold")))
 
 # Label Delta K as 'b'
-panel_b <- arrangeGrob(p_dk, top = textGrob("b)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+panel_b <- arrangeGrob(p_dk, top = textGrob("B", x = unit(0.5, "line"), y = unit(1, "npc"), 
                                              just = c("left", "top"), 
                                              gp = gpar(fontsize = 18, fontface = "bold")))
 
@@ -827,12 +830,12 @@ p_dk <- t2$grobs[[4]]
 
 
 # Label Likelihood as 'a'
-panel_a <- arrangeGrob(p_lik, top = textGrob("a)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+panel_a <- arrangeGrob(p_lik, top = textGrob("A", x = unit(0.5, "line"), y = unit(1, "npc"), 
                                              just = c("left", "top"), 
                                              gp = gpar(fontsize = 18, fontface = "bold")))
 
 # Label Delta K as 'b'
-panel_b <- arrangeGrob(p_dk, top = textGrob("b)", x = unit(0.5, "line"), y = unit(1, "npc"), 
+panel_b <- arrangeGrob(p_dk, top = textGrob("B", x = unit(0.5, "line"), y = unit(1, "npc"), 
                                              just = c("left", "top"), 
                                              gp = gpar(fontsize = 18, fontface = "bold")))
 
@@ -1054,7 +1057,10 @@ plotQ(temp2_no_plains.merged.list,
 ### PCA w/ plains bison outgroup
 
 # PCA w/ plains T1
-pca1_tight <- pca1_nl 
+pca1_tight <- pca1_nl + 
+  theme(
+    text = element_text(size = 20)
+    )
 
 
 # STRUCTURE T1 w/ plains
@@ -1068,7 +1074,8 @@ plot1 <- plotQ(c(temp1.mk2, temp1.mk3, temp1.mk4, temp1.mk5, temp1.mk6),
 
       # Side "K" Labels
             splab = c("K=2", "K=3", "K=4", "K=5*", "K=6"),
-            splabsize = 14,
+            splabsize = 20,
+            splabface = "bold",
             sppos = "left",
             splabcol = "black",
             splabangle = 0,
@@ -1080,8 +1087,8 @@ plot1 <- plotQ(c(temp1.mk2, temp1.mk3, temp1.mk4, temp1.mk5, temp1.mk6),
             indlabheight = 0,
       
       # Group Label settings
-            grplabsize = 5, 
-            grplabangle = 45,
+            grplabsize = 8, 
+            grplabangle = 90,
             grplabpos = 0.85,
             grplabheight = 0.6,      
             grplabspacer = 0,
@@ -1126,12 +1133,15 @@ t1 <- plot1$plot[[1]]
 # Combine Global w/ plains T1
 row_1 <- grid.arrange(pca1_tight, t1,
                       ncol = 2,
-                      widths = c(10, 15))
+                      widths = c(5, 7.5))
 
 
 
 # PCA w/ plains T2
-pca2_tight <- pca2_nl 
+pca2_tight <- pca2_nl + 
+  theme(
+    text = element_text(size = 20)
+    )
 
 
 # STRUCTURE T1 w/ plains
@@ -1145,7 +1155,8 @@ plot2 <- plotQ(c(temp2.mk2, temp2.mk3, temp2.mk4, temp2.mk5, temp2.mk6),
 
       # Side "K" Labels
             splab = c("K=2", "K=3", "K=4", "K=5*", "K=6"),
-            splabsize = 14,
+            splabsize = 20,
+            splabface = "bold",
             sppos = "left",
             splabcol = "black",
             splabangle = 0,
@@ -1157,8 +1168,8 @@ plot2 <- plotQ(c(temp2.mk2, temp2.mk3, temp2.mk4, temp2.mk5, temp2.mk6),
             indlabheight = 0,
       
       # Group Label settings
-            grplabsize = 5, 
-            grplabangle = 45,
+            grplabsize = 8, 
+            grplabangle = 90,
             grplabpos = 0.85,
             grplabheight = 0.6,      
             grplabspacer = 0,
@@ -1209,7 +1220,10 @@ row_2 <- grid.arrange(pca2_tight, t2,
 ################ Without Plains from Elk Island
 
 # PCA w/ plains T1
-pca1.noEINPP_tight <- pca1_nl.noEINPP 
+pca1.noEINPP_tight <- pca1_nl.noEINPP + 
+  theme(
+    text = element_text(size = 20)
+    )
 
 
 # STRUCTURE T1 w/ plains
@@ -1223,7 +1237,8 @@ plot1_no_plains <- plotQ(c(temp1_no_plains.mk2, temp1_no_plains.mk3, temp1_no_pl
 
       # Side "K" Labels
             splab = c("K=2", "K=3", "K=4*", "K=5", "K=6"),
-            splabsize = 14,
+            splabsize = 20,
+            splabface = "bold",
             sppos = "left",
             splabcol = "black",
             splabangle = 0,
@@ -1235,8 +1250,8 @@ plot1_no_plains <- plotQ(c(temp1_no_plains.mk2, temp1_no_plains.mk3, temp1_no_pl
             indlabheight = 0,
       
       # Group Label settings
-            grplabsize = 5, 
-            grplabangle = 45,
+            grplabsize = 8, 
+            grplabangle = 90,
             grplabpos = 0.85,
             grplabheight = 0.6,      
             grplabspacer = 0,
@@ -1284,7 +1299,10 @@ row_3 <- grid.arrange(pca1.noEINPP_tight, t1_no_plains,
                       widths = c(10, 15))
 
 # PCA w/o plains T2
-pca2.noEINPP_tight <- pca2_nl.noEINPP 
+pca2.noEINPP_tight <- pca2_nl.noEINPP + 
+  theme(
+    text = element_text(size = 20)
+    )
 
 # STRUCTURE T1 w/ plains
 plot2_no_plains <- plotQ(c(temp2_no_plains.mk2, temp2_no_plains.mk3, temp2_no_plains.mk4, temp2_no_plains.mk5, temp2_no_plains.mk6),
@@ -1297,7 +1315,8 @@ plot2_no_plains <- plotQ(c(temp2_no_plains.mk2, temp2_no_plains.mk3, temp2_no_pl
 
       # Side "K" Labels
             splab = c("K=2", "K=3", "K=4*", "K=5", "K=6"),
-            splabsize = 14,
+            splabsize = 20,
+            splabface = "bold",
             sppos = "left",
             splabcol = "black",
             splabangle = 0,
@@ -1309,8 +1328,8 @@ plot2_no_plains <- plotQ(c(temp2_no_plains.mk2, temp2_no_plains.mk3, temp2_no_pl
             indlabheight = 0,
       
       # Group Label settings
-            grplabsize = 5, 
-            grplabangle = 45,
+            grplabsize = 8, 
+            grplabangle = 90,
             grplabpos = 0.85,
             grplabheight = 0.6,      
             grplabspacer = 0,
@@ -1358,38 +1377,35 @@ row_4 <- grid.arrange(pca2.noEINPP_tight, t2_no_plains,
                       widths = c(10, 15))
 
 
-
-
-
 #### Label Sections
 # 3. Apply the 'A' Label
 A_labeled <- arrangeGrob(row_1, 
-                         top = textGrob("A", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 25, fontface = "bold")))
+                         top = textGrob("A (1986 - 2015)", x = unit(0.02, "npc"), just = "left", 
+                                        gp = gpar(fontsize = 35, fontface = "bold")))
 
 B_labeled <- arrangeGrob(row_2, 
-                         top = textGrob("B", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 25, fontface = "bold")))
+                         top = textGrob("B (2016 - 2025)", x = unit(0.02, "npc"), just = "left", 
+                                        gp = gpar(fontsize = 35, fontface = "bold")))
 
 top_half <- arrangeGrob(A_labeled, B_labeled, 
                         ncol = 1, 
                         heights = c(10, 10),
                         top = textGrob("Including Plains Bison Outgroup", 
-                                       gp = gpar(fontsize = 25, fontface = "bold")))
+                                       gp = gpar(fontsize = 35, fontface = "bold")))
 
 C_labeled <- arrangeGrob(row_3, 
-                         top = textGrob("C", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 25, fontface = "bold")))
+                         top = textGrob("C (1986 - 2015)", x = unit(0.02, "npc"), just = "left", 
+                                        gp = gpar(fontsize = 35, fontface = "bold")))
 
 D_labeled <- arrangeGrob(row_4, 
-                         top = textGrob("D", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 25, fontface = "bold"))) 
+                         top = textGrob("D (2016 - 2025)", x = unit(0.02, "npc"), just = "left", 
+                                        gp = gpar(fontsize = 35, fontface = "bold"))) 
 
 bottom_half <- arrangeGrob(C_labeled, D_labeled, 
                            ncol = 1, 
                            heights = c(10, 10),
                            top = textGrob("Excluding Plains Bison Outgroup", 
-                                       gp = gpar(fontsize = 25, fontface = "bold")))
+                                       gp = gpar(fontsize = 35, fontface = "bold")))
 
 #### Combine PCAs and STRUCTURE barplots
 comb <- arrangeGrob(top_half, 
@@ -1406,14 +1422,14 @@ pcag_horizontal <- pcag +
 
         legend.justification = "left", 
         legend.box.just = "top",
-        legend.text = element_text(size = 10, face = "bold"), 
-        legend.title = element_text(size = 14, face = "bold"),
+        legend.text = element_text(size = 25, face = "italic"), 
+        legend.title = element_text(size = 35, face = "bold"),
         legend.margin = margin(l = 0)) + 
   guides(color = guide_legend(
     title = "Herd", 
     nrow = 3, 
     byrow = TRUE,
-    override.aes = list(size = 3, alpha = 1) 
+    override.aes = list(size = 7, alpha = 1) 
   ))
 
 # Isolate legend
@@ -1440,8 +1456,8 @@ comb_leg_sep <-grobTree(comb_leg, linesGrob(x = unit(c(0, 1), "npc"),
 # Save plots
 ggsave("./plots/combined_global_leg_sep.svg",
        plot = comb_leg_sep,
-       height = 21,
-       width = 21,
+       height = 25,
+       width = 20,
        bg = "white",
        units = "in")
 ```

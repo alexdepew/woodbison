@@ -70,6 +70,8 @@ can <-
  
 woodbisonpop <- 
   read_sf("./shapefiles/WoodBisonPop/")
+
+plainsbisonpop <- read_sf("./shapefiles/BisonHerds_SampleSites_9.gdb/")
 ```
  
 ### Set up map elements
@@ -88,6 +90,13 @@ can_subset <-
 herd_centroids <- 
   st_centroid(woodbisonpop) %>% 
   mutate(latlong = st_transform(geometry, 4326))
+
+plains_centroid <- 
+  st_centroid(plainsbisonpop) %>% 
+  mutate(latlong = st_transform(Shape, 4326))
+
+
+
  
 herd_centroids <-
   data.frame(herd = herd_centroids$POPULATION,
@@ -176,21 +185,21 @@ p <- ggplot() +
 
   
   # Sample size
-  geom_sf_text(
-    data = map_data,
-    aes(label = n),
-    size = 3,
-    color = "black",
-    fun.geometry = sf::st_centroid
-  ) +
+#  geom_sf_text(
+#    data = map_data,
+#    aes(label = n),
+#    size = 3,
+#    color = "black",
+#    fun.geometry = sf::st_centroid
+#  ) +
   
   # Herd Labels (full names this time)
   geom_sf_text_repel(
   data = map_data, 
   aes(label = POPULATION),
-  fontface = "bold",
-  size = 3.5,
-  force = 40, 
+  fontface = "italic",
+  size = 4.2,
+  force = 50, 
   force_pull = 1,            
   box.padding = 1.2,   # label "hit-box"       
   point.padding = 0.4,        

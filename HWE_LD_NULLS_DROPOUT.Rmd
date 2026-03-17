@@ -395,11 +395,11 @@ table(pop(temp2)) # NAH, NORD, WAB, WENT
 
 # Create significant dataframes of called nulls but remove the small population sizes
 null.sig.1 <- temp1.FreeNA.nulls %>% 
-  filter(!Population == "WENT",
+  filter(#!Population == "WENT",
          FreeNA >= 0.10)
 
 null.sig.2 <- temp2.FreeNA.nulls %>% 
-  filter(!Population %in% c("NAH", "NORD", "WAB", "WENT"), 
+  filter(#!Population %in% c("NAH", "NORD", "WAB", "WENT"), 
          FreeNA >= 0.10)
 
 # Merge to see list across time 

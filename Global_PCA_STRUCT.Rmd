@@ -1402,10 +1402,10 @@ B_labeled <- arrangeGrob(row_2,
                                         gp = gpar(fontsize = 35, fontface = "bold")))
 
 top_half <- arrangeGrob(A_labeled, 
-                        rectGrob(gp = gpar(col = NA)), # Spacer between Row 1 and 2
+                        rectGrob(gp = gpar(col = NA)), # Spacer between rows
                         B_labeled, 
                         ncol = 1, 
-                        heights = c(10, 1.5, 10), # Adjust 1.5 to your preferred gap size
+                        heights = c(10, 1.5, 10),
                         top = textGrob("Including Plains Bison Outgroup", 
                                        gp = gpar(fontsize = 35, fontface = "bold")))
 
@@ -1418,10 +1418,10 @@ D_labeled <- arrangeGrob(row_4,
                                         gp = gpar(fontsize = 35, fontface = "bold"))) 
 
 bottom_half <- arrangeGrob(C_labeled, 
-                           rectGrob(gp = gpar(col = NA)), # Spacer between Row 3 and 4
+                           rectGrob(gp = gpar(col = NA)), # Spacer between rows
                            D_labeled, 
                            ncol = 1, 
-                           heights = c(10, 1.5, 10), # Keep consistent with top_half
+                           heights = c(10, 1.5, 10), 
                            top = textGrob("Excluding Plains Bison Outgroup", 
                                           gp = gpar(fontsize = 35, fontface = "bold")))
 

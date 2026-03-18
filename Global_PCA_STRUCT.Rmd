@@ -1481,6 +1481,57 @@ ggsave("./plots/combined_global_leg_sep.svg",
 ```
 
 
+# Plains Admixture
+#### Assess Q-values (membership probabilities of assigning to clusters)
+```{r}
+temp1.order <- data.frame(plot1$data$grplab[[2]]) %>% 
+  rownames_to_column("Ind")
+
+temp1.k2 <- data.frame(temp1.mk2) %>% 
+  rownames_to_column("Ind") %>% 
+  left_join(temp1.order, by = "Ind") %>% 
+  rename(Herd = ".",
+         Wood = X2.Cluster1,
+         Plains = X2.Cluster2) %>% 
+  select(-Ind) %>% 
+  relocate(Herd, .before = Wood)
+  
+temp1.Q.sum <- temp1.k2 %>% 
+  group_by(Herd) %>% 
+  summarise(
+    Wood_mean = mean(Wood),
+    Wood_SD = sd(Wood),
+    Plains_mean = mean(Plains),
+    Plains_SD = sd(Plains)
+  )
+
+# Summary per herd of Q assignments
+temp1.Q.sum
+
+temp2.order <- data.frame(plot2$data$grplab[[2]]) %>% 
+  rownames_to_column("Ind")
+
+temp2.k2 <- data.frame(temp2.mk2) %>% 
+  rownames_to_column("Ind") %>% 
+  left_join(temp2.order, by = "Ind") %>% 
+  rename(Herd = ".",
+         Wood = X2.Cluster2, # Swapped from previous
+         Plains = X2.Cluster1) %>% 
+  select(-Ind) %>% 
+  relocate(Herd, .before = Wood)
+  
+temp2.Q.sum <- temp2.k2 %>% 
+  group_by(Herd) %>% 
+  summarise(
+    Wood_mean = mean(Wood),
+    Wood_SD = sd(Wood),
+    Plains_mean = mean(Plains),
+    Plains_SD = sd(Plains)
+  )
+
+# Summary per herd of Q assignments
+temp2.Q.sum
+```
 
 
 

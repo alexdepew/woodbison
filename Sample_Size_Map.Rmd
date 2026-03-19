@@ -15,6 +15,7 @@ rm(list = ls())
 library(tidyverse)
 library(sf)
 library(ggsflabel)
+library(adegenet)
 ```
 
 # Load Data
@@ -95,8 +96,18 @@ plains_centroid <-
   st_centroid(plainsbisonpop) %>% 
   mutate(latlong = st_transform(Shape, 4326))
 
+plains_subset <- plains_centroid %>% 
+  filter(Shape_Area == 132207959 &
+           HerdName == "Elk Island NP") %>% 
+  mutate(HerdName = "Elk Island NP (Plains)") %>% 
+  select(HerdName, geometry = Shape) %>% 
+  st_transform(st_crs(woodbisonpop))
 
+wood_subset <- herd_centroids %>% 
+select(POPULATION, geometry)
 
+herd_centroids_combined <- rbind(wood_subset, plains_subset)
+herd_centroids <- herd_centroids_combined
  
 herd_centroids <-
   data.frame(herd = herd_centroids$POPULATION,
@@ -107,32 +118,36 @@ herd_centroids <-
   separate(latlong, into = c("long", "lat"),
            sep = ", ")
 
-herd_centroids <- st_centroid(woodbisonpop)
-
-herd_centroids <- herd_centroids %>%
-
-  
-  # Update Herd names
-    mutate(POPULATION = case_when(
-    # Name from NWT shapefile to name consistent with study abbrev.
+wood_centroids <- st_centroid(woodbisonpop) %>%
+  mutate(POPULATION = case_when(
     POPULATION == "Aishihik Herd" ~ "Aishihik",
-    POPULATION == "Chitek Lake Herd"    ~ "Chitek Lake",
-    POPULATION == "Delta"   ~ "WBNP-Peace Athabasca Delta",
-    POPULATION == "Elk Island National Park"   ~ "Elk Island NP (Wood)",
-    POPULATION == "Etthithun Lake Herd"   ~ "Etthithun",
-    POPULATION == "Garden River"   ~ "WBNP-Garden River",
-    POPULATION == "Hay-Zama Lakes Herd"   ~ "Hay Zama",
-    POPULATION == "Hay Camp"   ~ "WBNP-Hay Camp",
-    POPULATION == "Nahanni Population"   ~ "Nahanni",
-    POPULATION == "Nordquist Herd"   ~ "Nordquist",
-    POPULATION == "Nyarling"   ~ "WBNP-Nyarling",
-    POPULATION == "Slave River Lowlands"   ~ "WBNP-Little Buffalo",
-    POPULATION == "Wabesca"   ~ "Wabasca",
-    POPULATION == "Ronald Lake"   ~ "Ronald Lake",
-    POPULATION == "Wentzel"   ~ "Wentzel",
-    POPULATION == "Mack Bison CH-Range 2012_04"   ~ "Mackenzie",
+    POPULATION == "Chitek Lake Herd" ~ "Chitek Lake",
+    POPULATION == "Delta" ~ "WBNP-Peace Athabasca Delta",
+    POPULATION == "Elk Island National Park" ~ "Elk Island NP (Wood)",
+    POPULATION == "Etthithun Lake Herd" ~ "Etthithun",
+    POPULATION == "Garden River" ~ "WBNP-Garden River",
+    POPULATION == "Hay-Zama Lakes Herd" ~ "Hay Zama",
+    POPULATION == "Hay Camp" ~ "WBNP-Hay Camp",
+    POPULATION == "Nahanni Population" ~ "Nahanni",
+    POPULATION == "Nordquist Herd" ~ "Nordquist",
+    POPULATION == "Nyarling" ~ "WBNP-Nyarling",
+    POPULATION == "Slave River Lowlands" ~ "WBNP-Little Buffalo",
+    POPULATION == "Wabesca" ~ "Wabasca",
+    POPULATION == "Ronald Lake" ~ "Ronald Lake",
+    POPULATION == "Wentzel" ~ "Wentzel",
+    POPULATION == "Mack Bison CH-Range 2012_04" ~ "Mackenzie",
     TRUE ~ str_to_title(gsub("_", " ", POPULATION))
-  ))
+  )) %>%
+  select(POPULATION, geometry)
+
+plains_subset <- st_centroid(plainsbisonpop) %>% 
+  filter(HerdName == "Elk Island NP" &
+           SciName == "Bison bison bison") %>% 
+  mutate(POPULATION = "Elk Island NP (Plains)") %>% 
+  select(POPULATION, geometry = Shape) %>% 
+  st_transform(st_crs(woodbisonpop))
+
+herd_centroids <- rbind(wood_centroids, plains_subset)
 
 ```
 
@@ -181,6 +196,10 @@ map_data$`Collection Year` <- factor(map_data$`Collection Year`,
 p <- ggplot() +
   geom_sf(data = can_subset, fill = "gray95", color = "gray60") +
   geom_sf(data = woodbisonpop, fill = "gray80", alpha = 0.2) +
+  geom_sf(data = plainsbisonpop %>% 
+            filter(HerdName == "Elk Island NP" &
+                     SciName == "Bison bison bison") %>% 
+            st_transform(st_crs(can_subset)), fill = "gray80", alpha = 0.2) + 
   geom_sf(data = map_data, aes(size = n, color = `Collection Year`), alpha = 0.7) +
 
   
@@ -201,7 +220,7 @@ p <- ggplot() +
   size = 4.2,
   force = 50, 
   force_pull = 1,            
-  box.padding = 1.2,   # label "hit-box"       
+  box.padding = 1.3,   # label "hit-box"       
   point.padding = 0.4,        
   min.segment.length = 0,     
   segment.color = "gray30",

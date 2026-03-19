@@ -528,14 +528,14 @@ p_dk <- p1$grobs[[4]]
 
 
 # Label Likelihood as 'a'
-panel_a <- arrangeGrob(p_lik, top = textGrob("A", x = unit(0.5, "line"), y = unit(1, "npc"), 
+panel_a <- arrangeGrob(p_lik, top = textGrob("A", x = unit(0.5, "line"), y = unit(0.80, "npc"), 
                                              just = c("left", "top"), 
-                                             gp = gpar(fontsize = 18, fontface = "bold")))
+                                             gp = gpar(fontsize = 35, fontface = "bold")))
 
 # Label Delta K as 'b'
-panel_b <- arrangeGrob(p_dk, top = textGrob("B", x = unit(0.5, "line"), y = unit(1, "npc"), 
+panel_b <- arrangeGrob(p_dk, top = textGrob("B", x = unit(0.5, "line"), y = unit(0.80, "npc"), 
                                              just = c("left", "top"), 
-                                             gp = gpar(fontsize = 18, fontface = "bold")))
+                                             gp = gpar(fontsize = 35, fontface = "bold")))
 
 evanno_w1 <- grid.arrange(panel_a, panel_b, 
                          ncol = 2, 
@@ -561,14 +561,14 @@ p_dk <- p2$grobs[[4]]
 
 
 # Label Likelihood as 'a'
-panel_a <- arrangeGrob(p_lik, top = textGrob("A", x = unit(0.5, "line"), y = unit(1, "npc"), 
+panel_a <- arrangeGrob(p_lik, top = textGrob("A", x = unit(0.5, "line"), y = unit(0.8, "npc"), 
                                              just = c("left", "top"), 
-                                             gp = gpar(fontsize = 18, fontface = "bold")))
+                                             gp = gpar(fontsize = 35, fontface = "bold")))
 
 # Label Delta K as 'b'
-panel_b <- arrangeGrob(p_dk, top = textGrob("B", x = unit(0.5, "line"), y = unit(1, "npc"), 
+panel_b <- arrangeGrob(p_dk, top = textGrob("B", x = unit(0.5, "line"), y = unit(0.8, "npc"), 
                                              just = c("left", "top"), 
-                                             gp = gpar(fontsize = 18, fontface = "bold")))
+                                             gp = gpar(fontsize = 35, fontface = "bold")))
 
 evanno_w2 <- grid.arrange(panel_a, panel_b, 
                          ncol = 2, 
@@ -792,7 +792,7 @@ struct_sum_temp2_no_plains <- summariseQ(tabulateQ(slist_temp2_no_plains))
 
 #### Likelihood Plots
 ```{r}
-## Temp1 With plains ----
+## Temp1 Without plains ----
 # K plots
 t1 <- evannoMethodStructure(data = struct_sum_temp1_no_plains, exportplot = T,
                            returnplot = T, returndata = F,
@@ -807,14 +807,14 @@ p_dk <- t1$grobs[[4]]
 
 
 # Label Likelihood as 'a'
-panel_a <- arrangeGrob(p_lik, top = textGrob("A", x = unit(0.5, "line"), y = unit(1, "npc"), 
+panel_a <- arrangeGrob(p_lik, top = textGrob("A", x = unit(0.5, "line"), y = unit(0.8, "npc"), 
                                              just = c("left", "top"), 
-                                             gp = gpar(fontsize = 18, fontface = "bold")))
+                                             gp = gpar(fontsize = 35, fontface = "bold")))
 
 # Label Delta K as 'b'
-panel_b <- arrangeGrob(p_dk, top = textGrob("B", x = unit(0.5, "line"), y = unit(1, "npc"), 
+panel_b <- arrangeGrob(p_dk, top = textGrob("B", x = unit(0.5, "line"), y = unit(0.8, "npc"), 
                                              just = c("left", "top"), 
-                                             gp = gpar(fontsize = 18, fontface = "bold")))
+                                             gp = gpar(fontsize = 35, fontface = "bold")))
 
 evanno_t1 <- grid.arrange(panel_a, panel_b, 
                          ncol = 2, 
@@ -825,7 +825,7 @@ ggsave("./plots/K_plots/temp1_no_plains.k.svg",
        width = 27, 
        height = 11)
 
-# Temp2 With Plains ----
+# Temp2 Without Plains ----
 # K plots
 t2 <- evannoMethodStructure(data = struct_sum_temp2_no_plains, exportplot = T,
                            returnplot = T, returndata = F,
@@ -840,14 +840,14 @@ p_dk <- t2$grobs[[4]]
 
 
 # Label Likelihood as 'a'
-panel_a <- arrangeGrob(p_lik, top = textGrob("A", x = unit(0.5, "line"), y = unit(1, "npc"), 
+panel_a <- arrangeGrob(p_lik, top = textGrob("A", x = unit(0.5, "line"), y = unit(0.8, "npc"), 
                                              just = c("left", "top"), 
-                                             gp = gpar(fontsize = 18, fontface = "bold")))
+                                             gp = gpar(fontsize = 35, fontface = "bold")))
 
 # Label Delta K as 'b'
-panel_b <- arrangeGrob(p_dk, top = textGrob("B", x = unit(0.5, "line"), y = unit(1, "npc"), 
+panel_b <- arrangeGrob(p_dk, top = textGrob("B", x = unit(0.5, "line"), y = unit(0.8, "npc"), 
                                              just = c("left", "top"), 
-                                             gp = gpar(fontsize = 18, fontface = "bold")))
+                                             gp = gpar(fontsize = 35, fontface = "bold")))
 
 evanno_t2 <- grid.arrange(panel_a, panel_b, 
                          ncol = 2, 

@@ -87,38 +87,8 @@ can_subset <-
  
 ### Extract General Latitude and Longitude for Herds
 ```{r, warning = FALSE}
-# Herd Centroids
-herd_centroids <- 
-  st_centroid(woodbisonpop) %>% 
-  mutate(latlong = st_transform(geometry, 4326))
 
-plains_centroid <- 
-  st_centroid(plainsbisonpop) %>% 
-  mutate(latlong = st_transform(Shape, 4326))
-
-plains_subset <- plains_centroid %>% 
-  filter(Shape_Area == 132207959 &
-           HerdName == "Elk Island NP") %>% 
-  mutate(HerdName = "Elk Island NP (Plains)") %>% 
-  select(HerdName, geometry = Shape) %>% 
-  st_transform(st_crs(woodbisonpop))
-
-wood_subset <- herd_centroids %>% 
-select(POPULATION, geometry)
-
-herd_centroids_combined <- rbind(wood_subset, plains_subset)
-herd_centroids <- herd_centroids_combined
- 
-herd_centroids <-
-  data.frame(herd = herd_centroids$POPULATION,
-             status = as.character(herd_centroids$STATUS),
-             latlong = as.character(herd_centroids$latlong)) %>% 
-  mutate(latlong = gsub("c\\(", "", latlong),
-         latlong = gsub("\\)", "", latlong)) %>% 
-  separate(latlong, into = c("long", "lat"),
-           sep = ", ")
-
-wood_centroids <- st_centroid(woodbisonpop) %>%
+wood_subset <- st_centroid(woodbisonpop) %>%
   mutate(POPULATION = case_when(
     POPULATION == "Aishihik Herd" ~ "Aishihik",
     POPULATION == "Chitek Lake Herd" ~ "Chitek Lake",
@@ -147,7 +117,7 @@ plains_subset <- st_centroid(plainsbisonpop) %>%
   select(POPULATION, geometry = Shape) %>% 
   st_transform(st_crs(woodbisonpop))
 
-herd_centroids <- rbind(wood_centroids, plains_subset)
+herd_centroids <- rbind(wood_subset, plains_subset)
 
 ```
 
@@ -165,8 +135,8 @@ sample_counts <- data.frame(
     YEAR = analysis.genind@other$YEAR.ASSIGN
   ) %>%
   mutate(`Collection Year`= case_when(
-    YEAR <= 2015 ~ "1986 - 2015",
-    YEAR >= 2016 ~ "2016 - 2025"
+    YEAR <= 2015 ~ "T1: 1986 - 2015",
+    YEAR >= 2016 ~ "T2: 2016 - 2025"
   )) %>%
 
     count(POPULATION, `Collection Year`, name = "n") # Sample count per herd
@@ -183,14 +153,14 @@ map_data <- herd_centroids %>%
   st_transform(st_crs(can_subset)) %>% 
   left_join(sample_counts, by = "POPULATION")
 
-facet_names <- c("1986 - 2015",
-                 "2016 - 2025")
+facet_names <- c("T1: 1986 - 2015",
+                 "T2: 2016 - 2025")
 
 bbox <- sf::st_bbox(map_data)
 
-# Factor data to ensure T1 comes before T2
+# Factor data to ensure T1 comes before T2 on map "title"
 map_data$`Collection Year` <- factor(map_data$`Collection Year`, 
-                                     levels = c("1986 - 2015", "2016 - 2025"))
+                                     levels = c("T1: 1986 - 2015", "T2: 2016 - 2025"))
 
 
 p <- ggplot() +
@@ -203,7 +173,7 @@ p <- ggplot() +
   geom_sf(data = map_data, aes(size = n, color = `Collection Year`), alpha = 0.7) +
 
   
-  # Sample size
+  # Sample size **** THIS IS TO INCLUDE THE SAMPLE SIZES WITHIN THE HERDS
 #  geom_sf_text(
 #    data = map_data,
 #    aes(label = n),
@@ -244,10 +214,10 @@ p <- ggplot() +
   coord_sf(xlim = c(bbox["xmin"] - 1, bbox["xmax"] + 1), 
            ylim = c(bbox["ymin"] - 1, bbox["ymax"] + 1), 
            expand = TRUE) + 
-  scale_color_manual(values = c("1986 - 2015" = "steelblue", # Set plot colours
-                                "2016 - 2025" = "darkorange"))
+  scale_color_manual(values = c("T1: 1986 - 2015" = "steelblue", # Set plot colours
+                                "T2: 2016 - 2025" = "darkorange"))
 
-# Export to PNG - SVG file too large
+# Export to PNG - SVG file was too large
 ggsave("./plots/Sample_size_map_v2.png", plot = p,
        height = 8
       , width = 12)

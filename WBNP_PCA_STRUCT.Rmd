@@ -1226,12 +1226,12 @@ row_4 <- grid.arrange(pcaw2_nl, tw2,
 #### Label Sections
 # 3. Apply the 'A' Label
 A_labeled <- arrangeGrob(row_1, 
-                         top = textGrob("A (1986 - 1999)", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 25, fontface = "bold")))
+                         top = textGrob("A (T1: 1986 - 1999)", x = unit(0.02, "npc"), just = "left", 
+                                        gp = gpar(fontsize = 35, fontface = "bold")))
 
 B_labeled <- arrangeGrob(row_2, 
-                         top = textGrob("B (2016 - 2025)", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 25, fontface = "bold")))
+                         top = textGrob("B (T2: 2016 - 2025)", x = unit(0.02, "npc"), just = "left", 
+                                        gp = gpar(fontsize = 35, fontface = "bold")))
 
 top_half <- arrangeGrob(A_labeled, 
                         rectGrob(gp = gpar(col = NA)), # Spacer between rows
@@ -1242,12 +1242,12 @@ top_half <- arrangeGrob(A_labeled,
                                        gp = gpar(fontsize = 35, fontface = "bold")))
 
 C_labeled <- arrangeGrob(row_3, 
-                         top = textGrob("C (1986 - 1999)", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 25, fontface = "bold")))
+                         top = textGrob("C (T1: 1986 - 1999)", x = unit(0.02, "npc"), just = "left", 
+                                        gp = gpar(fontsize = 35, fontface = "bold")))
 
 D_labeled <- arrangeGrob(row_4, 
-                         top = textGrob("D (2016 - 2025)", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 25, fontface = "bold"))) 
+                         top = textGrob("D (T2: 2016 - 2025)", x = unit(0.02, "npc"), just = "left", 
+                                        gp = gpar(fontsize = 35, fontface = "bold"))) 
 
 bottom_half <- arrangeGrob(C_labeled, 
                            rectGrob(gp = gpar(col = NA)), # Spacer between rows
@@ -1434,7 +1434,7 @@ dev.off()
 # Plains Admixture
 #### Assess Q-values (membership probabilities of assigning to clusters)
 ```{r}
-a1.order <- data.frame(plota1$data$grplab[[2]]) %>% 
+a1.order <- data.frame(plota1$data$grplab[[1]]) %>% 
   rownames_to_column("Ind")
 
 a1.k2 <- data.frame(a1.mk2) %>% 
@@ -1463,7 +1463,10 @@ mean(a1.wbnp.Q.sum$Plains_mean)
 write.csv(a1.wbnp.Q.sum, "./tables/A1.Q.plains_assign.csv")
 
 
-a2.order <- data.frame(plota2$data$grplab[[2]]) %>% 
+#-------------------
+
+
+a2.order <- data.frame(plota2$data$grplab[[1]]) %>% 
   rownames_to_column("Ind")
 
 a2.k2 <- data.frame(a2.mk2) %>% 
@@ -1493,6 +1496,37 @@ write.csv(a2.wbnp.Q.sum, "./tables/A2.Q.plains_assign.csv")
 
 
 ```
+#### JUST WBNP Plains (but grouped as all herds)
+```{r}
+# Identify the names of the WBNP herds based on your subsetting (rows 3 to 8)
+wbnp_herds <- a1.Q.sum$Herd[3:8]
+
+# Filter the original individual data for these herds and calculate the overall stats
+a1.wbnp.overall_stats <- a1.k2 %>%
+  filter(Herd %in% wbnp_herds) %>%
+  summarise(
+    Overall_Mean_Plains = mean(Plains, na.rm = TRUE),
+    Overall_SD_Plains = sd(Plains, na.rm = TRUE)
+  )
+
+# View the result
+a1.wbnp.overall_stats
+
+
+# Filter the original individual data for these herds and calculate the overall stats
+a2.wbnp.overall_stats <- a2.k2 %>%
+  filter(Herd %in% wbnp_herds) %>%
+  summarise(
+    Overall_Mean_Plains = mean(Plains, na.rm = TRUE),
+    Overall_SD_Plains = sd(Plains, na.rm = TRUE)
+  )
+
+# View the result
+a2.wbnp.overall_stats
+```
+
+
+
 
 # WBNP Split
 ```{r}
@@ -1827,12 +1861,12 @@ row_4 <- grid.arrange(pcaw2_nl, tw2,
 #### Label Sections
 # 3. Apply the 'A' Label
 A_labeled <- arrangeGrob(row_1, 
-                         top = textGrob("A (1986 - 1999)", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 25, fontface = "bold")))
+                         top = textGrob("A (T1: 1986 - 1999)", x = unit(0.02, "npc"), just = "left", 
+                                        gp = gpar(fontsize = 35, fontface = "bold")))
 
 B_labeled <- arrangeGrob(row_2, 
-                         top = textGrob("B (2016 - 2025)", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 25, fontface = "bold")))
+                         top = textGrob("B (T2: 2016 - 2025)", x = unit(0.02, "npc"), just = "left", 
+                                        gp = gpar(fontsize = 35, fontface = "bold")))
 
 top_half <- arrangeGrob(A_labeled, 
                         rectGrob(gp = gpar(col = NA)), # Spacer between rows
@@ -1843,12 +1877,12 @@ top_half <- arrangeGrob(A_labeled,
                                        gp = gpar(fontsize = 35, fontface = "bold")))
 
 C_labeled <- arrangeGrob(row_3, 
-                         top = textGrob("C (1986 - 1999)", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 25, fontface = "bold")))
+                         top = textGrob("C (T1: 1986 - 1999)", x = unit(0.02, "npc"), just = "left", 
+                                        gp = gpar(fontsize = 35, fontface = "bold")))
 
 D_labeled <- arrangeGrob(row_4, 
-                         top = textGrob("D (2016 - 2025)", x = unit(0.02, "npc"), just = "left", 
-                                        gp = gpar(fontsize = 25, fontface = "bold"))) 
+                         top = textGrob("D (T2: 2016 - 2025)", x = unit(0.02, "npc"), just = "left", 
+                                        gp = gpar(fontsize = 35, fontface = "bold"))) 
 
 bottom_half <- arrangeGrob(C_labeled, 
                            rectGrob(gp = gpar(col = NA)), # Spacer between rows

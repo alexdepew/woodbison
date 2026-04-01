@@ -236,24 +236,65 @@ write.csv(temp2_fst.ordered, "./tables/fst2.csv", row.names = T)
 #### Bootstraps of Fst - Test for significance (Null hypothesis Fst = 0)
 ```{r}
 boot1.mat <- boot.ppfst(temp1, nboot = 1000, quant=c(0.025,0.975))
-boot1.mat$ll
+temp1.fst.ll <- as.matrix(boot1.mat$ll)
+temp1.fst.ul <- as.matrix(boot1.mat$ul)
+
+# Make symmetrical
+temp1.fst.ll[lower.tri(temp1.fst.ll)] <- t(temp1.fst.ll)[lower.tri(temp1.fst.ll)]
+temp1.fst.ul[lower.tri(temp1.fst.ul)] <- t(temp1.fst.ul)[lower.tri(temp1.fst.ul)]
+
+# Reorder in same order as Fst table
+temp1.fst.ll <- temp1.fst.ll[new_order, new_order]
+temp1.fst.ul <- temp1.fst.ul[new_order, new_order]
+
+# Combine to make full CI table
+temp1.fst.mat <- temp1.fst.ul
+temp1.fst.mat[lower.tri(temp1.fst.mat)] <- t(temp1.fst.ll)[lower.tri(t(temp1.fst.ll))]
+
+# Write FST CI's to tables
+write.csv(temp1.fst.mat, "./tables/temp1.fst.sig.csv")
+
+
+##### Temp2 
 boot2.mat <- boot.ppfst(temp2, nboot = 1000, quant=c(0.025,0.975))
-boot2.mat$ll
+temp2.fst.ll <- as.matrix(boot2.mat$ll)
+temp2.fst.ul <- as.matrix(boot2.mat$ul)
+
+# Make symmetrical
+temp2.fst.ll[lower.tri(temp2.fst.ll)] <- t(temp2.fst.ll)[lower.tri(temp2.fst.ll)]
+temp2.fst.ul[lower.tri(temp2.fst.ul)] <- t(temp2.fst.ul)[lower.tri(temp2.fst.ul)]
+
+# Reorder in same order as Fst table
+temp2.fst.ll <- temp2.fst.ll[new_order2, new_order2]
+temp2.fst.ul <- temp2.fst.ul[new_order2, new_order2]
+
+# Combine to make full CI table
+temp2.fst.mat <- temp2.fst.ul
+temp2.fst.mat[lower.tri(temp2.fst.mat)] <- t(temp2.fst.ll)[lower.tri(t(temp2.fst.ll))]
+
+# Write FST CI's to tables
+write.csv(temp2.fst.mat, "./tables/temp2.fst.sig.csv")
+
+
 ```
+
+
+
 
 ## Fis Sig
 ```{r}
 temp1_fis_boot <- boot.ppfis(dat=temp1,nboot=1000,quant=c(0.025,0.975))
-temp1_fis_boot$fis.ci$ll # EINPW is the only herd with a significant FIS value
+temp1.fis.ci <- data.frame(temp1_fis_boot$fis.ci) 
+rownames(temp1.fis.ci) <- (names(colMeans(temp1.stats$Fis)))
 
-temp1.stat <- basic.stats(temp1)
-colMeans(temp1.stats$Fis)
 
 temp2_fis_boot <- boot.ppfis(dat=temp2,nboot=1000,quant=c(0.025,0.975))
-temp2_fis_boot$fis.ci$ll # WBNPPAD, WBNPC2
+temp2.fis.ci <- data.frame(temp2_fis_boot$fis.ci) 
+rownames(temp2.fis.ci) <- (names(colMeans(temp2.stats$Fis)))
 
-temp2.stat <- basic.stats(temp2)
-colMeans(temp2.stat$Fis)
+FIS.CI <- rbind(temp1.fis.ci, temp2.fis.ci)
+
+write.csv(FIS.CI, "./tables/FIS.ci.csv")
 ```
 
 
@@ -451,6 +492,15 @@ print(final_one_vs_all)
 
 write.csv(final_one_vs_all, "./tables/temp1_sig_hs_v2.csv", row.names = F)
 ```
+
+
+
+
+
+
+
+
+
 ```{r}
 # Temp2 He comparisons
 current_obj <- temp2.no.plains
@@ -491,16 +541,32 @@ write.csv(final_one_vs_all, "./tables/temp2_sig_hs_v2.csv", row.names = F)
 ```
 
 ```{r}
-btlneck <- mRatio(temp1.g, by.strata = T)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
 
-btlneck.sum <- btlneck %>% 
-  group_by(stratum) %>% 
-  summarize(
-    avg.m = mean(m.ratio, na.rm = TRUE),
-    sd.m = sd(m.ratio, na.rm = TRUE),
-    n_loci = sum(!is.na(m.ratio))
-  )
+plot_data <- full.descr.long %>%
+  separate(HE, into = c("HE_mean", "HE_sd"), sep = " ± ", convert = TRUE) 
 
-btlneck.sum
+
+bar_w <- 0.7 
+
+
+ggplot(plot_data, aes(x = Population, y = HE_mean, fill = Period)) +
+ 
+  geom_bar(stat = "identity", 
+           position = position_dodge(width = 0.8), 
+           width = bar_w, 
+           color = "black") +
+  theme_classic() + 
+  labs(title = "Expected Heterozygosity (He) by Herd and Temporal Cohort",
+       y = "Expected Heterozygosity (He)",
+       x = "Herd") +
+  scale_fill_manual(values = c("T1" = "steelblue", "T2" = "darkorange")) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+        panel.grid.major.y = element_line(color = "grey90")) 
+
+ggsave("./plots/HE_barplot.png")
 ```
+
 

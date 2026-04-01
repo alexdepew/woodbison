@@ -1875,11 +1875,11 @@ row_4 <- grid.arrange(pca2.noEINPP_tight, t2_no_plains,
 #### Label Sections
 # 3. Apply the 'A' Label
 A_labeled <- arrangeGrob(row_1, 
-                         top = textGrob("A (1986 - 2015)", x = unit(0.02, "npc"), just = "left", 
+                         top = textGrob("A (T1: 1986 - 2015)", x = unit(0.02, "npc"), just = "left", 
                                         gp = gpar(fontsize = 35, fontface = "bold")))
 
 B_labeled <- arrangeGrob(row_2, 
-                         top = textGrob("B (2016 - 2025)", x = unit(0.02, "npc"), just = "left", 
+                         top = textGrob("B (T2: 2016 - 2025)", x = unit(0.02, "npc"), just = "left", 
                                         gp = gpar(fontsize = 35, fontface = "bold")))
 
 top_half <- arrangeGrob(A_labeled, 
@@ -1891,11 +1891,11 @@ top_half <- arrangeGrob(A_labeled,
                                        gp = gpar(fontsize = 35, fontface = "bold")))
 
 C_labeled <- arrangeGrob(row_3, 
-                         top = textGrob("C (1986 - 2015)", x = unit(0.02, "npc"), just = "left", 
+                         top = textGrob("C (T1: 1986 - 2015)", x = unit(0.02, "npc"), just = "left", 
                                         gp = gpar(fontsize = 35, fontface = "bold")))
 
 D_labeled <- arrangeGrob(row_4, 
-                         top = textGrob("D (2016 - 2025)", x = unit(0.02, "npc"), just = "left", 
+                         top = textGrob("D (T2: 2016 - 2025)", x = unit(0.02, "npc"), just = "left", 
                                         gp = gpar(fontsize = 35, fontface = "bold"))) 
 
 bottom_half <- arrangeGrob(C_labeled, 
@@ -1962,6 +1962,9 @@ ggsave("./plots/combined_global_leg_sep_revised.svg",
 ```
 
 
+```{r}
+
+```
 
 
 

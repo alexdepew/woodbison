@@ -562,7 +562,7 @@ ggplot(plot_data, aes(x = Population, y = HE_mean, fill = Period)) +
   labs(title = "Expected Heterozygosity (He) by Herd and Temporal Cohort",
        y = "Expected Heterozygosity (He)",
        x = "Herd") +
-  scale_fill_manual(values = c("T1" = "steelblue", "T2" = "darkorange")) +
+  scale_fill_manual(values = c("T1" = "#154734", "T2" = "#cbc36d")) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
         panel.grid.major.y = element_line(color = "grey90")) 
 
